@@ -2100,11 +2100,20 @@ class KrepagotchiGame extends Phaser.Scene {
 
       spawnFirework(x, y)
       {
-            let burst = this.physics.add.sprite(x, y, 'fireworks');
-            burst.anims.play('fireworks', true);
-            burst.on('animationcomplete', function() {
-                  burst.destroy();
-            });
+            this.switchFireworks = !this.switchFireworks;
+
+            if (this.switchFireworks) {
+                  let burst = this.physics.add.sprite(x, y, 'fireworks');
+                  burst.anims.play('fireworks', true);
+                  burst.on('animationcomplete', function() {
+                        burst.destroy();
+                  });
+            } else {
+                  const colors = [0xffffff, 0xff3333, 0x33ff33, 0x3333ff, 0xffff33, 0xff33ff, 0xffd700, 0x00ffff, 0x50c877, 0xff4500, 0x8a2bd2, 0xff3367];
+                  const randomColor = Phaser.Utils.Array.GetRandom(colors);
+                  this.fireworksParticles.setParticleTint(randomColor);
+                  this.fireworksParticles.explode(150, x, y);
+            }
 
             const fwsnd = this.sndFireworks[Phaser.Math.Between(0, this.sndFireworks.length - 1)];
             fwsnd.play();
@@ -2150,6 +2159,36 @@ class KrepagotchiGame extends Phaser.Scene {
                   },
                   callbackScope: self
             });
+
+            const canvsize = 16;
+            const canvas = document.createElement('canvas');
+            canvas.width = canvsize;
+            canvas.height = canvsize;
+            const ctx = canvas.getContext('2d');
+            
+            const gradient = ctx.createRadialGradient(canvsize / 2, canvsize / 2, 0, canvsize / 2, canvsize / 2, canvsize / 2);
+            gradient.addColorStop(0, 'rgba(255, 255, 255, 1)');
+            gradient.addColorStop(0.3, 'rgba(255, 255, 255, 0.8)');
+            gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvsize, canvsize);
+            
+            this.textures.addCanvas('fwsparkles', canvas);
+
+            this.fireworksParticles = this.add.particles(0, 0, 'fwsparkles', {
+                  lifespan: { min: 1230, max: 2000 },
+                  speed: { min: 50, max: 150 },
+                  angle: { min: 0, max: 360 },
+                  gravityY: 180,
+                  drag: 0.04,
+                  scale: { start: 0.5, end: 0 },
+                  alpha: { start: 1, end: 0, ease: 'Quad.easeIn' },
+                  blendMode: 'ADD',
+                  emitting: false
+            });
+
+            this.switchFireworks = Phaser.Math.Between(1, 2) === 1;
 
             this.tmrFireworks = this.time.addEvent({
                   delay: 2000,
