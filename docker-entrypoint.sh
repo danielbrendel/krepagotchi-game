@@ -61,7 +61,7 @@ create_environment_file() {
 
     # App settings
     APP_NAME="Krepagotchi"
-    APP_VERSION="1.0"
+    APP_VERSION="1.1"
     APP_AUTHOR="Daniel Brendel"
     APP_CONTACT="www.danielbrendel.com"
     APP_DESCRIPTION="A cozy and wholesome virtual pet sim"
