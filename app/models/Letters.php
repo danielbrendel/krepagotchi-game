@@ -1,7 +1,9 @@
 <?php
 
 /**
- * This class extends the base model class and represents your associated table
+ * Class Letters
+ * 
+ * Handle Letters specific data model operations
  */ 
 class Letters extends \Asatru\Database\Model {
     /**

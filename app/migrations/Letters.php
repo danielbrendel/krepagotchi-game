@@ -1,7 +1,9 @@
 <?php
 
 /**
- * This class specifies a migration
+ * Class Letters_Migration
+ * 
+ * Migration for Letters table
  */
 class Letters_Migration {
     private $database = null;

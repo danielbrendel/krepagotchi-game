@@ -2,6 +2,8 @@
 
 /**
  * Class GameBuild
+ * 
+ * Implement game building/bundling for various different platforms
  */
 class GameBuild {
     /**

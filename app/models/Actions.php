@@ -1,11 +1,9 @@
 <?php
 
-/*
-    Asatru PHP - Model
-*/
-
 /**
- * This class extends the base model class and represents your associated table
+ * Class Actions
+ * 
+ * Handle Actions specific data model operations
  */ 
 class Actions extends \Asatru\Database\Model {
     /**

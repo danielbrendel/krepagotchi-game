@@ -1,11 +1,9 @@
 <?php
 
-/*
-    Asatru PHP - Migration for Actions
-*/
-
 /**
- * This class specifies a migration
+ * Class Actions_Migration
+ * 
+ * Migration for Actions table
  */
 class Actions_Migration {
     private $database = null;
