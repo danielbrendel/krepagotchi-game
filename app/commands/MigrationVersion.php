@@ -11,7 +11,7 @@ class MigrationVersion implements Asatru\Commands\Command {
     /**
      * @var array
      */
-    private $files = ['.env', '.env.example', '.env.testing'];
+    private $files = ['.env', '.env.example', '.env.testing', 'docker-entrypoint.sh'];
 
     /**
      * @param $message
