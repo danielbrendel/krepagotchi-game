@@ -1,13 +1,11 @@
 <?php
 
-/*
-    Asatru PHP - Command handler
-*/
-
 /**
- * Command handler class
+ * Class CmdMigrationVersion
+ * 
+ * Command to perform version upgrades
  */
-class MigrationVersion implements Asatru\Commands\Command {
+class CmdMigrationVersion implements Asatru\Commands\Command {
     /**
      * @var array
      */
@@ -26,7 +24,6 @@ class MigrationVersion implements Asatru\Commands\Command {
         
         system("git switch {$target_branch}");
         system("git add {$list}");
-        system("git add app/config/version.php");
         system("git commit -m \"{$message}\"");
 
         if ($push) {

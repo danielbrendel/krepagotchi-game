@@ -14,7 +14,7 @@
 */
 
 return [
-    array('migrate:version', 'Incrementially update the current product version', 'MigrationVersion'),
+    array('migrate:version', 'Incrementially update the current product version', 'CmdMigrationVersion'),
     array('game:debug', 'Make a shippable debug build', 'CmdGameBuildDebug'),
     array('game:release', 'Make a shippable release build', 'CmdGameBuildRelease'),
 ];
