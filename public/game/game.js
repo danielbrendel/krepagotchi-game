@@ -3125,7 +3125,7 @@ class KrepagotchiGame extends Phaser.Scene {
 
             if (this.krepaStats.health < 90) {
                   thought = this.krepaThoughts.unhealthy[Phaser.Math.Between(0, this.krepaThoughts.unhealthy.length - 1)];
-            } else if (this.krepaStats.full < 75) {
+            } else if (this.krepaStats.full < 55) {
                   thought = this.krepaThoughts.hungry[Phaser.Math.Between(0, this.krepaThoughts.hungry.length - 1)];
             } else if (this.krepaStats.affection < 50) {
                   thought = this.krepaThoughts.affection[Phaser.Math.Between(0, this.krepaThoughts.affection.length - 1)];
