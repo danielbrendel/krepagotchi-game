@@ -1,5 +1,6 @@
 const MAX_WALKING_SPEED = 50;
 const FOOD_ADD_COUNT = 10;
+const HUNGER_VALUE = 5;
 
 class KrepagotchiGame extends Phaser.Scene {
       preload()
@@ -27,12 +28,18 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.spritesheet('plant4', 'game/assets/sprites/plant4.png', { frameWidth: 41, frameHeight: 35 });
             this.load.spritesheet('tntfood', 'game/assets/sprites/tntfood.png', { frameWidth: 32, frameHeight: 32 });
             this.load.spritesheet('explosion', 'game/assets/sprites/explosion.png', { frameWidth: 256, frameHeight: 256 });
+            this.load.spritesheet('poop', 'game/assets/sprites/poop.png', { frameWidth: 16, frameHeight: 16 });
+            this.load.spritesheet('poopsplash', 'game/assets/sprites/poop-splash.png', { frameWidth: 16, frameHeight: 16 });
 
             this.load.audio('theme', 'game/assets/sounds/theme.wav');
+            this.load.audio('step', 'game/assets/sounds/step.wav');
             this.load.audio('eating', 'game/assets/sounds/eating.wav');
             this.load.audio('afraid', 'game/assets/sounds/afraid.wav');
+            this.load.audio('tntspawn', 'game/assets/sounds/tntspawn.wav');
             this.load.audio('fuse', 'game/assets/sounds/fuse.wav');
             this.load.audio('explosion', 'game/assets/sounds/explosion.wav');
+            this.load.audio('poopsplash', 'game/assets/sounds/poop-splash.wav');
+            this.load.audio('hurt', 'game/assets/sounds/hurt.wav');
             
             this.cursors = this.input.keyboard.createCursorKeys();
       }
@@ -87,10 +94,12 @@ class KrepagotchiGame extends Phaser.Scene {
             this.krepaBlink = 0;
 
             this.krepaStats = {
-                  full: self.getConfigValue('krepa_stats_full'),
-                  health: self.getConfigValue('krepa_stats_health'),
-                  affection: self.getConfigValue('krepa_stats_affection')
+                  full: Number(self.getConfigValue('krepa_stats_full')),
+                  health: Number(self.getConfigValue('krepa_stats_health')),
+                  affection: Number(self.getConfigValue('krepa_stats_affection'))
             };
+
+            this.poops = [];
 
             this.krepaTweenFootLeft = this.tweens.add({
                   targets: this.krepa_foot_left,
@@ -131,11 +140,20 @@ class KrepagotchiGame extends Phaser.Scene {
             });
 
             this.tmrKrepaHealthCheck = this.time.addEvent({
-                  delay: 100,
+                  delay: 2000,
                   loop: true,
                   callback: function() {
                         if ((self.krepaStats.full <= 0) || (self.krepaStats.affection <= 0)) {
                               self.krepaStats.health--;
+
+                              self.sndHurt.play();
+
+                              self.txtHealthValue.setColor('rgb(250, 50, 0)');
+                              self.krepa.iterate(child => { child.setTintFill(0xff0000); });
+                              self.time.delayedCall(250, () => {
+                                    self.txtHealthValue.setColor('rgb(250, 250, 250)');
+                                    self.krepa.iterate(child => { child.clearTint(); });
+                              });
                         }
 
                         if (self.krepaStats.health <= 0) {
@@ -146,9 +164,38 @@ class KrepagotchiGame extends Phaser.Scene {
                   callbackScope: self
             });
 
+            this.tmrKrepaHunger = this.time.addEvent({
+                  delay: Phaser.Math.Between(5000, 10000),
+                  loop: true,
+                  callback: function() {
+                        if (self.krepaStats.full > 0) {
+                              self.krepaStats.full -= HUNGER_VALUE; 
+                        }
+                  },
+                  callbackScope: self
+            });
+
+            this.tmrPoopCheck = this.time.addEvent({
+                  delay: Phaser.Math.Between(5000, 10000),
+                  loop: true,
+                  callback: function() {
+                        if (self.poops.length > 0) {
+                              self.krepaStats.health -= 5;
+                        }
+                  },
+                  callbackScope: self
+            });
+
             this.anims.create({
                   key: 'explosion',
                   frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 63 }),
+                  frameRate: 25,
+                  repeat: 0
+            });
+
+            this.anims.create({
+                  key: 'poopsplash',
+                  frames: this.anims.generateFrameNumbers('poopsplash', { start: 0, end: 3 }),
                   frameRate: 25,
                   repeat: 0
             });
@@ -177,10 +224,14 @@ class KrepagotchiGame extends Phaser.Scene {
             });
 
             this.sndTheme = this.sound.add('theme');
+            this.sndStep = this.sound.add('step');
             this.sndEating = this.sound.add('eating');
             this.sndAfraid = this.sound.add('afraid');
+            this.sndTntSpawn = this.sound.add('tntspawn');
             this.sndFuse = this.sound.add('fuse');
             this.sndExplosion = this.sound.add('explosion');
+            this.sndPoopSplash = this.sound.add('poopsplash');
+            this.sndHurt = this.sound.add('hurt');
 
             this.loadHelp();
             this.loadStats();
@@ -190,6 +241,9 @@ class KrepagotchiGame extends Phaser.Scene {
 
             this.sndTheme.loop = true;
             //this.sndTheme.play();
+
+            this.sndStep.loop = true;
+            this.sndStep.setVolume(0.5);
       }
 
       update()
@@ -254,12 +308,12 @@ class KrepagotchiGame extends Phaser.Scene {
                   this.add.image(iMenuStartX + i * 64, gameconfig.scale.height - 45, 'slot').setScale(0.5);
             }
 
-            const food = this.add.image(iMenuStartX, gameconfig.scale.height - 45 + 1, 'tnt').setScale(0.05).setInteractive();
+            const food = this.add.image(iMenuStartX, gameconfig.scale.height - 45 + 1, 'tnt').setScale(0.03).setInteractive();
             food.on('pointerdown', function() {
                   self.spawnFood();
             });
-            food.on('pointerover', function() { food.setScale(0.055); });
-            food.on('pointerout', function() { food.setScale(0.05); });
+            food.on('pointerover', function() { food.setScale(0.035); });
+            food.on('pointerout', function() { food.setScale(0.03); });
 
             const hand = this.add.image(iMenuStartX + 64 * 1, gameconfig.scale.height - 45 + 1, 'hand').setInteractive();
             hand.on('pointerdown', function() {
@@ -270,7 +324,19 @@ class KrepagotchiGame extends Phaser.Scene {
 
             const brush = this.add.image(iMenuStartX + 64 * 2, gameconfig.scale.height - 45 + 1, 'brush').setInteractive();
             brush.on('pointerdown', function() {
-                  console.log('Cleaning...');
+                  if (self.poops.length > 0) {
+                        let pindex = Phaser.Math.Between(0, self.poops.length - 1);
+
+                        let splash = self.physics.add.sprite(self.poops[pindex].x, self.poops[pindex].y, 'poopsplash').setScale(2.0);
+                        splash.anims.play('poopsplash', true);
+                        splash.on('animationcomplete', function() {
+                              splash.destroy();
+                        });
+
+                        self.removePoop(pindex);
+
+                        self.sndPoopSplash.play();
+                  }
             });
             brush.on('pointerover', function() { brush.setScale(1.1); });
             brush.on('pointerout', function() { brush.setScale(1.0); });
@@ -300,6 +366,10 @@ class KrepagotchiGame extends Phaser.Scene {
                   if (this.krepaTweenFootRight.isPaused()) {
                         this.krepaTweenFootRight.resume();
                   }
+
+                  if (!this.sndStep.isPlaying) {
+                        this.sndStep.play();
+                  }
             } else {
                   this.krepa.body.setVelocity(0, 0);
 
@@ -309,6 +379,10 @@ class KrepagotchiGame extends Phaser.Scene {
 
                   if (!this.krepaTweenFootRight.isPaused()) {
                         this.krepaTweenFootRight.pause();
+                  }
+
+                  if (this.sndStep.isPlaying) {
+                        this.sndStep.stop();
                   }
             }
 
@@ -326,8 +400,8 @@ class KrepagotchiGame extends Phaser.Scene {
       {
             let self = this;
 
-            let posx = this.krepa.body.x + Phaser.Math.Between(0, 200) - 50;
-            let posy = this.krepa.body.y + Phaser.Math.Between(0, 200) - 50;
+            let posx = this.krepa.body.x + Phaser.Math.Between(0, 100) - 50;
+            let posy = this.krepa.body.y + Phaser.Math.Between(0, 100) - 50;
 
             let food = this.physics.add.sprite(posx, posy, 'tntfood').refreshBody();
             food.setCollideWorldBounds(true);
@@ -346,6 +420,7 @@ class KrepagotchiGame extends Phaser.Scene {
                         }
 
                         self.sndEating.play();
+                        self.spawnPoop();
 
                         food.destroy();
                   }
@@ -353,6 +428,32 @@ class KrepagotchiGame extends Phaser.Scene {
 
             this.physics.add.collider(food, this.fenceColliderTop);
             this.physics.add.collider(food, this.fenceColliderBottom);
+
+            this.sndTntSpawn.play();
+      }
+
+      spawnPoop()
+      {
+            let self = this;
+
+            let posx = this.krepa.body.x + Phaser.Math.Between(0, 100) - 50;
+            let posy = this.krepa.body.y + Phaser.Math.Between(0, 100) - 50;
+
+            let poop = this.physics.add.sprite(posx, posy, 'poop').refreshBody();
+            poop.setCollideWorldBounds(true);
+
+            this.physics.add.collider(poop, this.fenceColliderTop);
+            this.physics.add.collider(poop, this.fenceColliderBottom);
+
+            this.poops.push(poop);
+      }
+
+      removePoop(index)
+      {
+            if (typeof this.poops[index] !== 'undefined') {
+                  this.poops[index].destroy();
+                  this.poops.splice(index, 1);
+            }
       }
 
       explodeKrepa()
