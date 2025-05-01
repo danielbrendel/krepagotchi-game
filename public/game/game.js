@@ -2,6 +2,7 @@ const MAX_WALKING_SPEED = 50;
 const FOOD_ADD_COUNT = 10;
 const HUNGER_VALUE = 5;
 const AFFECTION_VALUE = 4;
+const HEALTH_VALUE = 10;
 
 class KrepagotchiGame extends Phaser.Scene {
       preload()
@@ -43,6 +44,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.audio('poopsplash', 'game/assets/sounds/poop-splash.wav');
             this.load.audio('hurt', 'game/assets/sounds/hurt.wav');
             this.load.audio('meow', 'game/assets/sounds/meow.wav');
+            this.load.audio('refreshed', 'game/assets/sounds/refreshed.wav');
             
             this.cursors = this.input.keyboard.createCursorKeys();
       }
@@ -236,6 +238,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.sndPoopSplash = this.sound.add('poopsplash');
             this.sndHurt = this.sound.add('hurt');
             this.sndMeow = this.sound.add('meow');
+            this.sndRefreshed = this.sound.add('refreshed');
 
             this.loadHelp();
             this.loadStats();
@@ -377,7 +380,19 @@ class KrepagotchiGame extends Phaser.Scene {
             
             const pill = this.add.image(iMenuStartX + 64 * 3, gameconfig.scale.height - 45 + 1, 'pill').setRotation(320).setInteractive();
             pill.on('pointerdown', function() {
-                  console.log('Giving meds...');
+                  if (self.krepaStats.health < 100) {
+                        self.krepaStats.health += HEALTH_VALUE;
+                        if (self.krepaStats.health > 100) {
+                              self.krepaStats.health = 100;
+                        }
+
+                        self.txtHealthValue.setColor('rgb(50, 250, 50)');
+                        self.time.delayedCall(500, () => {
+                              self.txtHealthValue.setColor('rgb(250, 250, 250)');
+                        });
+
+                        self.sndRefreshed.play();
+                  }
             });
             pill.on('pointerover', function() { pill.setScale(1.1); });
             pill.on('pointerout', function() { pill.setScale(1.0); });
