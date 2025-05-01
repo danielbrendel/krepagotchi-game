@@ -1,6 +1,7 @@
 const MAX_WALKING_SPEED = 50;
 const FOOD_ADD_COUNT = 10;
 const HUNGER_VALUE = 5;
+const AFFECTION_VALUE = 4;
 
 class KrepagotchiGame extends Phaser.Scene {
       preload()
@@ -30,6 +31,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.spritesheet('explosion', 'game/assets/sprites/explosion.png', { frameWidth: 256, frameHeight: 256 });
             this.load.spritesheet('poop', 'game/assets/sprites/poop.png', { frameWidth: 16, frameHeight: 16 });
             this.load.spritesheet('poopsplash', 'game/assets/sprites/poop-splash.png', { frameWidth: 16, frameHeight: 16 });
+            this.load.spritesheet('particle', 'game/assets/sprites/particle.png', { frameWidth: 32, frameHeight: 32 });
 
             this.load.audio('theme', 'game/assets/sounds/theme.wav');
             this.load.audio('step', 'game/assets/sounds/step.wav');
@@ -40,6 +42,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.audio('explosion', 'game/assets/sounds/explosion.wav');
             this.load.audio('poopsplash', 'game/assets/sounds/poop-splash.wav');
             this.load.audio('hurt', 'game/assets/sounds/hurt.wav');
+            this.load.audio('meow', 'game/assets/sounds/meow.wav');
             
             this.cursors = this.input.keyboard.createCursorKeys();
       }
@@ -232,6 +235,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.sndExplosion = this.sound.add('explosion');
             this.sndPoopSplash = this.sound.add('poopsplash');
             this.sndHurt = this.sound.add('hurt');
+            this.sndMeow = this.sound.add('meow');
 
             this.loadHelp();
             this.loadStats();
@@ -317,7 +321,37 @@ class KrepagotchiGame extends Phaser.Scene {
 
             const hand = this.add.image(iMenuStartX + 64 * 1, gameconfig.scale.height - 45 + 1, 'hand').setInteractive();
             hand.on('pointerdown', function() {
-                  console.log('Petting...');
+                  if (self.krepaStats.affection < 100) {
+                        self.krepaStats.affection += AFFECTION_VALUE;
+                        if (self.krepaStats.affection > 100) {
+                              self.krepaStats.affection = 100;
+                        }
+
+                        let emitter = self.add.particles(self.krepa.x, self.krepa.y - 30, 'particle', {
+                              speed: 100,
+                              lifespan: 3000,
+                              frequency: 100,
+                              quantity: 1,
+                              gravityY: 200
+                        });
+
+                        let interval = setInterval(function() {
+                              emitter.x = self.krepa.x;
+                              emitter.y = self.krepa.y - 30;
+                        }, 10);
+
+                        self.time.addEvent({
+                              delay: 1000,
+                              loop: false,
+                              callback: function() {
+                                    clearInterval(interval);
+                                    emitter.destroy();
+                              },
+                              callbackScope: self
+                        });
+
+                        self.sndMeow.play();
+                  }
             });
             hand.on('pointerover', function() { hand.setScale(1.1); });
             hand.on('pointerout', function() { hand.setScale(1.0); });
