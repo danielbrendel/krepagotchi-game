@@ -9,6 +9,11 @@ class MyGame extends Phaser.Scene {
             this.load.image('hand', 'game/assets/sprites/hand.png');
             this.load.image('brush', 'game/assets/sprites/brush.png');
             this.load.image('pill', 'game/assets/sprites/pill.png');
+            this.load.image('affection', 'game/assets/sprites/affection.png');
+            this.load.image('food', 'game/assets/sprites/food.png');
+            this.load.image('health', 'game/assets/sprites/health.png');
+            this.load.image('btn_circle', 'game/assets/sprites/btn_circle.png');
+            this.load.image('sym_help', 'game/assets/sprites/sym_help.png');
             this.load.spritesheet('krepa', 'game/assets/sprites/krepa.png', { frameWidth: 1024, frameHeight: 1536 });
             this.load.spritesheet('krepa_foot_left', 'game/assets/sprites/krepa_foot_left.png', { frameWidth: 334, frameHeight: 400 });
             this.load.spritesheet('krepa_foot_right', 'game/assets/sprites/krepa_foot_right.png', { frameWidth: 334, frameHeight: 400 });
@@ -36,22 +41,25 @@ class MyGame extends Phaser.Scene {
             this.add.image(300, 400, 'plant3');
             this.add.image(50, 270, 'plant4');
 
-            this.loadMenu();
-
-            this.fence_v_left = this.add.tileSprite(0, 0, 14, gameconfig.scale.height - 90, 'fence_v').setOrigin(0, 0);
-            this.fence_v_right = this.add.tileSprite(gameconfig.scale.width - 14, 0, 14, gameconfig.scale.height - 90, 'fence_v').setOrigin(0, 0);
-            this.fence_h_top = this.add.tileSprite(0, 0, gameconfig.scale.width, 30, 'fence_h').setOrigin(0, 0);
-            this.fence_h_bottom = this.add.tileSprite(0, gameconfig.scale.height - 111, gameconfig.scale.width, 30, 'fence_h').setOrigin(0, 0);
+            this.fence_v_left = this.add.tileSprite(0, 50, 14, gameconfig.scale.height - 140, 'fence_v').setOrigin(0, 0);
+            this.fence_v_right = this.add.tileSprite(gameconfig.scale.width - 14, 50, 14, gameconfig.scale.height - 140, 'fence_v').setOrigin(0, 0);
+            this.fence_h_top = this.add.tileSprite(0, 50, gameconfig.scale.width, 30, 'fence_h').setOrigin(0, 0);
+            this.fence_h_bottom = this.add.tileSprite(0, gameconfig.scale.height - 120, gameconfig.scale.width, 30, 'fence_h').setOrigin(0, 0);
 
             this.krepa_body = this.add.sprite(0, 0, 'krepa');
             this.krepa_foot_left = this.add.sprite(-190, this.krepa_body.height - 990, 'krepa_foot_left');
             this.krepa_foot_right = this.add.sprite(190, this.krepa_body.height - 990, 'krepa_foot_right');
 
-            this.krepa = this.add.container(Phaser.Math.Between(50, 300), Phaser.Math.Between(50, 450), [this.krepa_body, this.krepa_foot_left, this.krepa_foot_right]);
+            this.krepa = this.add.container(Phaser.Math.Between(30, 320), Phaser.Math.Between(200, 450), [this.krepa_body, this.krepa_foot_left, this.krepa_foot_right]);
             this.krepa.setScale(0.05);
             this.physics.world.enable(this.krepa);
             this.krepa.body.setCollideWorldBounds(true);
             this.krepa.body.setOffset(-640, -590);
+
+            const fenceColliderTop = this.physics.add.staticImage(0, 65, null).setSize(gameconfig.scale.width * 2, 32).setVisible(false);
+            this.physics.add.collider(this.krepa, fenceColliderTop);
+            const fenceColliderBottom = this.physics.add.staticImage(0, gameconfig.scale.height - 105, null).setSize(gameconfig.scale.width * 2, 32).setVisible(false);
+            this.physics.add.collider(this.krepa, fenceColliderBottom);
 
             this.txtKrepaName = this.add.text(0, 0, this.krepaName, {
                   fontSize: '12px',
@@ -61,6 +69,12 @@ class MyGame extends Phaser.Scene {
 
             this.krepaSpeed = 0;
             this.krepaRotation = 10.0;
+
+            this.krepaStats = {
+                  full: 100,
+                  health: 100,
+                  affection: 100
+            };
 
             this.krepaTweenFootLeft = this.tweens.add({
                   targets: this.krepa_foot_left,
@@ -99,11 +113,59 @@ class MyGame extends Phaser.Scene {
                   },
                   callbackScope: self
             });
+
+            this.loadHelp();
+            this.loadStats();
+            this.loadMenu();
       }
 
       update()
       {
             this.moveKrepa();
+            this.updateStats();
+      }
+
+      loadHelp()
+      {
+            const infoText = this.add.text(0, 0, gameconfig.about.name + " v" + gameconfig.about.version + "\nBy " + gameconfig.about.author + "\n\n" + gameconfig.about.contact + "\n\n" + gameconfig.about.description + "\n\n" + gameconfig.about.info, {
+                  fontSize: '20px',
+                  color: 'rgb(250, 250, 25)',
+                  fontFamily: 'Pixel, monospace',
+                  backgroundColor: 'rgb(50, 50, 50)',
+                  padding: { x: 10, y: 5 }
+            });
+            infoText.setInteractive();
+            infoText.on('pointerdown', function() {
+                  infoText.setVisible(false);
+            });
+            infoText.setPosition(gameconfig.scale.width / 2 - infoText.width / 2, gameconfig.scale.height / 2 - infoText.height / 2);
+            infoText.setVisible(false);
+
+            this.add.image(gameconfig.scale.width - 25, 25, 'btn_circle').setScale(0.8);
+
+            const helpAction = this.add.image(gameconfig.scale.width - 25, 25, 'sym_help').setScale(0.8).setInteractive();
+            helpAction.on('pointerdown', function() {
+                  if (infoText.visible) {
+                        infoText.setVisible(false);
+                  } else {
+                        infoText.setVisible(true);
+                  }
+                  
+            });
+            helpAction.on('pointerover', function() { helpAction.setScale(1.01); });
+            helpAction.on('pointerout', function() { helpAction.setScale(0.8); });
+      }
+
+      loadStats()
+      {
+            this.add.image(20, 25, 'affection').setScale(0.8);
+            this.txtAffectionValue = this.add.text(40, 17, this.krepaStats.affection);
+
+            this.add.image(100, 25, 'food');
+            this.txtFoodValue = this.add.text(120, 17, this.krepaStats.full);
+
+            this.add.image(180, 25, 'health');
+            this.txtHealthValue = this.add.text(200, 17, this.krepaStats.health);
       }
 
       loadMenu()
@@ -112,31 +174,31 @@ class MyGame extends Phaser.Scene {
 
             let iMenuStartX = 83;
             for (let i = 0; i < 4; i++) {
-                  this.add.image(iMenuStartX + i * 64, gameconfig.scale.height - 40, 'slot').setScale(0.5);
+                  this.add.image(iMenuStartX + i * 64, gameconfig.scale.height - 45, 'slot').setScale(0.5);
             }
 
-            const food = this.add.image(iMenuStartX, gameconfig.scale.height - 40 + 1, 'tnt').setScale(0.05).setInteractive();
+            const food = this.add.image(iMenuStartX, gameconfig.scale.height - 45 + 1, 'tnt').setScale(0.05).setInteractive();
             food.on('pointerdown', function() {
                   console.log('Feeding...');
             });
             food.on('pointerover', function() { food.setScale(0.055); });
             food.on('pointerout', function() { food.setScale(0.05); });
 
-            const hand = this.add.image(iMenuStartX + 64 * 1, gameconfig.scale.height - 40 + 1, 'hand').setInteractive();
+            const hand = this.add.image(iMenuStartX + 64 * 1, gameconfig.scale.height - 45 + 1, 'hand').setInteractive();
             hand.on('pointerdown', function() {
                   console.log('Petting...');
             });
             hand.on('pointerover', function() { hand.setScale(1.1); });
             hand.on('pointerout', function() { hand.setScale(1.0); });
 
-            const brush = this.add.image(iMenuStartX + 64 * 2, gameconfig.scale.height - 40 + 1, 'brush').setInteractive();
+            const brush = this.add.image(iMenuStartX + 64 * 2, gameconfig.scale.height - 45 + 1, 'brush').setInteractive();
             brush.on('pointerdown', function() {
                   console.log('Cleaning...');
             });
             brush.on('pointerover', function() { brush.setScale(1.1); });
             brush.on('pointerout', function() { brush.setScale(1.0); });
             
-            const pill = this.add.image(iMenuStartX + 64 * 3, gameconfig.scale.height - 40 + 1, 'pill').setRotation(320).setInteractive();
+            const pill = this.add.image(iMenuStartX + 64 * 3, gameconfig.scale.height - 45 + 1, 'pill').setRotation(320).setInteractive();
             pill.on('pointerdown', function() {
                   console.log('Giving meds...');
             });
@@ -176,6 +238,13 @@ class MyGame extends Phaser.Scene {
             this.txtKrepaName.setPosition(this.krepa.body.x + this.krepa.body.width / 2 - this.txtKrepaName.width / 2, this.krepa.body.y - 25);
       }
 
+      updateStats()
+      {
+            this.txtAffectionValue.text = this.krepaStats.affection;
+            this.txtFoodValue.text = this.krepaStats.full;
+            this.txtHealthValue.text = this.krepaStats.health;
+      }
+
       getConfigValue(item, defval = null)
       {
             let result = localStorage.getItem(item);
@@ -194,19 +263,27 @@ class MyGame extends Phaser.Scene {
 }
 
 const gameconfig = {
-       type: Phaser.AUTO,
-       scene: MyGame,
-       physics: {
-          default: 'arcade',
-          arcade: {
-                gravity: { y: 0 },
-                debug: true
-           }
-       },
-        scale: {
-           mode: Phaser.Scale.FIT,
-           autoCenter: Phaser.Scale.CENTER_BOTH,
-           width: 360,
-           height: 640
-     }
+      type: Phaser.AUTO,
+      scene: MyGame,
+      physics: {
+            default: 'arcade',
+            arcade: {
+                  gravity: { y: 0 },
+                  debug: true
+            }
+      },
+      scale: {
+            mode: Phaser.Scale.FIT,
+            autoCenter: Phaser.Scale.CENTER_BOTH,
+            width: 360,
+            height: 640
+      },
+      about: {
+            name: 'Krepagotchi',
+            version: '1.0',
+            author: 'Daniel Brendel',
+            contact: '',
+            description: 'Keep your Krepa as a pet',
+            info: ''
+      }
 };
