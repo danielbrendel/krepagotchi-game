@@ -1,0 +1,24 @@
+{
+    "name": "Krepagotchi",
+    "version": "1.0.0",
+    "description": "Keep your Creeper as a pet",
+    "author": "Daniel Brendel",
+    "main": "src/main.js",
+    "build": {
+        "appId": "com.danielbrendel.krepagotchi",
+        "productName": "Krepagotchi",
+        "icon": "game/logo"
+    },
+    "scripts": {
+        "start": "electron .",
+        "build-windows": "electron-builder --win=portable --x64",
+        "build-linux": "electron-builder --linux AppImage --arm64 --config.linux.category=Game",
+        "build-macos": "electron-builder --mac"
+    },
+    "devDependencies": {
+        "electron": "^35.0.0",
+        "electron-builder": "^24.6.3"
+    },
+    "dependencies": {
+    }
+}

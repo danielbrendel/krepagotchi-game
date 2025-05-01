@@ -3,5 +3,6 @@
 /node_modules
 /.idea
 /app/migrations/migrations.list
+/public/builds
 .env
 .phpunit.result.cache

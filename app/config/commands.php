@@ -14,5 +14,6 @@
 */
 
 return [
-    array('test:cmd', 'Add your description here', 'TestCommand'),
+    array('game:debug', 'Make a shippable debug build', 'CmdGameBuildDebug'),
+    array('game:release', 'Make a shippable release build', 'CmdGameBuildRelease'),
 ];

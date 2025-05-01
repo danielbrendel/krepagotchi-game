@@ -5,3 +5,80 @@ html, body {
     overflow-y: hidden;
     background-color: rgb(0, 0, 0);
 }
+
+.prompt-overlay {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    background-color: rgba(0, 0, 0, 0.95);
+}
+
+.prompt-content {
+    position: absolute;
+    z-index: 3;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    @media screen and (max-width: 450px) {
+        top: 50%;
+        left: unset;
+        transform: translate(-0%, -50%);
+    }
+    font-family: "Jersey 10", sans-serif;
+    font-size: 2.0em;
+    background-color: rgb(50, 50, 50);
+    border-radius: 5px;
+}
+
+.prompt-title {
+    margin-bottom: 10px;
+    background-color: rgb(100, 100, 100);
+    color: rgb(200, 200, 200);
+    padding: 20px;
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+}
+
+.prompt-input {
+    margin-bottom: 10px;
+    padding: 20px;
+}
+
+.prompt-input input {
+    width: 93%;
+    padding-top: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 10px;
+    color: rgb(200, 200, 200);
+    background-color: rgb(50, 50, 50);
+    border: 1px solid rgb(150, 150, 150);
+    border-radius: 15px;
+}
+
+.prompt-input input:hover, .prompt-input input:focus-visible {
+    border: 1px solid rgb(150, 150, 150);
+}
+
+.prompt-action {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-left: 20px;
+    padding-bottom: 10px;
+    font-size: 0.8em;
+}
+
+.prompt-action a {
+    color: rgb(50, 175, 225);
+    text-decoration: none;
+}
+
+.prompt-action a:hover {
+    color: rgb(50, 175, 225);
+    text-decoration: underline;
+}
+
+.is-hidden {
+    display: none;
+}

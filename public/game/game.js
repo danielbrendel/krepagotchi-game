@@ -24,11 +24,7 @@ class MyGame extends Phaser.Scene {
       {
             let self = this;
 
-            this.creeperName = this.getConfigValue('creeper_name');
-            if ((typeof this.creeperName !== 'string') || (!(this.creeperName.length > 0))) {
-                  this.creeperName = prompt('What should your Creeper be called?', 'Creeper');
-                  this.setConfigValue('creeper_name', this.creeperName);
-            }
+            this.creeperName = this.getConfigValue('creeper_name', 'Creeper');
 
             this.add.image(0, 0, 'background').setOrigin(0, 0);
 
@@ -51,7 +47,7 @@ class MyGame extends Phaser.Scene {
             this.creeper_foot_left = this.add.sprite(-190, this.creeper_body.height - 990, 'creeper_foot_left');
             this.creeper_foot_right = this.add.sprite(190, this.creeper_body.height - 990, 'creeper_foot_right');
 
-            this.creeper = this.add.container(100, 200, [this.creeper_body, this.creeper_foot_left, this.creeper_foot_right]);
+            this.creeper = this.add.container(Phaser.Math.Between(50, 300), Phaser.Math.Between(50, 450), [this.creeper_body, this.creeper_foot_left, this.creeper_foot_right]);
             this.creeper.setScale(0.05);
             this.physics.world.enable(this.creeper);
             this.creeper.body.setCollideWorldBounds(true);
@@ -177,17 +173,23 @@ class MyGame extends Phaser.Scene {
                   }
             }
 
-            this.txtCreeperName.setPosition(this.creeper.body.x - this.creeperName.length / 2, this.creeper.body.y - 25);
+            this.txtCreeperName.setPosition(this.creeper.body.x + this.creeper.body.width / 2 - this.txtCreeperName.width / 2, this.creeper.body.y - 25);
       }
 
-      getConfigValue(item)
+      getConfigValue(item, defval = null)
       {
-            return localStorage.getItem(item)
+            let result = localStorage.getItem(item);
+
+            if (result === null) {
+                  result = defval;
+            }
+
+            return result;
       }
 
       setConfigValue(item, value)
       {
-            localStorage.setItem(item, value)
+            localStorage.setItem(item, value);
       }
 }
 
