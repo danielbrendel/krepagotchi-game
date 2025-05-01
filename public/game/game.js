@@ -1,4 +1,7 @@
-class MyGame extends Phaser.Scene {
+const MAX_WALKING_SPEED = 50;
+const FOOD_ADD_COUNT = 10;
+
+class KrepagotchiGame extends Phaser.Scene {
       preload()
       {
             this.load.image('background', 'game/assets/sprites/background.png');
@@ -14,6 +17,7 @@ class MyGame extends Phaser.Scene {
             this.load.image('health', 'game/assets/sprites/health.png');
             this.load.image('btn_circle', 'game/assets/sprites/btn_circle.png');
             this.load.image('sym_help', 'game/assets/sprites/sym_help.png');
+            
             this.load.spritesheet('krepa', 'game/assets/sprites/krepa.png', { frameWidth: 1024, frameHeight: 1536 });
             this.load.spritesheet('krepa_foot_left', 'game/assets/sprites/krepa_foot_left.png', { frameWidth: 334, frameHeight: 400 });
             this.load.spritesheet('krepa_foot_right', 'game/assets/sprites/krepa_foot_right.png', { frameWidth: 334, frameHeight: 400 });
@@ -21,6 +25,14 @@ class MyGame extends Phaser.Scene {
             this.load.spritesheet('plant2', 'game/assets/sprites/plant2.png', { frameWidth: 47, frameHeight: 30 });
             this.load.spritesheet('plant3', 'game/assets/sprites/plant3.png', { frameWidth: 39, frameHeight: 35 });
             this.load.spritesheet('plant4', 'game/assets/sprites/plant4.png', { frameWidth: 41, frameHeight: 35 });
+            this.load.spritesheet('tntfood', 'game/assets/sprites/tntfood.png', { frameWidth: 32, frameHeight: 32 });
+            this.load.spritesheet('explosion', 'game/assets/sprites/explosion.png', { frameWidth: 256, frameHeight: 256 });
+
+            this.load.audio('theme', 'game/assets/sounds/theme.wav');
+            this.load.audio('eating', 'game/assets/sounds/eating.wav');
+            this.load.audio('afraid', 'game/assets/sounds/afraid.wav');
+            this.load.audio('fuse', 'game/assets/sounds/fuse.wav');
+            this.load.audio('explosion', 'game/assets/sounds/explosion.wav');
             
             this.cursors = this.input.keyboard.createCursorKeys();
       }
@@ -54,12 +66,14 @@ class MyGame extends Phaser.Scene {
             this.krepa.setScale(0.05);
             this.physics.world.enable(this.krepa);
             this.krepa.body.setCollideWorldBounds(true);
-            this.krepa.body.setOffset(-640, -590);
+            this.krepa.body.setOffset(-150, 50);
+            this.krepa.setSize(this.krepa_body.width, this.krepa_body.height);
+            this.krepa.setInteractive();
 
-            const fenceColliderTop = this.physics.add.staticImage(0, 65, null).setSize(gameconfig.scale.width * 2, 32).setVisible(false);
-            this.physics.add.collider(this.krepa, fenceColliderTop);
-            const fenceColliderBottom = this.physics.add.staticImage(0, gameconfig.scale.height - 105, null).setSize(gameconfig.scale.width * 2, 32).setVisible(false);
-            this.physics.add.collider(this.krepa, fenceColliderBottom);
+            this.fenceColliderTop = this.physics.add.staticImage(0, 65, null).setSize(gameconfig.scale.width * 2, 32).setVisible(false);
+            this.physics.add.collider(this.krepa, this.fenceColliderTop);
+            this.fenceColliderBottom = this.physics.add.staticImage(0, gameconfig.scale.height - 105, null).setSize(gameconfig.scale.width * 2, 32).setVisible(false);
+            this.physics.add.collider(this.krepa, this.fenceColliderBottom);
 
             this.txtKrepaName = this.add.text(0, 0, this.krepaName, {
                   fontSize: '12px',
@@ -68,12 +82,14 @@ class MyGame extends Phaser.Scene {
             });
 
             this.krepaSpeed = 0;
+            this.krepaSpeedBeforeDrag = 0;
             this.krepaRotation = 10.0;
+            this.krepaBlink = 0;
 
             this.krepaStats = {
-                  full: 100,
-                  health: 100,
-                  affection: 100
+                  full: self.getConfigValue('krepa_stats_full'),
+                  health: self.getConfigValue('krepa_stats_health'),
+                  affection: self.getConfigValue('krepa_stats_affection')
             };
 
             this.krepaTweenFootLeft = this.tweens.add({
@@ -109,18 +125,79 @@ class MyGame extends Phaser.Scene {
                   delay: Phaser.Math.Between(2000, 4500),
                   loop: true,
                   callback: function() {
-                        self.krepaSpeed = Phaser.Math.Between(0, 50);
+                        self.krepaSpeed = Phaser.Math.Between(0, MAX_WALKING_SPEED);
                   },
                   callbackScope: self
             });
 
+            this.tmrKrepaHealthCheck = this.time.addEvent({
+                  delay: 100,
+                  loop: true,
+                  callback: function() {
+                        if ((self.krepaStats.full <= 0) || (self.krepaStats.affection <= 0)) {
+                              self.krepaStats.health--;
+                        }
+
+                        if (self.krepaStats.health <= 0) {
+                              self.explodeKrepa();
+                              self.tmrKrepaHealthCheck.paused = true;
+                        }
+                  },
+                  callbackScope: self
+            });
+
+            this.anims.create({
+                  key: 'explosion',
+                  frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 63 }),
+                  frameRate: 25,
+                  repeat: 0
+            });
+
+            this.input.setDraggable(this.krepa);
+            this.input.on('drag', function(pointer, gameObject, dragX, dragY) {
+                  if (gameObject === self.krepa) {
+                        gameObject.x = dragX;
+                        gameObject.y = dragY;
+                  }
+            });
+            this.input.on('dragstart', function(pointer, gameObject) {
+                  self.krepaSpeedBeforeDrag = self.krepaSpeed;
+                  self.krepaSpeed = MAX_WALKING_SPEED;
+
+                  self.krepaTweenFootLeft.timeScale = 4;
+                  self.krepaTweenFootRight.timeScale = 4;
+                  
+                  self.sndAfraid.play();
+            });
+            this.input.on('dragend', function(pointer, gameObject) {
+                  self.krepaTweenFootLeft.timeScale = 1;
+                  self.krepaTweenFootRight.timeScale = 1;
+
+                  self.krepaSpeed = self.krepaSpeedBeforeDrag;
+            });
+
+            this.sndTheme = this.sound.add('theme');
+            this.sndEating = this.sound.add('eating');
+            this.sndAfraid = this.sound.add('afraid');
+            this.sndFuse = this.sound.add('fuse');
+            this.sndExplosion = this.sound.add('explosion');
+
             this.loadHelp();
             this.loadStats();
             this.loadMenu();
+
+            this.inDetonation = false;
+
+            this.sndTheme.loop = true;
+            //this.sndTheme.play();
       }
 
       update()
       {
+            if (this.inDetonation) {
+                  return;
+            }
+
             this.moveKrepa();
             this.updateStats();
       }
@@ -179,7 +256,7 @@ class MyGame extends Phaser.Scene {
 
             const food = this.add.image(iMenuStartX, gameconfig.scale.height - 45 + 1, 'tnt').setScale(0.05).setInteractive();
             food.on('pointerdown', function() {
-                  console.log('Feeding...');
+                  self.spawnFood();
             });
             food.on('pointerover', function() { food.setScale(0.055); });
             food.on('pointerout', function() { food.setScale(0.05); });
@@ -245,6 +322,107 @@ class MyGame extends Phaser.Scene {
             this.txtHealthValue.text = this.krepaStats.health;
       }
 
+      spawnFood()
+      {
+            let self = this;
+
+            let posx = this.krepa.body.x + Phaser.Math.Between(0, 200) - 50;
+            let posy = this.krepa.body.y + Phaser.Math.Between(0, 200) - 50;
+
+            let food = this.physics.add.sprite(posx, posy, 'tntfood').refreshBody();
+            food.setCollideWorldBounds(true);
+
+            food.setInteractive();
+            food.on('pointerdown', function() {
+                  food.destroy();
+            });
+
+            this.physics.add.collider(this.krepa, food, function() {
+                  if (self.krepaStats.full < 100) {
+                        self.krepaStats.full += FOOD_ADD_COUNT;
+
+                        if (self.krepaStats.full > 100) {
+                              self.krepaStats.full = 100;
+                        }
+
+                        self.sndEating.play();
+
+                        food.destroy();
+                  }
+            });
+
+            this.physics.add.collider(food, this.fenceColliderTop);
+            this.physics.add.collider(food, this.fenceColliderBottom);
+      }
+
+      explodeKrepa()
+      {
+            let self = this;
+
+            if (this.inDetonation) {
+                  return;
+            }
+
+            this.krepaBlink = 3 + 1;
+
+            this.time.addEvent({
+                  delay: 200,
+                  repeat: self.krepaBlink * 2,
+                  callback: function() {
+                        if (self.krepaBlink % 2 == 0) {
+                              self.krepa.iterate(child => { child.setTintFill(0xffffff); });
+                        } else {
+                              self.krepa.iterate(child => { child.clearTint(); });
+                        }
+
+                        self.krepaBlink--;
+                  },
+                  callbackScope: self
+            });
+
+            this.sndFuse.once('complete', function() {
+                  self.krepa.setVisible(false);
+                  self.txtKrepaName.setVisible(false);
+
+                  self.sndExplosion.play();
+                  
+                  let explosion = self.physics.add.sprite(self.krepa.x, self.krepa.y, 'explosion').setScale(1.5);
+                  explosion.anims.play('explosion', true);
+                  explosion.on('animationcomplete', function() {
+                        explosion.destroy();
+
+                        const restartAction = self.add.text(0, 0, self.krepaName + ' is now at a better place.\n\nBorn: ' + self.getReadableDate(Number(self.getConfigValue('krepa_birthdate'))) + '\nDetonated: ' + self.getReadableDate(Date.now()) + '\n\nClick or tap to restart', {
+                              fontSize: '20px',
+                              color: 'rgb(250, 50, 0)',
+                              fontFamily: 'Pixel, monospace',
+                              backgroundColor: 'rgb(50, 50, 50)',
+                              padding: { x: 10, y: 5 }
+                        });
+                        restartAction.setInteractive();
+                        restartAction.on('pointerdown', function() {
+                              self.restartGame();
+                        });
+                        restartAction.setPosition(gameconfig.scale.width / 2 - restartAction.width / 2, gameconfig.scale.height / 2 - restartAction.height / 2);
+                        restartAction.setVisible(true);
+                  });
+            });
+            this.sndFuse.play();
+      }
+
+      restartGame()
+      {
+            this.krepaStats.affection = 100;
+            this.krepaStats.full = 100;
+            this.krepaStats.health = 100;
+
+            this.setConfigValue('krepa_stats_affection', this.krepaStats.affection);
+            this.setConfigValue('krepa_stats_full', this.krepaStats.full);
+            this.setConfigValue('krepa_stats_health', this.krepaStats.health);
+            this.setConfigValue('krepa_birthdate', Date.now());
+
+            location.reload();
+      }
+
       getConfigValue(item, defval = null)
       {
             let result = localStorage.getItem(item);
@@ -260,11 +438,22 @@ class MyGame extends Phaser.Scene {
       {
             localStorage.setItem(item, value);
       }
+
+      getReadableDate(timestamp)
+      {
+            const date = new Date(timestamp);
+
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+
+            return `${year}-${month}-${day}`;
+      }
 }
 
 const gameconfig = {
       type: Phaser.AUTO,
-      scene: MyGame,
+      scene: KrepagotchiGame,
       physics: {
             default: 'arcade',
             arcade: {

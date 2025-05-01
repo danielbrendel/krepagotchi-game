@@ -57,6 +57,10 @@
                 if ((!krepaName) || (!(krepaName.length > 0))) {
                     window.showPrompt('What should your Krepa be called?', function(text) {
                         localStorage.setItem('krepa_name', text);
+                        localStorage.setItem('krepa_stats_affection', 100);
+                        localStorage.setItem('krepa_stats_full', 100);
+                        localStorage.setItem('krepa_stats_health', 100);
+                        localStorage.setItem('krepa_birthdate', Date.now());
                         window.playSound('{{ asset('game/assets/sounds/nameselect.wav') }}');
                         setTimeout(function() {
                             location.reload();
