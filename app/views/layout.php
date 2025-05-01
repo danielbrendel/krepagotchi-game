@@ -53,15 +53,15 @@
             };
 
             document.addEventListener('DOMContentLoaded', function() {
-                let creeperName = localStorage.getItem('creeper_name');
-                if ((!creeperName) || (!(creeperName.length > 0))) {
-                    window.showPrompt('What should your Creeper be called?', function(text) {
-                        localStorage.setItem('creeper_name', text);
+                let krepaName = localStorage.getItem('krepa_name');
+                if ((!krepaName) || (!(krepaName.length > 0))) {
+                    window.showPrompt('What should your Krepa be called?', function(text) {
+                        localStorage.setItem('krepa_name', text);
                         window.playSound('{{ asset('game/assets/sounds/nameselect.wav') }}');
                         setTimeout(function() {
                             location.reload();
                         }, 1000);
-                    }, 'Creeper');
+                    }, 'Krepa');
                 } else {
                     window.startGame();
                 }

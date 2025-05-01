@@ -1,7 +1,7 @@
 {
     "name": "Krepagotchi",
     "version": "1.0.0",
-    "description": "Keep your Creeper as a pet",
+    "description": "Keep your Krepa as a pet",
     "author": "Daniel Brendel",
     "main": "src/main.js",
     "build": {

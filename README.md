@@ -1,61 +1,78 @@
-# Asatru PHP
+<h1 align="center">
+    <img src="public/img/logo.png" width="256"/><br/>
+    Krepagotchi
+</h1>
 
-(C) 2019 - 2025 by Daniel Brendel
+<p align="center">
+    Keep your Krepa as a pet<br/>
+    (C) 2025 by Daniel Brendel
+</p>
 
-**Codename**: dnyAsatruPHP\
-**Contact**: dbrendel1988 at gmail dot com\
-**GitHub**: https://github.com/danielbrendel
+<p align="center">
+    <img src="https://img.shields.io/badge/web-php-green" alt="web-php"/>
+    <img src="https://img.shields.io/badge/engine-phaser-orange" alt="engine-phaser"/>
+    <img src="https://img.shields.io/badge/license-MIT-blue" alt="license-mit"/>
+    <img src="https://img.shields.io/badge/maintained-yes-violet" alt="maintained-yes"/>
+</p>
 
-Released under the MIT license
+<p align="center">
+    <img src="public/img/screenshot-game.png" />
+</p>
 
-## Description:
-This product is a lightweight PHP framework which can be used to create your own PHP apps using MVC design pattern.
+## Author
 
-## Feature overview:
-+ Controllers
-+ Views
-+ Models
-+ Modules
-+ Migrations
-+ Templating
-+ Logging
-+ .env parser
-+ Localization
-+ Exception handling
-+ Events
-+ Commands
-+ Validators
-+ Helpers
-+ Autoloading
-+ Config management
-+ Security
-+ Flash messages
-+ Authentication
-+ Caching
-+ Testing
-+ CLI interface
-+ mail() wrapper
-+ SMTP mailing
-+ Html helper
-+ Form helper
-+ Carbon support
-+ npm/webpack support
+__Author__: Daniel Brendel\
+__Contact__: dbrendel1988(at)gmail(dot)com\
+__GitHub__: https://github.com/danielbrendel
 
-## Installation
-The installation of this framework is just one composer command away:
+## Description
+
+Krepagotchi is a virtual pet game where you need to take care of your own little Krepa. You need to feed it, clean its home, and give medicine if it is sick.
+You can also pet it, which is a lovely way to show affection.
+
+## Disclaimer
+
+This project is a fan-made game and is not affiliated with Mojang, Microsoft, Bandai, or any of their properties.
+
+## Features
+- Krepa pet
+- Feeding
+- Petting
+- Cleaning
+- Treatment
+- Cute pixel art
+- PWA support
+
+## Run locally
+
+In order to run the game locally during development process, issue one of the following commands.
+
+Use Asatru CLI to run development server
+```sh
+php asatru serve
 ```
-composer require danielbrendel/asatru-php-framework
+
+Use AquaShell to run development server
+```sh
+aquashell launch.dnys
 ```
 
-To create a new project run the command:
-```
-composer create-project danielbrendel/asatru-php
+## Make a shippable game build
+
+Make a release build
+```sh
+php asatru game:release [platform]
 ```
 
-## Documentation
-The documentation is available in the /public/doc directory.
+Make a debug build
+```sh
+php asatru game:debug [platform]
+```
 
-## Requirements
-+ PHP ^8.3
-+ MariaDB ^10.4
-+ Composer ^2.2
+`platform` can be one of the following:
+- windows
+- linux
+- macos
+- html5 (default)
+
+The ready-packaged game builds are stored in the `/public/builds` directory

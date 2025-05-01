@@ -9,9 +9,9 @@ class MyGame extends Phaser.Scene {
             this.load.image('hand', 'game/assets/sprites/hand.png');
             this.load.image('brush', 'game/assets/sprites/brush.png');
             this.load.image('pill', 'game/assets/sprites/pill.png');
-            this.load.spritesheet('creeper', 'game/assets/sprites/creeper.png', { frameWidth: 1024, frameHeight: 1536 });
-            this.load.spritesheet('creeper_foot_left', 'game/assets/sprites/creeper_foot_left.png', { frameWidth: 334, frameHeight: 400 });
-            this.load.spritesheet('creeper_foot_right', 'game/assets/sprites/creeper_foot_right.png', { frameWidth: 334, frameHeight: 400 });
+            this.load.spritesheet('krepa', 'game/assets/sprites/krepa.png', { frameWidth: 1024, frameHeight: 1536 });
+            this.load.spritesheet('krepa_foot_left', 'game/assets/sprites/krepa_foot_left.png', { frameWidth: 334, frameHeight: 400 });
+            this.load.spritesheet('krepa_foot_right', 'game/assets/sprites/krepa_foot_right.png', { frameWidth: 334, frameHeight: 400 });
             this.load.spritesheet('plant1', 'game/assets/sprites/plant1.png', { frameWidth: 34, frameHeight: 32 });
             this.load.spritesheet('plant2', 'game/assets/sprites/plant2.png', { frameWidth: 47, frameHeight: 30 });
             this.load.spritesheet('plant3', 'game/assets/sprites/plant3.png', { frameWidth: 39, frameHeight: 35 });
@@ -24,7 +24,7 @@ class MyGame extends Phaser.Scene {
       {
             let self = this;
 
-            this.creeperName = this.getConfigValue('creeper_name', 'Creeper');
+            this.krepaName = this.getConfigValue('krepa_name', 'Krepa');
 
             this.add.image(0, 0, 'background').setOrigin(0, 0);
 
@@ -43,27 +43,27 @@ class MyGame extends Phaser.Scene {
             this.fence_h_top = this.add.tileSprite(0, 0, gameconfig.scale.width, 30, 'fence_h').setOrigin(0, 0);
             this.fence_h_bottom = this.add.tileSprite(0, gameconfig.scale.height - 111, gameconfig.scale.width, 30, 'fence_h').setOrigin(0, 0);
 
-            this.creeper_body = this.add.sprite(0, 0, 'creeper');
-            this.creeper_foot_left = this.add.sprite(-190, this.creeper_body.height - 990, 'creeper_foot_left');
-            this.creeper_foot_right = this.add.sprite(190, this.creeper_body.height - 990, 'creeper_foot_right');
+            this.krepa_body = this.add.sprite(0, 0, 'krepa');
+            this.krepa_foot_left = this.add.sprite(-190, this.krepa_body.height - 990, 'krepa_foot_left');
+            this.krepa_foot_right = this.add.sprite(190, this.krepa_body.height - 990, 'krepa_foot_right');
 
-            this.creeper = this.add.container(Phaser.Math.Between(50, 300), Phaser.Math.Between(50, 450), [this.creeper_body, this.creeper_foot_left, this.creeper_foot_right]);
-            this.creeper.setScale(0.05);
-            this.physics.world.enable(this.creeper);
-            this.creeper.body.setCollideWorldBounds(true);
-            this.creeper.body.setOffset(-640, -590);
+            this.krepa = this.add.container(Phaser.Math.Between(50, 300), Phaser.Math.Between(50, 450), [this.krepa_body, this.krepa_foot_left, this.krepa_foot_right]);
+            this.krepa.setScale(0.05);
+            this.physics.world.enable(this.krepa);
+            this.krepa.body.setCollideWorldBounds(true);
+            this.krepa.body.setOffset(-640, -590);
 
-            this.txtCreeperName = this.add.text(0, 0, this.creeperName, {
+            this.txtKrepaName = this.add.text(0, 0, this.krepaName, {
                   fontSize: '12px',
                   color: 'rgb(250, 250, 250)',
                   fontFamily: 'Pixel, monospace'
             });
 
-            this.creeperSpeed = 0;
-            this.creeperRotation = 10.0;
+            this.krepaSpeed = 0;
+            this.krepaRotation = 10.0;
 
-            this.creeperTweenFootLeft = this.tweens.add({
-                  targets: this.creeper_foot_left,
+            this.krepaTweenFootLeft = this.tweens.add({
+                  targets: this.krepa_foot_left,
                   rotation: Phaser.Math.DegToRad(25),
                   yoyo: true,
                   repeat: -1,
@@ -72,8 +72,8 @@ class MyGame extends Phaser.Scene {
                   paused: true
             });
 
-            this.creeperTweenFootRight = this.tweens.add({
-                  targets: this.creeper_foot_right,
+            this.krepaTweenFootRight = this.tweens.add({
+                  targets: this.krepa_foot_right,
                   rotation: Phaser.Math.DegToRad(-25),
                   yoyo: true,
                   repeat: -1,
@@ -82,20 +82,20 @@ class MyGame extends Phaser.Scene {
                   paused: true
             });
 
-            this.tmrCreeperRotationChange = this.time.addEvent({
+            this.tmrKrepaRotationChange = this.time.addEvent({
                   delay: Phaser.Math.Between(2000, 4500),
                   loop: true,
                   callback: function() {
-                        self.creeperRotation = Phaser.Math.Between(0, 360);
+                        self.krepaRotation = Phaser.Math.Between(0, 360);
                   },
                   callbackScope: self
             });
 
-            this.tmrCreeperSpeedChange = this.time.addEvent({
+            this.tmrKrepaSpeedChange = this.time.addEvent({
                   delay: Phaser.Math.Between(2000, 4500),
                   loop: true,
                   callback: function() {
-                        self.creeperSpeed = Phaser.Math.Between(0, 50);
+                        self.krepaSpeed = Phaser.Math.Between(0, 50);
                   },
                   callbackScope: self
             });
@@ -103,7 +103,7 @@ class MyGame extends Phaser.Scene {
 
       update()
       {
-            this.moveCreeper();
+            this.moveKrepa();
       }
 
       loadMenu()
@@ -144,36 +144,36 @@ class MyGame extends Phaser.Scene {
             pill.on('pointerout', function() { pill.setScale(1.0); });
       }
 
-      moveCreeper()
+      moveKrepa()
       {
-            if (this.creeperSpeed > 0) {
-                  const angleRad = Phaser.Math.DegToRad(Phaser.Math.Angle.WrapDegrees(this.creeperRotation));
+            if (this.krepaSpeed > 0) {
+                  const angleRad = Phaser.Math.DegToRad(Phaser.Math.Angle.WrapDegrees(this.krepaRotation));
 
-                  this.creeper.body.setVelocity(
-                        Math.cos(angleRad) * this.creeperSpeed,
-                        Math.sin(angleRad) * this.creeperSpeed
+                  this.krepa.body.setVelocity(
+                        Math.cos(angleRad) * this.krepaSpeed,
+                        Math.sin(angleRad) * this.krepaSpeed
                   );
 
-                  if (this.creeperTweenFootLeft.isPaused()) {
-                        this.creeperTweenFootLeft.resume();
+                  if (this.krepaTweenFootLeft.isPaused()) {
+                        this.krepaTweenFootLeft.resume();
                   }
 
-                  if (this.creeperTweenFootRight.isPaused()) {
-                        this.creeperTweenFootRight.resume();
+                  if (this.krepaTweenFootRight.isPaused()) {
+                        this.krepaTweenFootRight.resume();
                   }
             } else {
-                  this.creeper.body.setVelocity(0, 0);
+                  this.krepa.body.setVelocity(0, 0);
 
-                  if (!this.creeperTweenFootLeft.isPaused()) {
-                        this.creeperTweenFootLeft.pause();
+                  if (!this.krepaTweenFootLeft.isPaused()) {
+                        this.krepaTweenFootLeft.pause();
                   }
 
-                  if (!this.creeperTweenFootRight.isPaused()) {
-                        this.creeperTweenFootRight.pause();
+                  if (!this.krepaTweenFootRight.isPaused()) {
+                        this.krepaTweenFootRight.pause();
                   }
             }
 
-            this.txtCreeperName.setPosition(this.creeper.body.x + this.creeper.body.width / 2 - this.txtCreeperName.width / 2, this.creeper.body.y - 25);
+            this.txtKrepaName.setPosition(this.krepa.body.x + this.krepa.body.width / 2 - this.txtKrepaName.width / 2, this.krepa.body.y - 25);
       }
 
       getConfigValue(item, defval = null)
