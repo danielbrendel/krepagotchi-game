@@ -35,6 +35,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.spritesheet('particle', 'game/assets/sprites/particle.png', { frameWidth: 32, frameHeight: 32 });
 
             this.load.audio('theme', 'game/assets/sounds/theme.wav');
+            this.load.audio('click', 'game/assets/sounds/click.wav');
             this.load.audio('step', 'game/assets/sounds/step.wav');
             this.load.audio('eating', 'game/assets/sounds/eating.wav');
             this.load.audio('afraid', 'game/assets/sounds/afraid.wav');
@@ -240,6 +241,7 @@ class KrepagotchiGame extends Phaser.Scene {
             });
 
             this.sndTheme = this.sound.add('theme');
+            this.sndClick = this.sound.add('click');
             this.sndStep = this.sound.add('step');
             this.sndEating = this.sound.add('eating');
             this.sndAfraid = this.sound.add('afraid');
@@ -257,11 +259,12 @@ class KrepagotchiGame extends Phaser.Scene {
 
             this.inDetonation = false;
 
-            this.sndTheme.loop = true;
-            //this.sndTheme.play();
-
             this.sndStep.loop = true;
             this.sndStep.setVolume(0.5);
+
+            this.sndTheme.loop = true;
+            this.sndTheme.setVolume(0.5);
+            this.sndTheme.play();
       }
 
       update()
@@ -276,6 +279,8 @@ class KrepagotchiGame extends Phaser.Scene {
 
       loadHelp()
       {
+            let self = this;
+
             const infoText = this.add.text(0, 0, gameconfig.about.name + " v" + gameconfig.about.version + "\nBy " + gameconfig.about.author + "\n\n" + gameconfig.about.contact + "\n\n" + gameconfig.about.description + "\n\n" + gameconfig.about.info, {
                   fontSize: '20px',
                   color: 'rgb(250, 250, 25)',
@@ -286,6 +291,8 @@ class KrepagotchiGame extends Phaser.Scene {
             infoText.setInteractive();
             infoText.on('pointerdown', function() {
                   infoText.setVisible(false);
+
+                  self.sndClick.play();
             });
             infoText.setPosition(gameconfig.scale.width / 2 - infoText.width / 2, gameconfig.scale.height / 2 - infoText.height / 2);
             infoText.setVisible(false);
@@ -299,6 +306,8 @@ class KrepagotchiGame extends Phaser.Scene {
                   } else {
                         infoText.setVisible(true);
                   }
+
+                  self.sndClick.play();
                   
             });
             helpAction.on('pointerover', function() { helpAction.setScale(1.01); });
@@ -451,6 +460,10 @@ class KrepagotchiGame extends Phaser.Scene {
 
       updateStats()
       {
+            this.setConfigValue('krepa_stats_affection', this.krepaStats.affection);
+            this.setConfigValue('krepa_stats_full', this.krepaStats.full);
+            this.setConfigValue('krepa_stats_health', this.krepaStats.health);
+
             this.txtAffectionValue.text = this.krepaStats.affection;
             this.txtFoodValue.text = this.krepaStats.full;
             this.txtHealthValue.text = this.krepaStats.health;
