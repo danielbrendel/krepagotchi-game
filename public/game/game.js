@@ -169,6 +169,17 @@ class KrepagotchiGame extends Phaser.Scene {
                   callbackScope: self
             });
 
+            this.tmrKrepaAffection = this.time.addEvent({
+                  delay: Phaser.Math.Between(5000, 10000),
+                  loop: true,
+                  callback: function() {
+                        if (self.krepaStats.affection > 0) {
+                              self.krepaStats.affection -= AFFECTION_VALUE; 
+                        }
+                  },
+                  callbackScope: self
+            });
+
             this.tmrKrepaHunger = this.time.addEvent({
                   delay: Phaser.Math.Between(5000, 10000),
                   loop: true,
