@@ -48,7 +48,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.audio('explosion', 'game/assets/sounds/explosion.wav');
             this.load.audio('poopsplash', 'game/assets/sounds/poop-splash.wav');
             this.load.audio('hurt', 'game/assets/sounds/hurt.wav');
-            this.load.audio('meow', 'game/assets/sounds/meow.wav');
+            this.load.audio('purr', 'game/assets/sounds/purr.wav');
             this.load.audio('refreshed', 'game/assets/sounds/refreshed.wav');
             
             this.cursors = this.input.keyboard.createCursorKeys();
@@ -253,7 +253,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.sndExplosion = this.sound.add('explosion');
             this.sndPoopSplash = this.sound.add('poopsplash');
             this.sndHurt = this.sound.add('hurt');
-            this.sndMeow = this.sound.add('meow');
+            this.sndPurr = this.sound.add('purr');
             this.sndRefreshed = this.sound.add('refreshed');
 
             this.loadHelp();
@@ -445,7 +445,7 @@ class KrepagotchiGame extends Phaser.Scene {
                               callbackScope: self
                         });
 
-                        self.sndMeow.play();
+                        self.sndPurr.play();
                   }
             });
             hand.on('pointerover', function() { hand.setScale(1.1); });
