@@ -671,6 +671,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.setConfigValue('krepa_stats_full', this.krepaStats.full);
             this.setConfigValue('krepa_stats_health', this.krepaStats.health);
             this.setConfigValue('krepa_birthdate', Date.now());
+            this.setConfigValue('krepa_name', '');
 
             location.reload();
       }
