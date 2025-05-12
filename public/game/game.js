@@ -514,7 +514,13 @@ class KrepagotchiGame extends Phaser.Scene {
             this.txtKrepaName.setPosition(this.krepa.body.x + this.krepa.body.width / 2 - this.txtKrepaName.width / 2, this.krepa.body.y - 25);
 
             if (this.txtThoughtBubble.visible) {
-                  this.txtThoughtBubble.setPosition(this.krepa.body.x + this.krepa.body.width / 2 - this.txtThoughtBubble.width / 2, this.krepa.body.y - 55);
+                  let txtgap = 55;
+
+                  if (this.txtThoughtBubble.text.includes('\n')) {
+                        txtgap += 10;
+                  }
+
+                  this.txtThoughtBubble.setPosition(this.krepa.body.x + this.krepa.body.width / 2 - this.txtThoughtBubble.width / 2, this.krepa.body.y - txtgap);
             }
       }
 
