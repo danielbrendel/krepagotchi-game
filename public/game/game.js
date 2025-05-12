@@ -633,6 +633,13 @@ class KrepagotchiGame extends Phaser.Scene {
                         });
                         restartAction.setPosition(gameconfig.scale.width / 2 - restartAction.width / 2, gameconfig.scale.height / 2 - restartAction.height / 2);
                         restartAction.setVisible(true);
+                        restartAction.setAlpha(0);
+
+                        self.tweens.add({
+                              targets: restartAction,
+                              alpha: 1,
+                              duration: 500,
+                        });
                   });
             });
             this.sndFuse.play();
