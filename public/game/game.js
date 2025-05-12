@@ -249,6 +249,12 @@ class KrepagotchiGame extends Phaser.Scene {
             this.sndTheme.loop = true;
             this.sndTheme.setVolume(0.5);
             this.sndTheme.play();
+
+            if (this.getConfigValue('krepa_initmsg') != 1) {
+                  this.sndClick.play();
+                  this.loadInitInfo();
+                  this.setConfigValue('krepa_initmsg', '1');
+            }
       }
 
       update()
@@ -275,11 +281,20 @@ class KrepagotchiGame extends Phaser.Scene {
             });
             infoText.setInteractive();
             infoText.on('pointerdown', function() {
-                  infoText.setVisible(false);
+                  infoText.setAlpha(1);
+                  self.tweens.add({
+                        targets: infoText,
+                        alpha: 0,
+                        duration: 250,
+                        onComplete: function() {
+                              infoText.setVisible(false);
+                        }
+                  });
 
                   self.sndClick.play();
             });
             infoText.setPosition(gameconfig.scale.width / 2 - infoText.width / 2, gameconfig.scale.height / 2 - infoText.height / 2);
+            infoText.setAlpha(0);
             infoText.setVisible(false);
 
             this.add.image(gameconfig.scale.width - 25, 25, 'btn_circle').setScale(0.8);
@@ -287,9 +302,23 @@ class KrepagotchiGame extends Phaser.Scene {
             const helpAction = this.add.image(gameconfig.scale.width - 25, 25, 'sym_help').setScale(0.8).setInteractive();
             helpAction.on('pointerdown', function() {
                   if (infoText.visible) {
-                        infoText.setVisible(false);
+                        infoText.setAlpha(1);
+                        self.tweens.add({
+                              targets: infoText,
+                              alpha: 0,
+                              duration: 250,
+                              onComplete: function() {
+                                    infoText.setVisible(false);
+                              }
+                        });
                   } else {
                         infoText.setVisible(true);
+                        infoText.setAlpha(0);
+                        self.tweens.add({
+                              targets: infoText,
+                              alpha: 1,
+                              duration: 250,
+                        });
                   }
 
                   self.sndClick.play();
@@ -297,6 +326,37 @@ class KrepagotchiGame extends Phaser.Scene {
             });
             helpAction.on('pointerover', function() { helpAction.setScale(1.01); });
             helpAction.on('pointerout', function() { helpAction.setScale(0.8); });
+      }
+
+      loadInitInfo()
+      {
+            let self = this;
+
+            const init_info = 'Hello fellow pet owner! 👋\n\nToday ' + this.krepaName + ' was born. 💚\n\nPlease take care of it:\n⭐ Feed it\n⭐ Clean it\n⭐ Give it affection\n⭐ Vet it if necessary\n\nThe journey has just begun! 🚀';
+
+            const initText = this.add.text(0, 0, init_info, {
+                  fontSize: '15px',
+                  color: 'rgb(250, 250, 250)',
+                  fontFamily: 'Pixel, monospace',
+                  backgroundColor: 'rgb(50, 50, 50)',
+                  padding: { x: 10, y: 5 }
+            });
+            initText.setInteractive();
+            initText.setAlpha(1);
+            initText.on('pointerdown', function() {
+                  self.tweens.add({
+                        targets: initText,
+                        alpha: 0,
+                        duration: 500,
+                        onComplete: function() {
+                              initText.setVisible(false);
+                        }
+                  });
+
+                  self.sndClick.play();
+            });
+            initText.setPosition(gameconfig.scale.width / 2 - initText.width / 2, gameconfig.scale.height / 2 - initText.height / 2);
+            initText.setVisible(true);
       }
 
       loadStats()

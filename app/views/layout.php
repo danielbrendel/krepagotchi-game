@@ -61,6 +61,7 @@
                         localStorage.setItem('krepa_stats_full', 100);
                         localStorage.setItem('krepa_stats_health', 100);
                         localStorage.setItem('krepa_birthdate', Date.now());
+                        localStorage.setItem('krepa_initmsg', 0);
                         window.playSound('{{ asset('game/assets/sounds/nameselect.wav') }}');
                         setTimeout(function() {
                             location.reload();
