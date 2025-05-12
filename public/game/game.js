@@ -3,6 +3,10 @@ const FOOD_ADD_COUNT = 10;
 const HUNGER_VALUE = 5;
 const AFFECTION_VALUE = 4;
 const HEALTH_VALUE = 10;
+const TIME_HEALTHCHECK = 4000 * 1000;
+const TIME_AFFECTIONCHECK = 3000 * 1000;
+const TIME_HUNGERCHECK = 3000 * 1000;
+const TIME_POOPCHECK = 5000 * 1000;
 
 class KrepagotchiGame extends Phaser.Scene {
       preload()
@@ -146,59 +150,37 @@ class KrepagotchiGame extends Phaser.Scene {
             });
 
             this.tmrKrepaHealthCheck = this.time.addEvent({
-                  delay: 2000,
+                  delay: TIME_HEALTHCHECK,
                   loop: true,
                   callback: function() {
-                        if ((self.krepaStats.full <= 0) || (self.krepaStats.affection <= 0)) {
-                              self.krepaStats.health--;
-
-                              self.sndHurt.play();
-
-                              self.txtHealthValue.setColor('rgb(250, 50, 0)');
-                              self.krepa.iterate(child => { child.setTintFill(0xff0000); });
-                              self.time.delayedCall(250, () => {
-                                    self.txtHealthValue.setColor('rgb(250, 250, 250)');
-                                    self.krepa.iterate(child => { child.clearTint(); });
-                              });
-                        }
-
-                        if (self.krepaStats.health <= 0) {
-                              self.explodeKrepa();
-                              self.tmrKrepaHealthCheck.paused = true;
-                        }
+                        self.krepaHealthCheck();
                   },
                   callbackScope: self
             });
 
             this.tmrKrepaAffection = this.time.addEvent({
-                  delay: Phaser.Math.Between(5000, 10000),
+                  delay: TIME_AFFECTIONCHECK,
                   loop: true,
                   callback: function() {
-                        if (self.krepaStats.affection > 0) {
-                              self.krepaStats.affection -= AFFECTION_VALUE; 
-                        }
+                        self.krepaAffectionCheck();
                   },
                   callbackScope: self
             });
 
             this.tmrKrepaHunger = this.time.addEvent({
-                  delay: Phaser.Math.Between(5000, 10000),
+                  delay: TIME_HUNGERCHECK,
                   loop: true,
                   callback: function() {
-                        if (self.krepaStats.full > 0) {
-                              self.krepaStats.full -= HUNGER_VALUE; 
-                        }
+                        self.krepaHungerCheck();
                   },
                   callbackScope: self
             });
 
             this.tmrPoopCheck = this.time.addEvent({
-                  delay: Phaser.Math.Between(5000, 10000),
+                  delay: TIME_POOPCHECK,
                   loop: true,
                   callback: function() {
-                        if (self.poops.length > 0) {
-                              self.krepaStats.health -= 5;
-                        }
+                        self.krepaPoopCheck();
                   },
                   callbackScope: self
             });
@@ -257,6 +239,8 @@ class KrepagotchiGame extends Phaser.Scene {
             this.loadStats();
             this.loadMenu();
 
+            this.adjustStatsTimeGap();
+
             this.inDetonation = false;
 
             this.sndStep.loop = true;
@@ -275,6 +259,7 @@ class KrepagotchiGame extends Phaser.Scene {
 
             this.moveKrepa();
             this.updateStats();
+            this.updateTime();
       }
 
       loadHelp()
@@ -469,6 +454,11 @@ class KrepagotchiGame extends Phaser.Scene {
             this.txtHealthValue.text = this.krepaStats.health;
       }
 
+      updateTime()
+      {
+            this.setConfigValue('updated_timestamp', Date.now());
+      }
+
       spawnFood()
       {
             let self = this;
@@ -581,6 +571,92 @@ class KrepagotchiGame extends Phaser.Scene {
                   });
             });
             this.sndFuse.play();
+      }
+
+      krepaHealthCheck()
+      {
+            let self = this;
+
+            if ((self.krepaStats.full <= 0) || (self.krepaStats.affection <= 0)) {
+                  self.krepaStats.health--;
+
+                  self.sndHurt.play();
+
+                  self.txtHealthValue.setColor('rgb(250, 50, 0)');
+                  self.krepa.iterate(child => { child.setTintFill(0xff0000); });
+                  self.time.delayedCall(250, () => {
+                        self.txtHealthValue.setColor('rgb(250, 250, 250)');
+                        self.krepa.iterate(child => { child.clearTint(); });
+                  });
+            }
+
+            if (self.krepaStats.health <= 0) {
+                  self.explodeKrepa();
+                  self.tmrKrepaHealthCheck.paused = true;
+            }
+      }
+
+      krepaAffectionCheck()
+      {
+            let self = this;
+
+            if (self.krepaStats.affection > 0) {
+                  self.krepaStats.affection -= AFFECTION_VALUE;
+
+                  if (self.krepaStats.affection < 0) {
+                        self.krepaStats.affection = 0;
+                  }
+            }
+      }
+
+      krepaHungerCheck()
+      {
+            let self = this;
+
+            if (self.krepaStats.full > 0) {
+                  self.krepaStats.full -= HUNGER_VALUE;
+
+                  if (self.krepaStats.full < 0) {
+                        self.krepaStats.full = 0;
+                  }
+            }
+      }
+
+      krepaPoopCheck()
+      {
+            let self = this;
+
+            if (self.poops.length > 0) {
+                  self.krepaStats.health -= 5;
+            }
+      }
+
+      adjustStatsTimeGap()
+      {
+            let time_last = Number(this.getConfigValue('updated_timestamp'));
+            let time_now = Date.now();
+            let time_diff = time_now - time_last;
+
+            let health_check_diff = time_diff / TIME_HEALTHCHECK;
+            let affection_check_diff = time_diff / TIME_AFFECTIONCHECK;
+            let hunger_check_diff = time_diff / TIME_HUNGERCHECK;
+            let poop_check_diff = time_diff / TIME_POOPCHECK;
+
+            for (let i = 0; i < affection_check_diff; i++) {
+                  this.krepaAffectionCheck();
+            }
+
+            for (let i = 0; i < hunger_check_diff; i++) {
+                  this.krepaHungerCheck();
+            }
+
+            for (let i = 0; i < poop_check_diff; i++) {
+                  this.krepaPoopCheck();
+            }
+
+            for (let i = 0; i < health_check_diff; i++) {
+                  this.krepaHealthCheck();
+            }
       }
 
       restartGame()
