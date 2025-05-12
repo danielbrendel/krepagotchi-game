@@ -37,6 +37,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.spritesheet('poop', 'game/assets/sprites/poop.png', { frameWidth: 16, frameHeight: 16 });
             this.load.spritesheet('poopsplash', 'game/assets/sprites/poop-splash.png', { frameWidth: 16, frameHeight: 16 });
             this.load.spritesheet('particle', 'game/assets/sprites/particle.png', { frameWidth: 32, frameHeight: 32 });
+            this.load.spritesheet('burst', 'game/assets/sprites/burst.png', { frameWidth: 192, frameHeight: 192 });
 
             this.load.audio('theme', 'game/assets/sounds/theme.wav');
             this.load.audio('click', 'game/assets/sounds/click.wav');
@@ -47,6 +48,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.audio('fuse', 'game/assets/sounds/fuse.wav');
             this.load.audio('explosion', 'game/assets/sounds/explosion.wav');
             this.load.audio('poopsplash', 'game/assets/sounds/poop-splash.wav');
+            this.load.audio('burst', 'game/assets/sounds/burst.wav');
             this.load.audio('hurt', 'game/assets/sounds/hurt.wav');
             this.load.audio('purr', 'game/assets/sounds/purr.wav');
             this.load.audio('refreshed', 'game/assets/sounds/refreshed.wav');
@@ -220,6 +222,13 @@ class KrepagotchiGame extends Phaser.Scene {
                   repeat: 0
             });
 
+            this.anims.create({
+                  key: 'burst',
+                  frames: this.anims.generateFrameNumbers('burst', { start: 0, end: 15 }),
+                  frameRate: 25,
+                  repeat: 0
+            });
+
             this.input.setDraggable(this.krepa);
             this.input.on('drag', function(pointer, gameObject, dragX, dragY) {
                   if (gameObject === self.krepa) {
@@ -252,6 +261,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.sndFuse = this.sound.add('fuse');
             this.sndExplosion = this.sound.add('explosion');
             this.sndPoopSplash = this.sound.add('poopsplash');
+            this.sndBurst = this.sound.add('burst');
             this.sndHurt = this.sound.add('hurt');
             this.sndPurr = this.sound.add('purr');
             this.sndRefreshed = this.sound.add('refreshed');
@@ -416,37 +426,7 @@ class KrepagotchiGame extends Phaser.Scene {
 
             const hand = this.add.image(iMenuStartX + 64 * 1, gameconfig.scale.height - 45 + 1, 'hand').setInteractive();
             hand.on('pointerdown', function() {
-                  if (self.krepaStats.affection < 100) {
-                        self.krepaStats.affection += AFFECTION_VALUE;
-                        if (self.krepaStats.affection > 100) {
-                              self.krepaStats.affection = 100;
-                        }
-
-                        let emitter = self.add.particles(self.krepa.x, self.krepa.y, 'particle', {
-                              speed: 100,
-                              lifespan: 3000,
-                              frequency: 100,
-                              quantity: 1,
-                              gravityY: 200
-                        }).setScale(0.5);
-
-                        let interval = setInterval(function() {
-                              emitter.x = self.krepa.x;
-                              emitter.y = self.krepa.y;
-                        }, 10);
-
-                        self.time.addEvent({
-                              delay: 1000,
-                              loop: false,
-                              callback: function() {
-                                    clearInterval(interval);
-                                    emitter.destroy();
-                              },
-                              callbackScope: self
-                        });
-
-                        self.sndPurr.play();
-                  }
+                  self.addAffection(AFFECTION_VALUE);
             });
             hand.on('pointerover', function() { hand.setScale(1.1); });
             hand.on('pointerout', function() { hand.setScale(1.0); });
@@ -560,6 +540,9 @@ class KrepagotchiGame extends Phaser.Scene {
 
             food.setInteractive();
             food.on('pointerdown', function() {
+                  self.spawnBurst(food.x, food.y);
+                  self.addAffection(AFFECTION_VALUE);
+
                   food.destroy();
             });
 
@@ -643,6 +626,54 @@ class KrepagotchiGame extends Phaser.Scene {
 
                         break;
                   }
+            }
+      }
+
+      spawnBurst(x, y)
+      {
+            let burst = this.physics.add.sprite(x, y, 'burst');
+            burst.anims.play('burst', true);
+            burst.on('animationcomplete', function() {
+                  burst.destroy();
+            });
+
+            this.sndBurst.play();
+      }
+
+      addAffection(amount)
+      {
+            let self = this;
+
+            if (self.krepaStats.affection < 100) {
+                  self.krepaStats.affection += amount;
+                  if (self.krepaStats.affection > 100) {
+                        self.krepaStats.affection = 100;
+                  }
+
+                  let emitter = self.add.particles(self.krepa.x, self.krepa.y, 'particle', {
+                        speed: 100,
+                        lifespan: 3000,
+                        frequency: 100,
+                        quantity: 1,
+                        gravityY: 200
+                  }).setScale(0.5);
+
+                  let interval = setInterval(function() {
+                        emitter.x = self.krepa.x;
+                        emitter.y = self.krepa.y;
+                  }, 10);
+
+                  self.time.addEvent({
+                        delay: 1000,
+                        loop: false,
+                        callback: function() {
+                              clearInterval(interval);
+                              emitter.destroy();
+                        },
+                        callbackScope: self
+                  });
+
+                  self.sndPurr.play();
             }
       }
 
