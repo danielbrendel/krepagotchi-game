@@ -95,7 +95,9 @@ class KrepagotchiGame extends Phaser.Scene {
             this.txtKrepaName = this.add.text(0, 0, this.krepaName, {
                   fontSize: '12px',
                   color: 'rgb(250, 250, 250)',
-                  fontFamily: 'Pixel, monospace'
+                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                  fontFamily: 'Pixel, monospace',
+                  padding: { x: 5, y: 2 }
             });
 
             this.krepaSpeed = 0;
