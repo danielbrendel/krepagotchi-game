@@ -456,15 +456,8 @@ class KrepagotchiGame extends Phaser.Scene {
                   if (self.poops.length > 0) {
                         let pindex = Phaser.Math.Between(0, self.poops.length - 1);
 
-                        let splash = self.physics.add.sprite(self.poops[pindex].x, self.poops[pindex].y, 'poopsplash').setScale(2.0);
-                        splash.anims.play('poopsplash', true);
-                        splash.on('animationcomplete', function() {
-                              splash.destroy();
-                        });
-
-                        self.removePoop(pindex);
-
-                        self.sndPoopSplash.play();
+                        self.poopSplash(self.poops[pindex].x, self.poops[pindex].y);
+                        self.removePoopById(pindex);
                   }
             });
             brush.on('pointerover', function() { brush.setScale(1.1); });
@@ -600,18 +593,56 @@ class KrepagotchiGame extends Phaser.Scene {
 
             let poop = this.physics.add.sprite(posx, posy, 'poop').refreshBody();
             poop.setCollideWorldBounds(true);
+            poop.setInteractive();
+            poop.on('pointerdown', function() {
+                  self.poopSplash(poop.x, poop.y);
+                  self.removePoopByObj(poop);
+            });
 
             this.physics.add.collider(poop, this.fenceColliderTop);
             this.physics.add.collider(poop, this.fenceColliderBottom);
 
+            this.tweens.add({
+                  targets: poop,
+                  scaleY: 1.2,
+                  scaleX: 0.8,
+                  duration: 500,
+                  yoyo: true,
+                  repeat: -1,
+                  ease: 'Sine.easeInOut'
+            });
+
             this.poops.push(poop);
       }
 
-      removePoop(index)
+      poopSplash(x, y)
+      {
+            let splash = this.physics.add.sprite(x, y, 'poopsplash').setScale(2.0);
+            splash.anims.play('poopsplash', true);
+            splash.on('animationcomplete', function() {
+                  splash.destroy();
+            });
+
+            this.sndPoopSplash.play();
+      }
+
+      removePoopById(index)
       {
             if (typeof this.poops[index] !== 'undefined') {
                   this.poops[index].destroy();
                   this.poops.splice(index, 1);
+            }
+      }
+
+      removePoopByObj(obj)
+      {
+            for (let i = 0; i < this.poops.length; i++) {
+                  if (this.poops[i] === obj) {
+                        this.poops[i].destroy();
+                        this.poops.splice(i, 1);
+
+                        break;
+                  }
             }
       }
 
