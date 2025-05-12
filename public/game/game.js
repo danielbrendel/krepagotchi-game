@@ -267,7 +267,7 @@ class KrepagotchiGame extends Phaser.Scene {
             let self = this;
 
             const infoText = this.add.text(0, 0, gameconfig.about.name + " v" + gameconfig.about.version + "\nBy " + gameconfig.about.author + "\n\n" + gameconfig.about.contact + "\n\n" + gameconfig.about.description + "\n\n" + gameconfig.about.info, {
-                  fontSize: '20px',
+                  fontSize: '15px',
                   color: 'rgb(250, 250, 25)',
                   fontFamily: 'Pixel, monospace',
                   backgroundColor: 'rgb(50, 50, 50)',
@@ -556,7 +556,7 @@ class KrepagotchiGame extends Phaser.Scene {
                         explosion.destroy();
 
                         const restartAction = self.add.text(0, 0, self.krepaName + ' is now at a better place.\n\nBorn: ' + self.getReadableDate(Number(self.getConfigValue('krepa_birthdate'))) + '\nDetonated: ' + self.getReadableDate(Date.now()) + '\n\nClick or tap to restart', {
-                              fontSize: '20px',
+                              fontSize: '15px',
                               color: 'rgb(250, 50, 0)',
                               fontFamily: 'Pixel, monospace',
                               backgroundColor: 'rgb(50, 50, 50)',
@@ -578,7 +578,9 @@ class KrepagotchiGame extends Phaser.Scene {
             let self = this;
 
             if ((self.krepaStats.full <= 0) || (self.krepaStats.affection <= 0)) {
-                  self.krepaStats.health--;
+                  if (self.krepaStats.health > 0) {
+                        self.krepaStats.health--;
+                  }
 
                   self.sndHurt.play();
 
