@@ -371,7 +371,7 @@ class KrepagotchiGame extends Phaser.Scene {
       {
             let self = this;
 
-            const init_info = 'Hello fellow pet owner! 👋\n\nToday ' + this.krepaName + ' was born. 💚\n\nPlease take care of it:\n⭐ Feed it\n⭐ Clean it\n⭐ Give it affection\n⭐ Vet it if necessary\n\nThe journey has just begun! 🚀';
+            const init_info = 'Hello fellow Krepa owner! 👋\n\nToday ' + this.krepaName + ' was born. 💚\n\nPlease take care of it:\n⭐ Feed it\n⭐ Clean it\n⭐ Give it affection\n⭐ Vet it if necessary\n\nThe journey has just begun! 🚀';
 
             const initText = this.add.text(0, 0, init_info, {
                   fontSize: '15px',
@@ -816,32 +816,32 @@ class KrepagotchiGame extends Phaser.Scene {
       {
             this.krepaThoughts = {
                   casual: [
-                        'This is really a great place to live! 💚',
+                        'This place is my home! 💚',
                         'I really like my owner.\nI\'m being treated nicely. 😃',
-                        'I wonder if I could learn how to fly...?',
-                        'I am all in for some cuddling today',
-                        'What came first?\nThe Krepa or the big bang?'
+                        'I just saw a pretty flower 🌸',
+                        'I enjoy being cuddled 🤗',
+                        'What came first?\nThe Krepa or the big bang? 🌌'
                   ],
 
                   hungry: [
-                        'I really want some tasty TNT right now',
-                        'Tonight I was dreaming of TNT cake',
+                        'Mmmhhh... Tasty TNT...',
+                        'Last night I dreamed about TNT',
                         'Can you feed me, please? 🥺',
-                        'Excuse me, but when is dinner ready?',
-                        'I am soooooo hungry right now!'
+                        'When dinner is ready?',
+                        'I am sooo hungry right now!'
                   ],
 
                   affection: [
-                        'It\'s been a while since someone cuddled me...',
-                        'Excuse me, can you pet me, please? 🥺',
-                        'I wonder whether my owner still loves me?',
+                        'I\'m in need of cuddles',
+                        'Can you pet me, please? 🥺',
+                        'Do you still love me?',
                         'I feel so lonely today...\nIt makes me sad. 😞',
                         'I feel like I\'m abandoned.\nWill anyone take care of me?'
                   ],
 
                   dirty: [
-                        'Someone should really clean this mess',
-                        'I honestly don\'t feel comfortable here',
+                        'Ugh, I stepped on something...',
+                        'Currently not comfortable...',
                         'Ugh, this really smells...',
                         'Can someone help me cleaning up?',
                         'I wonder what bathing feels like...'
@@ -849,10 +849,10 @@ class KrepagotchiGame extends Phaser.Scene {
 
                   unhealthy: [
                         'I really need some care now... 🤒',
-                        'It feels like I\'m going to blow off... 💥',
-                        'Tick... tick... tick... ',
+                        'I\'m going to blow off... 💥',
+                        'Tick... tick... tick... 🕰️',
                         'Am I being neglected?? 😢',
-                        'I wonder if there is a better place'
+                        'Dreaming of a better place... 😡'
                   ]
             };
       }
