@@ -32,14 +32,14 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.spritesheet('plant2', 'game/assets/sprites/plant2.png', { frameWidth: 47, frameHeight: 30 });
             this.load.spritesheet('plant3', 'game/assets/sprites/plant3.png', { frameWidth: 39, frameHeight: 35 });
             this.load.spritesheet('plant4', 'game/assets/sprites/plant4.png', { frameWidth: 41, frameHeight: 35 });
-            this.load.spritesheet('tntfood', 'game/assets/sprites/tntfood.png', { frameWidth: 32, frameHeight: 32 });
+            this.load.spritesheet('tntfood', 'game/assets/sprites/tnt.png', { frameWidth: 32, frameHeight: 32 });
             this.load.spritesheet('explosion', 'game/assets/sprites/explosion.png', { frameWidth: 256, frameHeight: 256 });
             this.load.spritesheet('poop', 'game/assets/sprites/poop.png', { frameWidth: 16, frameHeight: 16 });
             this.load.spritesheet('poopsplash', 'game/assets/sprites/poop-splash.png', { frameWidth: 16, frameHeight: 16 });
             this.load.spritesheet('particle', 'game/assets/sprites/particle.png', { frameWidth: 32, frameHeight: 32 });
             this.load.spritesheet('burst', 'game/assets/sprites/burst.png', { frameWidth: 192, frameHeight: 192 });
 
-            this.load.audio('theme', 'game/assets/sounds/theme.wav');
+            this.load.audio('theme', 'game/assets/sounds/theme.ogg');
             this.load.audio('click', 'game/assets/sounds/click.wav');
             this.load.audio('step', 'game/assets/sounds/step.wav');
             this.load.audio('eating', 'game/assets/sounds/eating.wav');
@@ -81,6 +81,8 @@ class KrepagotchiGame extends Phaser.Scene {
             this.krepa_body = this.add.sprite(0, 0, 'krepa');
             this.krepa_foot_left = this.add.sprite(-190, this.krepa_body.height - 990, 'krepa_foot_left');
             this.krepa_foot_right = this.add.sprite(190, this.krepa_body.height - 990, 'krepa_foot_right');
+
+            this.physics.world.enable(this.krepa_body);
 
             this.krepa = this.add.container(Phaser.Math.Between(30, 320), Phaser.Math.Between(200, 450), [this.krepa_body, this.krepa_foot_left, this.krepa_foot_right]);
             this.krepa.setScale(0.05);
@@ -419,12 +421,12 @@ class KrepagotchiGame extends Phaser.Scene {
                   this.add.image(iMenuStartX + i * 64, gameconfig.scale.height - 45, 'slot').setScale(0.5);
             }
 
-            const food = this.add.image(iMenuStartX, gameconfig.scale.height - 45 + 1, 'tnt').setScale(0.03).setInteractive();
+            const food = this.add.image(iMenuStartX, gameconfig.scale.height - 45 + 1, 'tnt').setInteractive();
             food.on('pointerdown', function() {
                   self.spawnFood();
             });
-            food.on('pointerover', function() { food.setScale(0.035); });
-            food.on('pointerout', function() { food.setScale(0.03); });
+            food.on('pointerover', function() { food.setScale(1.1); });
+            food.on('pointerout', function() { food.setScale(1.0); });
 
             const hand = this.add.image(iMenuStartX + 64 * 1, gameconfig.scale.height - 45 + 1, 'hand').setInteractive();
             hand.on('pointerdown', function() {
@@ -544,8 +546,8 @@ class KrepagotchiGame extends Phaser.Scene {
       {
             let self = this;
 
-            let posx = this.krepa.body.x + Phaser.Math.Between(0, 100) - 50;
-            let posy = this.krepa.body.y + Phaser.Math.Between(0, 100) - 50;
+            let posx = Phaser.Math.Between(55, gameconfig.scale.width - 55);
+            let posy = Phaser.Math.Between(90, gameconfig.scale.height - 150);
 
             let food = this.physics.add.sprite(posx, posy, 'tntfood').refreshBody();
             food.setCollideWorldBounds(true);
@@ -558,7 +560,7 @@ class KrepagotchiGame extends Phaser.Scene {
                   food.destroy();
             });
 
-            this.physics.add.collider(this.krepa, food, function() {
+            this.physics.add.collider(this.krepa_body, food, function() {
                   if (self.krepaStats.full < 100) {
                         self.krepaStats.full += FOOD_ADD_COUNT;
 
@@ -583,8 +585,8 @@ class KrepagotchiGame extends Phaser.Scene {
       {
             let self = this;
 
-            let posx = this.krepa.body.x + Phaser.Math.Between(0, 100) - 50;
-            let posy = this.krepa.body.y + Phaser.Math.Between(0, 100) - 50;
+            let posx = this.krepa.body.x + 35;
+            let posy = this.krepa.body.y + 59;
 
             let poop = this.physics.add.sprite(posx, posy, 'poop').refreshBody();
             poop.setCollideWorldBounds(true);
