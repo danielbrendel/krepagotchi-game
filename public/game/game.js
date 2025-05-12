@@ -447,7 +447,7 @@ class KrepagotchiGame extends Phaser.Scene {
             brush.on('pointerover', function() { brush.setScale(1.1); });
             brush.on('pointerout', function() { brush.setScale(1.0); });
             
-            const pill = this.add.image(iMenuStartX + 64 * 3, gameconfig.scale.height - 45 + 1, 'pill').setRotation(320).setInteractive();
+            const pill = this.add.image(iMenuStartX + 64 * 3, gameconfig.scale.height - 45 + 1, 'pill').setRotation(Phaser.Math.DegToRad(132)).setInteractive();
             pill.on('pointerdown', function() {
                   if (self.krepaStats.health < 100) {
                         self.krepaStats.health += HEALTH_VALUE;
