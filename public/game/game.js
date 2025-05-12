@@ -465,6 +465,11 @@ class KrepagotchiGame extends Phaser.Scene {
 
       moveKrepa()
       {
+            if (this.krepaStats.health <= 0) {
+                  this.krepaSpeed = 0;
+                  return;
+            }
+
             if (this.krepaSpeed > 0) {
                   const angleRad = Phaser.Math.DegToRad(Phaser.Math.Angle.WrapDegrees(this.krepaRotation));
 
