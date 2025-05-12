@@ -52,6 +52,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.audio('hurt', 'game/assets/sounds/hurt.wav');
             this.load.audio('purr', 'game/assets/sounds/purr.wav');
             this.load.audio('refreshed', 'game/assets/sounds/refreshed.wav');
+            this.load.audio('noaction', 'game/assets/sounds/noaction.wav');
             
             this.cursors = this.input.keyboard.createCursorKeys();
       }
@@ -265,6 +266,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.sndHurt = this.sound.add('hurt');
             this.sndPurr = this.sound.add('purr');
             this.sndRefreshed = this.sound.add('refreshed');
+            this.sndNoAction = this.sound.add('noaction');
 
             this.loadHelp();
             this.loadStats();
@@ -438,6 +440,8 @@ class KrepagotchiGame extends Phaser.Scene {
 
                         self.poopSplash(self.poops[pindex].x, self.poops[pindex].y);
                         self.removePoopById(pindex);
+                  } else {
+                        self.sndNoAction.play();
                   }
             });
             brush.on('pointerover', function() { brush.setScale(1.1); });
@@ -457,6 +461,8 @@ class KrepagotchiGame extends Phaser.Scene {
                         });
 
                         self.sndRefreshed.play();
+                  } else {
+                        self.sndNoAction.play();
                   }
             });
             pill.on('pointerover', function() { pill.setScale(1.1); });
@@ -674,6 +680,8 @@ class KrepagotchiGame extends Phaser.Scene {
                   });
 
                   self.sndPurr.play();
+            } else {
+                  self.sndNoAction.play();
             }
       }
 
