@@ -104,6 +104,16 @@ class KrepagotchiGame extends Phaser.Scene {
             this.krepaSpeedBeforeDrag = 0;
             this.krepaRotation = 10.0;
             this.krepaBlink = 0;
+            this.krepaThoughts = [];
+
+            this.txtThoughtBubble = this.add.text(0, 0, '', {
+                  fontSize: '12px',
+                  fontStyle: 'italic',
+                  color: 'rgb(250, 250, 250)',
+                  fontFamily: 'Pixel, monospace',
+                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                  padding: { x: 10, y: 5 }
+            }).setVisible(false);
 
             this.krepaStats = {
                   full: Number(self.getConfigValue('krepa_stats_full')),
@@ -187,6 +197,15 @@ class KrepagotchiGame extends Phaser.Scene {
                   callbackScope: self
             });
 
+            this.tmrThoughtBubbles = this.time.addEvent({
+                  delay: Phaser.Math.Between(20000, 30000),
+                  loop: true,
+                  callback: function() {
+                        self.krepaThoughtBubble();
+                  },
+                  callbackScope: self
+            });
+
             this.anims.create({
                   key: 'explosion',
                   frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 63 }),
@@ -240,6 +259,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.loadHelp();
             this.loadStats();
             this.loadMenu();
+            this.loadThoughtBubbles();
 
             this.adjustStatsTimeGap();
 
@@ -256,6 +276,11 @@ class KrepagotchiGame extends Phaser.Scene {
                   this.sndClick.play();
                   this.loadInitInfo();
                   this.setConfigValue('krepa_initmsg', '1');
+            } else {
+                  const chance = Phaser.Math.Between(1, 4);
+                  if (chance === 1) {
+                        this.krepaThoughtBubble();
+                  }
             }
       }
 
@@ -397,17 +422,17 @@ class KrepagotchiGame extends Phaser.Scene {
                               self.krepaStats.affection = 100;
                         }
 
-                        let emitter = self.add.particles(self.krepa.x, self.krepa.y - 30, 'particle', {
+                        let emitter = self.add.particles(self.krepa.x, self.krepa.y, 'particle', {
                               speed: 100,
                               lifespan: 3000,
                               frequency: 100,
                               quantity: 1,
                               gravityY: 200
-                        });
+                        }).setScale(0.5);
 
                         let interval = setInterval(function() {
                               emitter.x = self.krepa.x;
-                              emitter.y = self.krepa.y - 30;
+                              emitter.y = self.krepa.y;
                         }, 10);
 
                         self.time.addEvent({
@@ -508,6 +533,10 @@ class KrepagotchiGame extends Phaser.Scene {
             }
 
             this.txtKrepaName.setPosition(this.krepa.body.x + this.krepa.body.width / 2 - this.txtKrepaName.width / 2, this.krepa.body.y - 25);
+
+            if (this.txtThoughtBubble.visible) {
+                  this.txtThoughtBubble.setPosition(this.krepa.body.x + this.krepa.body.width / 2 - this.txtThoughtBubble.width / 2, this.krepa.body.y - 55);
+            }
       }
 
       updateStats()
@@ -705,6 +734,99 @@ class KrepagotchiGame extends Phaser.Scene {
             if (self.poops.length > 0) {
                   self.krepaStats.health -= 5;
             }
+      }
+
+      loadThoughtBubbles()
+      {
+            this.krepaThoughts = {
+                  casual: [
+                        'This is really a great place to live! 💚',
+                        'I really like my owner.\nI\'m being treated nicely. 😃',
+                        'I wonder if I could learn how to fly...?',
+                        'I am all in for some cuddling today',
+                        'What came first?\nThe Krepa or the big bang?'
+                  ],
+
+                  hungry: [
+                        'I really want some tasty TNT right now',
+                        'Tonight I was dreaming of TNT cake',
+                        'Can you feed me, please? 🥺',
+                        'Excuse me, but when is dinner ready?',
+                        'I am soooooo hungry right now!'
+                  ],
+
+                  affection: [
+                        'It\'s been a while since someone cuddled me...',
+                        'Excuse me, can you pet me, please? 🥺',
+                        'I wonder whether my owner still loves me?',
+                        'I feel so lonely today...\nIt makes me sad. 😞',
+                        'I feel like I\'m abandoned.\nWill anyone take care of me?'
+                  ],
+
+                  dirty: [
+                        'Someone should really clean this mess',
+                        'I honestly don\'t feel comfortable here',
+                        'Ugh, this really smells...',
+                        'Can someone help me cleaning up?',
+                        'I wonder what bathing feels like...'
+                  ],
+
+                  unhealthy: [
+                        'I really need some care now... 🤒',
+                        'It feels like I\'m going to blow off... 💥',
+                        'Tick... tick... tick... ',
+                        'Am I being neglected?? 😢',
+                        'I wonder if there is a better place'
+                  ]
+            };
+      }
+
+      krepaPickThought()
+      {
+            let thought = 'Hey, my name is ' + this.krepaName;
+
+            if (this.krepaStats.health < 100) {
+                  thought = this.krepaThoughts.unhealthy[Phaser.Math.Between(0, this.krepaThoughts.unhealthy.length - 1)];
+            } else if (this.krepaStats.full < 100) {
+                  thought = this.krepaThoughts.hungry[Phaser.Math.Between(0, this.krepaThoughts.hungry.length - 1)];
+            } else if (this.krepaStats.affection < 100) {
+                  thought = this.krepaThoughts.affection[Phaser.Math.Between(0, this.krepaThoughts.affection.length - 1)];
+            } else {
+                  thought = this.krepaThoughts.casual[Phaser.Math.Between(0, this.krepaThoughts.casual.length - 1)];
+            }
+
+            return thought;
+      }
+
+      krepaThoughtBubble()
+      {
+            let self = this;
+
+            const thought = this.krepaPickThought();
+
+            this.txtThoughtBubble.setText(thought);
+            this.txtThoughtBubble.setVisible(true);
+            this.txtThoughtBubble.setAlpha(0);
+
+            self.tweens.add({
+                  targets: this.txtThoughtBubble,
+                  alpha: 1,
+                  duration: 1000,
+                  onComplete: function() {
+                        self.time.delayedCall(5000, function() {
+                              self.txtThoughtBubble.setAlpha(1);
+                              
+                              self.tweens.add({
+                                    targets: self.txtThoughtBubble,
+                                    alpha: 0,
+                                    duration: 500,
+                                    onComplete: function() {
+                                          self.txtThoughtBubble.setVisible(false);
+                                    }
+                              });
+                        });
+                  }
+            });
       }
 
       adjustStatsTimeGap()
