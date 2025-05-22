@@ -19,7 +19,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.image('hand', 'game/assets/sprites/hand.png');
             this.load.image('brush', 'game/assets/sprites/brush.png');
             this.load.image('pill', 'game/assets/sprites/pill.png');
-            this.load.image('affection', 'game/assets/sprites/affection.png');
+            this.load.image('affection', 'game/assets/sprites/heart.png');
             this.load.image('food', 'game/assets/sprites/food.png');
             this.load.image('health', 'game/assets/sprites/health.png');
             this.load.image('btn_circle', 'game/assets/sprites/btn_circle.png');
@@ -33,10 +33,10 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.spritesheet('plant3', 'game/assets/sprites/plant3.png', { frameWidth: 39, frameHeight: 35 });
             this.load.spritesheet('plant4', 'game/assets/sprites/plant4.png', { frameWidth: 41, frameHeight: 35 });
             this.load.spritesheet('tntfood', 'game/assets/sprites/tnt.png', { frameWidth: 32, frameHeight: 32 });
-            this.load.spritesheet('explosion', 'game/assets/sprites/explosion.png', { frameWidth: 256, frameHeight: 256 });
+            this.load.spritesheet('explosion', 'game/assets/sprites/explosion.png', { frameWidth: 192, frameHeight: 192 });
             this.load.spritesheet('poop', 'game/assets/sprites/poop.png', { frameWidth: 16, frameHeight: 16 });
             this.load.spritesheet('poopsplash', 'game/assets/sprites/poop-splash.png', { frameWidth: 16, frameHeight: 16 });
-            this.load.spritesheet('particle', 'game/assets/sprites/particle.png', { frameWidth: 32, frameHeight: 32 });
+            this.load.spritesheet('particle', 'game/assets/sprites/heart.png', { frameWidth: 32, frameHeight: 32 });
             this.load.spritesheet('burst', 'game/assets/sprites/burst.png', { frameWidth: 192, frameHeight: 192 });
 
             this.load.audio('theme', 'game/assets/sounds/theme.ogg');
@@ -120,9 +120,9 @@ class KrepagotchiGame extends Phaser.Scene {
             }).setVisible(false);
 
             this.krepaStats = {
-                  full: Number(self.getConfigValue('krepa_stats_full')),
-                  health: Number(self.getConfigValue('krepa_stats_health')),
-                  affection: Number(self.getConfigValue('krepa_stats_affection'))
+                  full: Number(self.getConfigValue('krepa_stats_full', 100)),
+                  health: Number(self.getConfigValue('krepa_stats_health', 100)),
+                  affection: Number(self.getConfigValue('krepa_stats_affection', 100))
             };
 
             this.foods = [];
@@ -230,7 +230,7 @@ class KrepagotchiGame extends Phaser.Scene {
 
             this.anims.create({
                   key: 'explosion',
-                  frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 63 }),
+                  frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 15 }),
                   frameRate: 25,
                   repeat: 0
             });
@@ -792,7 +792,7 @@ class KrepagotchiGame extends Phaser.Scene {
 
                   self.sndExplosion.play();
                   
-                  let explosion = self.physics.add.sprite(self.krepa.x, self.krepa.y, 'explosion').setScale(1.5);
+                  let explosion = self.physics.add.sprite(self.krepa.x, self.krepa.y, 'explosion');
                   explosion.anims.play('explosion', true);
                   explosion.on('animationcomplete', function() {
                         explosion.destroy();
