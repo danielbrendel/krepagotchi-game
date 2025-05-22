@@ -125,6 +125,7 @@ class KrepagotchiGame extends Phaser.Scene {
                   affection: Number(self.getConfigValue('krepa_stats_affection'))
             };
 
+            this.foods = [];
             this.poops = [];
 
             this.krepaTweenFootLeft = this.tweens.add({
@@ -503,13 +504,22 @@ class KrepagotchiGame extends Phaser.Scene {
                   this.krepaSpeed = 0;
                   return;
             }
+            
+            let nearestFood = null;
+
+            if (this.krepaStats.full < 100) {
+                  nearestFood = this.findNearestFood();
+                  if (nearestFood) {
+                        this.krepaSpeed = MAX_WALKING_SPEED * 2;
+
+                        this.krepaRotation = Phaser.Math.Angle.Between(this.krepa.x, this.krepa.y, nearestFood.x, nearestFood.y);
+                  }
+            }
 
             if (this.krepaSpeed > 0) {
-                  const angleRad = Phaser.Math.DegToRad(Phaser.Math.Angle.WrapDegrees(this.krepaRotation));
-
                   this.krepa.body.setVelocity(
-                        Math.cos(angleRad) * this.krepaSpeed,
-                        Math.sin(angleRad) * this.krepaSpeed
+                        Math.cos(this.krepaRotation) * this.krepaSpeed,
+                        Math.sin(this.krepaRotation) * this.krepaSpeed
                   );
 
                   if (this.krepaTweenFootLeft.isPaused()) {
@@ -583,7 +593,7 @@ class KrepagotchiGame extends Phaser.Scene {
                   self.spawnBurst(food.x, food.y);
                   self.addAffection(AFFECTION_VALUE);
 
-                  food.destroy();
+                  self.removeFoodbyObj(food);
             });
 
             this.physics.add.collider(this.krepa_body, food, function() {
@@ -597,14 +607,46 @@ class KrepagotchiGame extends Phaser.Scene {
                         self.sndEating.play();
                         self.spawnPoop();
 
-                        food.destroy();
+                        self.removeFoodbyObj(food);
                   }
             });
 
             this.physics.add.collider(food, this.fenceColliderTop);
             this.physics.add.collider(food, this.fenceColliderBottom);
 
+            this.foods.push(food);
+
             this.sndTntSpawn.play();
+      }
+
+      findNearestFood()
+      {
+            let nearest = null;
+            let shortest = Infinity;
+
+            for (let i = 0; i < this.foods.length; i++) {
+                  const target = this.foods[i];
+                  const dist = Phaser.Math.Distance.Between(this.krepa.x, this.krepa.y, target.x, target.y);
+
+                  if (dist < shortest) {
+                        shortest = dist;
+                        nearest = target;
+                  }
+            }
+
+            return nearest;
+      }
+
+      removeFoodbyObj(obj)
+      {
+            for (let i = 0; i < this.foods.length; i++) {
+                  if (this.foods[i] === obj) {
+                        this.foods[i].destroy();
+                        this.foods.splice(i, 1);
+
+                        break;
+                  }
+            }
       }
 
       spawnPoop()
@@ -889,11 +931,11 @@ class KrepagotchiGame extends Phaser.Scene {
       {
             let thought = 'Hey, my name is ' + this.krepaName;
 
-            if (this.krepaStats.health < 100) {
+            if (this.krepaStats.health < 90) {
                   thought = this.krepaThoughts.unhealthy[Phaser.Math.Between(0, this.krepaThoughts.unhealthy.length - 1)];
-            } else if (this.krepaStats.full < 100) {
+            } else if (this.krepaStats.full < 75) {
                   thought = this.krepaThoughts.hungry[Phaser.Math.Between(0, this.krepaThoughts.hungry.length - 1)];
-            } else if (this.krepaStats.affection < 100) {
+            } else if (this.krepaStats.affection < 50) {
                   thought = this.krepaThoughts.affection[Phaser.Math.Between(0, this.krepaThoughts.affection.length - 1)];
             } else {
                   thought = this.krepaThoughts.casual[Phaser.Math.Between(0, this.krepaThoughts.casual.length - 1)];
