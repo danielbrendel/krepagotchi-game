@@ -43,7 +43,6 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.audio('click', 'game/assets/sounds/click.wav');
             this.load.audio('step', 'game/assets/sounds/step.wav');
             this.load.audio('eating', 'game/assets/sounds/eating.wav');
-            this.load.audio('afraid', 'game/assets/sounds/afraid.wav');
             this.load.audio('tntspawn', 'game/assets/sounds/tntspawn.wav');
             this.load.audio('fuse', 'game/assets/sounds/fuse.wav');
             this.load.audio('explosion', 'game/assets/sounds/explosion.wav');
@@ -202,6 +201,23 @@ class KrepagotchiGame extends Phaser.Scene {
                   callbackScope: self
             });
 
+            this.hissingCount = 0;
+            this.tmrHissing = this.time.addEvent({
+                  delay: 300,
+                  loop: true,
+                  callback: function() {
+                        if (self.hissingCount % 2 == 0) {
+                              self.krepa.iterate(child => { child.setTintFill(0xffffff); });
+                        } else {
+                              self.krepa.iterate(child => { child.clearTint(); });
+                        }
+
+                        self.hissingCount++;
+                  },
+                  paused: true,
+                  callbackScope: self
+            });
+
             this.tmrThoughtBubbles = this.time.addEvent({
                   delay: Phaser.Math.Between(20000, 30000),
                   loop: true,
@@ -246,20 +262,27 @@ class KrepagotchiGame extends Phaser.Scene {
                   self.krepaTweenFootLeft.timeScale = 4;
                   self.krepaTweenFootRight.timeScale = 4;
                   
-                  self.sndAfraid.play();
+                  self.sndHiss.play();
+
+                  self.hissingCount = 0;
+                  self.tmrHissing.paused = false;
             });
             this.input.on('dragend', function(pointer, gameObject) {
                   self.krepaTweenFootLeft.timeScale = 1;
                   self.krepaTweenFootRight.timeScale = 1;
 
                   self.krepaSpeed = self.krepaSpeedBeforeDrag;
+
+                  self.sndHiss.stop();
+                  self.tmrHissing.paused = true;
+                  self.krepa.iterate(child => { child.clearTint(); });
             });
 
             this.sndTheme = this.sound.add('theme');
             this.sndClick = this.sound.add('click');
             this.sndStep = this.sound.add('step');
             this.sndEating = this.sound.add('eating');
-            this.sndAfraid = this.sound.add('afraid');
+            this.sndHiss = this.sound.add('fuse');
             this.sndTntSpawn = this.sound.add('tntspawn');
             this.sndFuse = this.sound.add('fuse');
             this.sndExplosion = this.sound.add('explosion');
@@ -281,6 +304,9 @@ class KrepagotchiGame extends Phaser.Scene {
 
             this.sndStep.loop = true;
             this.sndStep.setVolume(0.5);
+
+            this.sndHiss.loop = true;
+            this.sndHiss.setVolume(0.5);
 
             this.sndTheme.loop = true;
             this.sndTheme.setVolume(0.5);
