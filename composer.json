@@ -19,7 +19,7 @@
 	"require": {
         "php": "^8.3",
 		"danielbrendel/asatru-php-framework": "^1.5",
-        "phpmailer/phpmailer": "^6.1",
+        "phpmailer/phpmailer": "^6.2",
         "nesbot/carbon": "^3.0"
     },
 	"scripts": {

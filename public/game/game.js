@@ -848,38 +848,38 @@ class KrepagotchiGame extends Phaser.Scene {
                         'I really like my owner.\nI\'m being treated nicely. 😃',
                         'I just saw a pretty flower 🌸',
                         'I enjoy being cuddled 🤗',
-                        'What came first?\nThe Krepa or the big bang? 🌌'
+                        'What came first?\nThe Krepa or the Big Bang? 🌌'
                   ],
 
                   hungry: [
-                        'Mmmhhh... Tasty TNT...',
-                        'Last night I dreamed about TNT',
+                        'Mmmhh... Tasty TNT...',
+                        'Last night I dreamed about TNT.',
                         'Can you feed me, please? 🥺',
-                        'When dinner is ready?',
+                        'When is dinner ready?',
                         'I am sooo hungry right now!'
                   ],
 
                   affection: [
-                        'I\'m in need of cuddles',
+                        'I\'m in need of cuddles.',
                         'Can you pet me, please? 🥺',
                         'Do you still love me?',
                         'I feel so lonely today...\nIt makes me sad. 😞',
-                        'I feel like I\'m abandoned.\nWill anyone take care of me?'
+                        'Have I been abandoned?\nWill anyone take care of me?'
                   ],
 
                   dirty: [
                         'Ugh, I stepped on something...',
-                        'Currently not comfortable...',
+                        'I\'m currently not comfortable...',
                         'Ugh, this really smells...',
-                        'Can someone help me cleaning up?',
+                        'Can someone help me clean up?',
                         'I wonder what bathing feels like...'
                   ],
 
                   unhealthy: [
                         'I really need some care now... 🤒',
-                        'I\'m going to blow off... 💥',
+                        'I\'m going to blow up... 💥',
                         'Tick... tick... tick... 🕰️',
-                        'Am I being neglected?? 😢',
+                        'Am I being neglected? 😢',
                         'Dreaming of a better place... 😡'
                   ]
             };
