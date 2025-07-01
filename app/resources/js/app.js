@@ -30,6 +30,10 @@ window.promptAction = function() {
 };
 
 window.playSound = function(url) {
-    const audio = new Audio(url);
-    audio.play();
+    try {
+        const audio = new Audio(url);
+        audio.play();
+    } catch (error) {
+        console.error(error);
+    }
 };

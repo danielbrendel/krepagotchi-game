@@ -61,6 +61,9 @@
                     localStorage.setItem('krepa_stats_health', 100);
                     localStorage.setItem('krepa_birthdate', Date.now());
                     localStorage.setItem('krepa_initmsg', 0);
+                    localStorage.setItem('food_objects', JSON.stringify([]));
+                    localStorage.setItem('poop_objects', JSON.stringify([]));
+                    localStorage.setItem('updated_timestamp', Number(Date.now()));
 
                     window.showPrompt('What should your Krepa be called?', function(text) {
                         localStorage.setItem('krepa_name', text);

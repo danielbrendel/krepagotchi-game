@@ -7,6 +7,8 @@ const TIME_HEALTHCHECK = 4000 * 1000;
 const TIME_AFFECTIONCHECK = 3000 * 1000;
 const TIME_HUNGERCHECK = 3000 * 1000;
 const TIME_POOPCHECK = 5000 * 1000;
+const TOPMOST_ELEMENT = 9999;
+const DRAG_TOLERANCE_THRESHOLD = 20;
 
 class KrepagotchiGame extends Phaser.Scene {
       preload()
@@ -102,13 +104,15 @@ class KrepagotchiGame extends Phaser.Scene {
                   backgroundColor: 'rgba(0, 0, 0, 0.5)',
                   fontFamily: 'Pixel, monospace',
                   padding: { x: 5, y: 2 }
-            });
+            }).setDepth(TOPMOST_ELEMENT);
 
             this.krepaSpeed = 0;
             this.krepaSpeedBeforeDrag = 0;
             this.krepaRotation = 10.0;
             this.krepaBlink = 0;
             this.krepaThoughts = [];
+            this.krepaInDragging = false;
+            this.krepaDragTime = 0;
 
             this.txtThoughtBubble = this.add.text(0, 0, '', {
                   fontSize: '12px',
@@ -117,7 +121,7 @@ class KrepagotchiGame extends Phaser.Scene {
                   fontFamily: 'Pixel, monospace',
                   backgroundColor: 'rgba(0, 0, 0, 0.5)',
                   padding: { x: 10, y: 5 }
-            }).setVisible(false);
+            }).setDepth(TOPMOST_ELEMENT).setVisible(false);
 
             this.krepaStats = {
                   full: Number(self.getConfigValue('krepa_stats_full', 100)),
@@ -272,6 +276,10 @@ class KrepagotchiGame extends Phaser.Scene {
                   if (gameObject === self.krepa) {
                         gameObject.x = dragX;
                         gameObject.y = dragY;
+                        
+                        if (self.getDragThresholdTime() >= DRAG_TOLERANCE_THRESHOLD) {
+                              self.explodeKrepa();
+                        }
                   }
             });
             this.input.on('dragstart', function(pointer, gameObject) {
@@ -285,6 +293,9 @@ class KrepagotchiGame extends Phaser.Scene {
 
                   self.hissingCount = 0;
                   self.tmrHissing.paused = false;
+
+                  self.krepaInDragging = true;
+                  self.krepaDragTime = Date.now();
             });
             this.input.on('dragend', function(pointer, gameObject) {
                   self.krepaTweenFootLeft.timeScale = 1;
@@ -295,6 +306,9 @@ class KrepagotchiGame extends Phaser.Scene {
                   self.sndHiss.stop();
                   self.tmrHissing.paused = true;
                   self.krepa.iterate(child => { child.clearTint(); });
+
+                  self.krepaInDragging = false;
+                  self.krepaDragTime = 0;
             });
 
             this.sndTheme = this.sound.add('theme');
@@ -316,10 +330,11 @@ class KrepagotchiGame extends Phaser.Scene {
             this.loadStats();
             this.loadMenu();
             this.loadThoughtBubbles();
-
+            
             this.adjustStatsTimeGap();
 
             this.inDetonation = false;
+            this.isDetonated = false;
 
             this.sndStep.loop = true;
             this.sndStep.setVolume(0.5);
@@ -328,7 +343,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.sndHiss.setVolume(0.5);
 
             this.sndTheme.loop = true;
-            this.sndTheme.setVolume(0.5);
+            this.sndTheme.setVolume(0.22);
             this.sndTheme.play();
 
             this.restoreObjectsFromData();
@@ -347,6 +362,8 @@ class KrepagotchiGame extends Phaser.Scene {
 
       update()
       {
+            this.updateTextPositions();
+
             if (this.inDetonation) {
                   return;
             }
@@ -365,7 +382,7 @@ class KrepagotchiGame extends Phaser.Scene {
                   fontFamily: 'Pixel, monospace',
                   backgroundColor: 'rgb(50, 50, 50)',
                   padding: { x: 10, y: 5 }
-            });
+            }).setDepth(TOPMOST_ELEMENT);
             infoText.setInteractive();
             infoText.on('pointerdown', function() {
                   infoText.setAlpha(1);
@@ -427,7 +444,7 @@ class KrepagotchiGame extends Phaser.Scene {
                   fontFamily: 'Pixel, monospace',
                   backgroundColor: 'rgb(50, 50, 50)',
                   padding: { x: 10, y: 5 }
-            });
+            }).setDepth(TOPMOST_ELEMENT);
             initText.setInteractive();
             initText.setAlpha(1);
             initText.on('pointerdown', function() {
@@ -536,38 +553,51 @@ class KrepagotchiGame extends Phaser.Scene {
             }
 
             if (this.krepaSpeed > 0) {
-                  this.krepa.body.setVelocity(
-                        Math.cos(this.krepaRotation) * this.krepaSpeed,
-                        Math.sin(this.krepaRotation) * this.krepaSpeed
-                  );
-
-                  if (this.krepaTweenFootLeft.isPaused()) {
-                        this.krepaTweenFootLeft.resume();
-                  }
-
-                  if (this.krepaTweenFootRight.isPaused()) {
-                        this.krepaTweenFootRight.resume();
-                  }
-
-                  if (!this.sndStep.isPlaying) {
-                        this.sndStep.play();
-                  }
+                  this.processKrepaMovement();
             } else {
-                  this.krepa.body.setVelocity(0, 0);
+                  this.stopKrepaMovement();
+            }
+      }
 
-                  if (!this.krepaTweenFootLeft.isPaused()) {
-                        this.krepaTweenFootLeft.pause();
-                  }
+      processKrepaMovement()
+      {
+            this.krepa.body.setVelocity(
+                  Math.cos(this.krepaRotation) * this.krepaSpeed,
+                  Math.sin(this.krepaRotation) * this.krepaSpeed
+            );
 
-                  if (!this.krepaTweenFootRight.isPaused()) {
-                        this.krepaTweenFootRight.pause();
-                  }
-
-                  if (this.sndStep.isPlaying) {
-                        this.sndStep.stop();
-                  }
+            if (this.krepaTweenFootLeft.isPaused()) {
+                  this.krepaTweenFootLeft.resume();
             }
 
+            if (this.krepaTweenFootRight.isPaused()) {
+                  this.krepaTweenFootRight.resume();
+            }
+
+            if (!this.sndStep.isPlaying) {
+                  this.sndStep.play();
+            }
+      }
+
+      stopKrepaMovement()
+      {
+            this.krepa.body.setVelocity(0, 0);
+
+            if (!this.krepaTweenFootLeft.isPaused()) {
+                  this.krepaTweenFootLeft.pause();
+            }
+
+            if (!this.krepaTweenFootRight.isPaused()) {
+                  this.krepaTweenFootRight.pause();
+            }
+
+            if (this.sndStep.isPlaying) {
+                  this.sndStep.stop();
+            }
+      }
+
+      updateTextPositions()
+      {
             this.txtKrepaName.setPosition(this.krepa.body.x + this.krepa.body.width / 2 - this.txtKrepaName.width / 2, this.krepa.body.y - 25);
 
             if (this.txtThoughtBubble.visible) {
@@ -787,11 +817,17 @@ class KrepagotchiGame extends Phaser.Scene {
       explodeKrepa()
       {
             let self = this;
-
+            
             if (this.inDetonation) {
                   return;
             }
 
+            this.krepaThoughtBubble();
+
+            this.inDetonation = true;
+            this.krepaSpeedBeforeDrag = 0;
+            this.krepaSpeed = 0;
+            this.stopKrepaMovement();
             this.krepaBlink = 3 + 1;
 
             this.time.addEvent({
@@ -820,13 +856,15 @@ class KrepagotchiGame extends Phaser.Scene {
                   explosion.on('animationcomplete', function() {
                         explosion.destroy();
 
+                        self.isDetonated = true;
+
                         const restartAction = self.add.text(0, 0, self.krepaName + ' is now at a better place.\n\nBorn: ' + self.getReadableDate(Number(self.getConfigValue('krepa_birthdate'))) + '\nDetonated: ' + self.getReadableDate(Date.now()) + '\n\nClick or tap to restart', {
                               fontSize: '15px',
                               color: 'rgb(250, 50, 0)',
                               fontFamily: 'Pixel, monospace',
                               backgroundColor: 'rgb(50, 50, 50)',
                               padding: { x: 10, y: 5 }
-                        });
+                        }).setDepth(TOPMOST_ELEMENT);
                         restartAction.setInteractive();
                         restartAction.on('pointerdown', function() {
                               self.restartGame();
@@ -946,6 +984,14 @@ class KrepagotchiGame extends Phaser.Scene {
                         'Tick... tick... tick... 🕰️',
                         'Am I being neglected? 😢',
                         'Dreaming of a better place... 😡'
+                  ],
+
+                  detonation: [
+                        'Why are you doing this?',
+                        'That has been too much.',
+                        'I can\'t do this anymore.',
+                        'I thought we were friends...',
+                        'I\'m going to a better place now.'
                   ]
             };
       }
@@ -969,9 +1015,21 @@ class KrepagotchiGame extends Phaser.Scene {
 
       krepaThoughtBubble()
       {
+            if (this.isDetonated) {
+                  return;
+            }
+
             let self = this;
 
-            const thought = this.krepaPickThought();
+            const isDraggingThresholdReached = this.getDragThresholdTime() >= DRAG_TOLERANCE_THRESHOLD;
+
+            if ((this.krepaInDragging) && (!isDraggingThresholdReached)) {
+                  return;
+            }
+
+            const thought = (isDraggingThresholdReached) ? 
+                  this.krepaThoughts.detonation[Phaser.Math.Between(0, this.krepaThoughts.detonation.length - 1)] : 
+                  this.krepaPickThought();
 
             this.txtThoughtBubble.setText(thought);
             this.txtThoughtBubble.setVisible(true);
@@ -1070,17 +1128,26 @@ class KrepagotchiGame extends Phaser.Scene {
             this.restorePoopObjects();
       }
 
+      getDragThresholdTime()
+      {
+            if ((typeof this.krepaDragTime !== 'number') || (this.krepaDragTime == 0)) {
+                  return 0;
+            }
+
+            return Date.now() / 1000 - this.krepaDragTime / 1000;
+      }
+
       adjustStatsTimeGap()
       {
             let time_last = Number(this.getConfigValue('updated_timestamp'));
             let time_now = Date.now();
             let time_diff = time_now - time_last;
 
-            let health_check_diff = time_diff / TIME_HEALTHCHECK;
-            let affection_check_diff = time_diff / TIME_AFFECTIONCHECK;
-            let hunger_check_diff = time_diff / TIME_HUNGERCHECK;
-            let poop_check_diff = time_diff / TIME_POOPCHECK;
-
+            let health_check_diff = Math.round(time_diff / TIME_HEALTHCHECK);
+            let affection_check_diff = Math.round(time_diff / TIME_AFFECTIONCHECK);
+            let hunger_check_diff = Math.round(time_diff / TIME_HUNGERCHECK);
+            let poop_check_diff = Math.round(time_diff / TIME_POOPCHECK);
+            
             for (let i = 0; i < affection_check_diff; i++) {
                   this.krepaAffectionCheck();
             }
@@ -1116,7 +1183,7 @@ class KrepagotchiGame extends Phaser.Scene {
       getConfigValue(item, defval = null)
       {
             let result = localStorage.getItem(item);
-
+            
             if (result === null) {
                   result = defval;
             }
