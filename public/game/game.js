@@ -229,10 +229,19 @@ class KrepagotchiGame extends Phaser.Scene {
             });
 
             this.tmrObjectStorage = this.time.addEvent({
-                  delay: 1500,
+                  delay: 2000,
                   loop: true,
                   callback: function() {
                         self.storeObjectData();
+                  },
+                  callbackScope: self
+            });
+
+            this.tmrUpdateTimestamp = this.time.addEvent({
+                  delay: 2000,
+                  loop: true,
+                  callback: function() {
+                        this.updateTime();
                   },
                   callbackScope: self
             });
@@ -344,7 +353,6 @@ class KrepagotchiGame extends Phaser.Scene {
 
             this.moveKrepa();
             this.updateStats();
-            this.updateTime();
       }
 
       loadHelp()
