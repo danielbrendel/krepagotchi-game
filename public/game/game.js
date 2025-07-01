@@ -228,6 +228,15 @@ class KrepagotchiGame extends Phaser.Scene {
                   callbackScope: self
             });
 
+            this.tmrObjectStorage = this.time.addEvent({
+                  delay: 1500,
+                  loop: true,
+                  callback: function() {
+                        self.storeObjectData();
+                  },
+                  callbackScope: self
+            });
+
             this.anims.create({
                   key: 'explosion',
                   frames: this.anims.generateFrameNumbers('explosion', { start: 0, end: 15 }),
@@ -312,6 +321,8 @@ class KrepagotchiGame extends Phaser.Scene {
             this.sndTheme.loop = true;
             this.sndTheme.setVolume(0.5);
             this.sndTheme.play();
+
+            this.restoreObjectsFromData();
 
             if (this.getConfigValue('krepa_initmsg') != 1) {
                   this.sndClick.play();
@@ -617,6 +628,8 @@ class KrepagotchiGame extends Phaser.Scene {
             this.foods.push(food);
 
             this.sndTntSpawn.play();
+
+            return food;
       }
 
       findNearestFood()
@@ -678,6 +691,8 @@ class KrepagotchiGame extends Phaser.Scene {
             });
 
             this.poops.push(poop);
+
+            return poop;
       }
 
       poopSplash(x, y)
@@ -973,6 +988,78 @@ class KrepagotchiGame extends Phaser.Scene {
                         });
                   }
             });
+      }
+
+      storeFoodData()
+      {
+            let data = [];
+
+            for (let i = 0; i < this.foods.length; i++) {
+                  const food = this.foods[i];
+
+                  data.push({ x: food.x, y: food.y });
+            }
+
+            const json_data = JSON.stringify(data);
+
+            this.setConfigValue('food_objects', json_data);
+      }
+
+      storePoopData()
+      {
+            let data = [];
+
+            for (let i = 0; i < this.poops.length; i++) {
+                  const poop = this.poops[i];
+
+                  data.push({ x: poop.x, y: poop.y });
+            }
+
+            const json_data = JSON.stringify(data);
+
+            this.setConfigValue('poop_objects', json_data);
+      }
+
+      storeObjectData()
+      {
+            this.storeFoodData();
+            this.storePoopData();
+      }
+
+      restoreFoodObjects()
+      {
+            let objects = this.getConfigValue('food_objects');
+            if (objects.length > 0) {
+                  objects = JSON.parse(objects);
+                  
+                  for (let i = 0; i < objects.length; i++) {
+                        let entity = this.spawnFood();
+                        if (entity) {
+                              entity.setPosition(objects[i].x, objects[i].y);
+                        }
+                  }
+            }
+      }
+
+      restorePoopObjects()
+      {
+            let objects = this.getConfigValue('poop_objects');
+            if (objects.length > 0) {
+                  objects = JSON.parse(objects);
+                  
+                  for (let i = 0; i < objects.length; i++) {
+                        let entity = this.spawnPoop();
+                        if (entity) {
+                              entity.setPosition(objects[i].x, objects[i].y);
+                        }
+                  }
+            }
+      }
+
+      restoreObjectsFromData()
+      {
+            this.restoreFoodObjects();
+            this.restorePoopObjects();
       }
 
       adjustStatsTimeGap()
