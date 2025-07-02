@@ -44,6 +44,7 @@ This project is a fan-made game and is not affiliated with Mojang, Microsoft, Ba
 - Cleaning
 - Treatment
 - Thought bubbles
+- Biome selection
 - Cute pixel art
 - PWA support
 
