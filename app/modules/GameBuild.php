@@ -48,6 +48,7 @@ class GameBuild {
         copy(public_path() . '/manifest.json', public_path() . '/build/manifest.json');
         copy(public_path() . '/serviceworker.js', public_path() . '/build/serviceworker.js');
         copy(public_path() . '/img/logo.png', public_path() . '/build/img/logo.png');
+        copy(public_path() . '/img/background.png', public_path() . '/build/img/background.png');
         copy(public_path() . '/img/logo.png', public_path() . '/build/game/logo.png');
         copy(public_path() . '/img/screenshot-game.png', public_path() . '/build/img/screenshot-game.png');
         copy(public_path() . '/game/game.js', public_path() . '/build/game/game.js');

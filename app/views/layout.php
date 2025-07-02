@@ -27,7 +27,9 @@
 
         <div class="prompt-overlay is-hidden">
             <div id="prompt-content" class="prompt-content">
-                <div class="prompt-title">Please enter your name</div>
+                <div class="prompt-title"></div>
+
+                <div class="prompt-label"></div>
 
                 <div class="prompt-input">
                     <input type="text" id="txtInputValue" value=""/>
@@ -55,7 +57,9 @@
             document.addEventListener('DOMContentLoaded', function() {
                 let krepaName = localStorage.getItem('krepa_name');
                 if ((!krepaName) || (!(krepaName.length > 0))) {
-                    localStorage.setItem('krepa_name', 'Unnamed Krepa');
+                    window.setBodyInitStyle();
+
+                    localStorage.setItem('krepa_name', '');
                     localStorage.setItem('krepa_stats_affection', {{ env('KREPA_INITIAL_AFFECTION', 100) }});
                     localStorage.setItem('krepa_stats_full', {{ env('KREPA_INITIAL_FULLNESS', 100) }});
                     localStorage.setItem('krepa_stats_health', {{ env('KREPA_INITIAL_HEALTH', 100) }});
@@ -65,9 +69,10 @@
                     localStorage.setItem('poop_objects', JSON.stringify([]));
                     localStorage.setItem('updated_timestamp', Number(Date.now()));
 
-                    window.showPrompt('What should your Krepa be called?', function(text) {
+                    window.showPrompt('<img src="{{ asset('img/logo.png') }}" alt="logo"/>&nbsp;{{ env('APP_NAME') }}', 'Please give your Krepa a name!', function(text) {
                         localStorage.setItem('krepa_name', text);
 
+                        window.clearBodyInitStyle();
                         window.playSound('{{ asset('game/assets/sounds/nameselect.wav') }}');
                         window.startGame();
                     }, 'Krepa');

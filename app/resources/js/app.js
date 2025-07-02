@@ -3,14 +3,17 @@ require('phaser');
 
 window.currentPromptCallback = function(text) {};
 
-window.showPrompt = function(label, cb = function(text) {}, deftext = '') {
+window.showPrompt = function(title, label, cb = function(text) {}, deftext = '') {
     let prompt = document.querySelector('.prompt-overlay');
     if (prompt) {
-        let title = document.querySelector('.prompt-title');
-        title.innerText = label;
+        let elTitle = document.querySelector('.prompt-title');
+        elTitle.innerHTML = title;
 
-        let eltext = document.querySelector('#txtInputValue');
-        eltext.value = deftext;
+        let elLabel = document.querySelector('.prompt-label');
+        elLabel.innerHTML = label;
+
+        let elText = document.querySelector('#txtInputValue');
+        elText.value = deftext;
 
         window.currentPromptCallback = cb;
 
@@ -26,6 +29,22 @@ window.promptAction = function() {
         let eltext = document.querySelector('#txtInputValue');
 
         window.currentPromptCallback(eltext.value);
+    }
+};
+
+window.setBodyInitStyle = function() {
+    let body = document.querySelector('body');
+    if (body) {
+        body.classList.add('background-overlay');
+        body.style.backgroundImage = 'url("img/background.png")';
+    }
+};
+
+window.clearBodyInitStyle = function() {
+    let body = document.querySelector('body');
+    if (body) {
+        body.classList.remove('background-overlay');
+        body.style.backgroundImage = 'unset';
     }
 };
 
