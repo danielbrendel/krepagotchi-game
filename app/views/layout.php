@@ -56,9 +56,9 @@
                 let krepaName = localStorage.getItem('krepa_name');
                 if ((!krepaName) || (!(krepaName.length > 0))) {
                     localStorage.setItem('krepa_name', 'Unnamed Krepa');
-                    localStorage.setItem('krepa_stats_affection', 100);
-                    localStorage.setItem('krepa_stats_full', 100);
-                    localStorage.setItem('krepa_stats_health', 100);
+                    localStorage.setItem('krepa_stats_affection', {{ env('KREPA_INITIAL_AFFECTION', 100) }});
+                    localStorage.setItem('krepa_stats_full', {{ env('KREPA_INITIAL_FULLNESS', 100) }});
+                    localStorage.setItem('krepa_stats_health', {{ env('KREPA_INITIAL_HEALTH', 100) }});
                     localStorage.setItem('krepa_birthdate', Date.now());
                     localStorage.setItem('krepa_initmsg', 0);
                     localStorage.setItem('food_objects', JSON.stringify([]));

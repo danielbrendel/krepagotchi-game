@@ -951,7 +951,18 @@ class KrepagotchiGame extends Phaser.Scene {
                         'I really like my owner.\nI\'m being treated nicely. 😃',
                         'I just saw a pretty flower 🌸',
                         'I enjoy being cuddled 🤗',
-                        'What came first?\nThe Krepa or the Big Bang? 🌌'
+                        'What came first?\nThe Krepa or the Big Bang? 🌌',
+                        'I saw a butterfly today 🦋\nIt was beautiful!',
+                        'Boomingly good weather.\nI like it. 🌞',
+                        'I\'m feeling peaceful today\nI like that.',
+                        'I like being a Krepa. 💚',
+                        'Is it cuddle time yet?\nJust wondering.',
+                        'This place is cozy 💚\nPlease don\'t change it.',
+                        'I want to learn how to smile. 🌞',
+                        'I counted pixels today\nNew highscore: ' + Phaser.Math.Between(20, 50),
+                        'I enjoy just existing 💚\nKinda nice.',
+                        'Boom-free day!\nI love it! 😃'
+
                   ],
 
                   hungry: [
@@ -959,7 +970,17 @@ class KrepagotchiGame extends Phaser.Scene {
                         'Last night I dreamed about TNT.',
                         'Can you feed me, please? 🥺',
                         'When is dinner ready?',
-                        'I am sooo hungry right now!'
+                        'I am sooo hungry right now!',
+                        'I smell TNT...\nWait, just a dream.',
+                        'My tummy is rumbling.\nPlease feed me!',
+                        'Boom hunger is real 💥\nI need food.',
+                        'Starving a little bit...\nOkay, a lot.',
+                        'You forgot my snack. 😢\nI noticed!',
+                        'TNT for dinner?\nPlease say yes!',
+                        'I dreamed of a feast...\nWoke up sad.',
+                        'No food. Still alive.\nBarely.',
+                        'Feed me soon...\nOr face the boom.',
+                        'I\'d really go for a TNT pie!'
                   ],
 
                   affection: [
@@ -967,7 +988,17 @@ class KrepagotchiGame extends Phaser.Scene {
                         'Can you pet me, please? 🥺',
                         'Do you still love me?',
                         'I feel so lonely today...\nIt makes me sad. 😞',
-                        'Have I been abandoned?\nWill anyone take care of me?'
+                        'Have I been abandoned?\nWill anyone take care of me?',
+                        'Pet me, please 🥺\nI miss you...',
+                        'I\'m still here...\nDo you care...?',
+                        'I need affection. 💚\nAnd many cuddles.',
+                        'I feel invisible...\nBut I\'m here.',
+                        'Cuddle time is the best\nDon\'t skip it!',
+                        'Will I be loved again?\nI hope so...',
+                        'I miss our good days. 💚\nDo you?',
+                        'I\'m sad today 😞\nBut I\'m still here.',
+                        'Have I been forgotten?\nHopefully not...',
+                        'Everyone needs affection.\nEspecially me.'
                   ],
 
                   dirty: [
@@ -975,7 +1006,17 @@ class KrepagotchiGame extends Phaser.Scene {
                         'I\'m currently not comfortable...',
                         'Ugh, this really smells...',
                         'Can someone help me clean up?',
-                        'I wonder what bathing feels like...'
+                        'I wonder what bathing feels like...',
+                        'There\'s poop everywhere.\nI stepped in it.',
+                        'I\'m stinky and sad. 😷\nPlease help?',
+                        'I slipped on my mess...\nEmbarrassing.',
+                        'It smells weird here...\nSuspiciously weird.',
+                        'I don\'t like that smell. 😢',
+                        'I feel gross. 🧼\nCan we clean?',
+                        'This place is a mess. 😖',
+                        'Something squished. Ew...',
+                        'How to deal with\nthat smelly mess?',
+                        'I miss being clean...\nIt felt better.'
                   ],
 
                   unhealthy: [
@@ -983,6 +1024,16 @@ class KrepagotchiGame extends Phaser.Scene {
                         'I\'m going to blow up... 💥',
                         'Tick... tick... tick... 🕰️',
                         'Am I being neglected? 😢',
+                        'Please fix me 😷\nBefore it\'s too late.',
+                        'I feel weak today 😔\nKinda fragile.',
+                        'I think I\'m fading...\nNeed help quickly.',
+                        'I\'m hurting. 💥\nThis isn\'t normal.',
+                        'My fuse is short...\nIn every way.',
+                        'I need a pill, please. 💊',
+                        'I\'m tired... all over.\nEven inside.',
+                        'I feel broken...\nAnd not the cute kind.',
+                        'I\'m about to burst...\nThis is scary.',
+                        'Will I survive?\nIt\'s not looking good.',
                         'Dreaming of a better place... 😡'
                   ],
 
@@ -991,7 +1042,17 @@ class KrepagotchiGame extends Phaser.Scene {
                         'That has been too much.',
                         'I can\'t do this anymore.',
                         'I thought we were friends...',
-                        'I\'m going to a better place now.'
+                        'This is the end...\nI can feel it.',
+                        'Goodbye, my friend...\nIt\'s boom time.',
+                        'I\'m done...\nBoomingly done.',
+                        'I wanted love...\nBut got neglected.',
+                        'I can\'t hold it anymore...\nI\'m so sorry.',
+                        'I thought we had something. 💥',
+                        'That was my final straw...\nPrepare for a burst.',
+                        'Ticking ends now.\nSee you on the other side.',
+                        'So this is goodbye...\nThanks anyway.',
+                        'You\'ll remember me...\nWon\'t you?',
+                        'I\'m going to a better place now.',
                   ]
             };
       }
