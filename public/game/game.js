@@ -183,8 +183,8 @@ class KrepagotchiGame extends Phaser.Scene {
                         ]
                   },
                   {
-                        ident: "beach",
-                        name: "Beach",
+                        ident: "glowath",
+                        name: "Glowath",
                         background: "background.png",
                         theme: "theme.ogg",
                         objects: [
@@ -298,7 +298,7 @@ class KrepagotchiGame extends Phaser.Scene {
 
             this.load.image('biome_grass', 'game/assets/sprites/biome_grass.png');
             this.load.image('biome_foliage', 'game/assets/sprites/biome_foliage.png');
-            this.load.image('biome_beach', 'game/assets/sprites/biome_beach.png');
+            this.load.image('biome_glowath', 'game/assets/sprites/biome_glowath.png');
             
             this.load.spritesheet('krepa', 'game/assets/sprites/krepa.png', { frameWidth: 1024, frameHeight: 1536 });
             this.load.spritesheet('krepa_foot_left', 'game/assets/sprites/krepa_foot_left.png', { frameWidth: 334, frameHeight: 400 });
@@ -723,7 +723,7 @@ class KrepagotchiGame extends Phaser.Scene {
 
             const biomeTypes = [
                   { key: 'grass', label: 'Grass' },
-                  { key: 'beach', label: 'Beach' },
+                  { key: 'glowath', label: 'Glowath' },
                   { key: 'foliage', label: 'Foliage' },
             ];
 
