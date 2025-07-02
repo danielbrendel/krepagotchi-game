@@ -698,14 +698,14 @@ class KrepagotchiGame extends Phaser.Scene {
             dialog.add(bg);
 
             const panel = this.add.rectangle(this.scale.width / 2, this.scale.height / 2, 300, 240, 0x323232, 1)
-                  .setStrokeStyle(2, 0xaaaaaa)
+                  .setStrokeStyle(2, 0x505050)
                   .setOrigin(0.5);
             dialog.add(panel);
 
             const title = this.add.text(this.scale.width / 2, this.scale.height / 2 - 90, 'Choose a biome', {
                   fontSize: '20px',
                   fontFamily: 'sans-serif',
-                  color: '#000'
+                  color: 'rgb(250, 250, 250)'
             }).setOrigin(0.5);
             dialog.add(title);
 
@@ -719,6 +719,8 @@ class KrepagotchiGame extends Phaser.Scene {
                   self.sndClick.play();
                   dialog.destroy();
             });
+            cancel.on('pointerover', function() { cancel.setScale(1.05); });
+            cancel.on('pointerout', function() { cancel.setScale(1.0); });
             dialog.add(cancel);
 
             const biomeTypes = [
@@ -734,7 +736,7 @@ class KrepagotchiGame extends Phaser.Scene {
                   const preview = self.add.image(startX + i * 90, startY, 'biome_' + biome.key).setDisplaySize(64, 64).setInteractive();
                   const label = self.add.text(startX + i * 90, startY + 40, biome.label, {
                         fontSize: '14px',
-                        color: '#000'
+                        color: 'rgb(220, 220, 220)'
                   }).setOrigin(0.5, 0);
 
                   preview.on('pointerdown', () => {
