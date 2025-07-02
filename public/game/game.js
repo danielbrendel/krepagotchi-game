@@ -835,7 +835,7 @@ class KrepagotchiGame extends Phaser.Scene {
       {
             let self = this;
 
-            const init_info = 'Hello fellow Krepa owner! 👋\n\nToday ' + this.krepaName + ' was born. 💚\n\nPlease take care of it:\n⭐ Feed it\n⭐ Clean it\n⭐ Give it affection\n⭐ Vet it if necessary\n\nThe journey has just begun! 🚀';
+            const init_info = 'Hello fellow Krepa owner! 👋\n\nToday ' + this.krepaName + ' was born. 💚\n\nPlease take care of it:\n⭐ Feed it\n⭐ Clean it\n⭐ Give it affection\n⭐ Heal it if required\n\nThe journey has just begun! 🚀';
 
             const initText = this.add.text(0, 0, init_info, {
                   fontSize: '15px',
