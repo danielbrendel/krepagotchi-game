@@ -11,9 +11,277 @@ const TOPMOST_ELEMENT = 9999;
 const DRAG_TOLERANCE_THRESHOLD = 20;
 
 class KrepagotchiGame extends Phaser.Scene {
+      biome_list = [
+                  {
+                        ident: "grass",
+                        name: "Grass",
+                        background: "background.png",
+                        theme: "theme.ogg",
+                        objects: [
+                              {
+                                    asset: "plant1.png",
+                                    pos: {
+                                          x: 100,
+                                          y: 105
+                                    },
+                                    size: {
+                                          w: 34,
+                                          h: 32
+                                    }
+                              },
+                              {
+                                    asset: "plant1.png",
+                                    pos: {
+                                          x: 250,
+                                          y: 200
+                                    },
+                                    size: {
+                                          w: 34,
+                                          h: 32
+                                    }
+                              },
+                              {
+                                    asset: "plant1.png",
+                                    pos: {
+                                          x: 111,
+                                          y: 450
+                                    },
+                                    size: {
+                                          w: 34,
+                                          h: 32
+                                    }
+                              },
+                              {
+                                    asset: "plant1.png",
+                                    pos: {
+                                          x: 200,
+                                          y: 492
+                                    },
+                                    size: {
+                                          w: 34,
+                                          h: 32
+                                    }
+                              },
+                              {
+                                    asset: "plant2.png",
+                                    pos: {
+                                          x: 200,
+                                          y: 300
+                                    },
+                                    size: {
+                                          w: 47,
+                                          h: 30
+                                    }
+                              },
+                              {
+                                    asset: "plant3.png",
+                                    pos: {
+                                          x: 300,
+                                          y: 400
+                                    },
+                                    size: {
+                                          w: 39,
+                                          h: 35
+                                    }
+                              },
+                              {
+                                    asset: "plant4.png",
+                                    pos: {
+                                          x: 50,
+                                          y: 270
+                                    },
+                                    size: {
+                                          w: 41,
+                                          h: 35
+                                    }
+                              },
+                        ]
+                  },
+                  {
+                        ident: "foliage",
+                        name: "Foliage",
+                        background: "background.png",
+                        theme: "theme.ogg",
+                        objects: [
+                              {
+                                    asset: "rock1.png",
+                                    pos: {
+                                          x: 100,
+                                          y: 105
+                                    },
+                                    size: {
+                                          w: 32,
+                                          h: 32
+                                    }
+                              },
+                              {
+                                    asset: "rock2.png",
+                                    pos: {
+                                          x: 250,
+                                          y: 200
+                                    },
+                                    size: {
+                                          w: 33,
+                                          h: 32
+                                    }
+                              },
+                              {
+                                    asset: "rock3.png",
+                                    pos: {
+                                          x: 111,
+                                          y: 450
+                                    },
+                                    size: {
+                                          w: 34,
+                                          h: 29
+                                    }
+                              },
+                              {
+                                    asset: "rock4.png",
+                                    pos: {
+                                          x: 200,
+                                          y: 492
+                                    },
+                                    size: {
+                                          w: 30,
+                                          h: 24
+                                    }
+                              },
+                              {
+                                    asset: "rock4.png",
+                                    pos: {
+                                          x: 200,
+                                          y: 300
+                                    },
+                                    size: {
+                                          w: 30,
+                                          h: 24
+                                    }
+                              },
+                              {
+                                    asset: "rock3.png",
+                                    pos: {
+                                          x: 300,
+                                          y: 400
+                                    },
+                                    size: {
+                                          w: 34,
+                                          h: 29
+                                    }
+                              },
+                              {
+                                    asset: "rock4.png",
+                                    pos: {
+                                          x: 50,
+                                          y: 270
+                                    },
+                                    size: {
+                                          w: 30,
+                                          h: 24
+                                    }
+                              },
+                        ]
+                  },
+                  {
+                        ident: "beach",
+                        name: "Beach",
+                        background: "background.png",
+                        theme: "theme.ogg",
+                        objects: [
+                              {
+                                    asset: "bamboo.png",
+                                    pos: {
+                                          x: 100,
+                                          y: 105
+                                    },
+                                    size: {
+                                          w: 256,
+                                          h: 128,
+                                          scale: 0.5
+                                    }
+                              },
+                              {
+                                    asset: "tropical1.png",
+                                    pos: {
+                                          x: 250,
+                                          y: 200
+                                    },
+                                    size: {
+                                          w: 256,
+                                          h: 128,
+                                          scale: 0.5
+                                    }
+                              },
+                              {
+                                    asset: "tropical1.png",
+                                    pos: {
+                                          x: 111,
+                                          y: 450
+                                    },
+                                    size: {
+                                          w: 256,
+                                          h: 128,
+                                          scale: 0.5
+                                    }
+                              },
+                              {
+                                    asset: "bush.png",
+                                    pos: {
+                                          x: 200,
+                                          y: 492
+                                    },
+                                    size: {
+                                          w: 256,
+                                          h: 128,
+                                          scale: 0.5
+                                    }
+                              },
+                              {
+                                    asset: "tropical2.png",
+                                    pos: {
+                                          x: 200,
+                                          y: 300
+                                    },
+                                    size: {
+                                          w: 256,
+                                          h: 128,
+                                          scale: 0.5
+                                    }
+                              },
+                              {
+                                    asset: "bamboo.png",
+                                    pos: {
+                                          x: 300,
+                                          y: 400
+                                    },
+                                    size: {
+                                          w: 256,
+                                          h: 128,
+                                          scale: 0.5
+                                    }
+                              },
+                              {
+                                    asset: "tropical2.png",
+                                    pos: {
+                                          x: 50,
+                                          y: 270
+                                    },
+                                    size: {
+                                          w: 256,
+                                          h: 128,
+                                          scale: 0.5
+                                    }
+                              },
+                        ]
+                  }
+            ];
+
+      biome_data = null;
+
       preload()
       {
-            this.load.image('background', 'game/assets/sprites/background.png');
+            this.precacheBiome();
+
             this.load.image('fence_h', 'game/assets/sprites/fence-horizontal.png');
             this.load.image('fence_v', 'game/assets/sprites/fence-vertical.png');
             this.load.image('slot', 'game/assets/sprites/slot.png');
@@ -26,14 +294,15 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.image('health', 'game/assets/sprites/health.png');
             this.load.image('btn_circle', 'game/assets/sprites/btn_circle.png');
             this.load.image('sym_help', 'game/assets/sprites/sym_help.png');
+            this.load.image('biome', 'game/assets/sprites/biome.png');
+
+            this.load.image('biome_grass', 'game/assets/sprites/biome_grass.png');
+            this.load.image('biome_foliage', 'game/assets/sprites/biome_foliage.png');
+            this.load.image('biome_beach', 'game/assets/sprites/biome_beach.png');
             
             this.load.spritesheet('krepa', 'game/assets/sprites/krepa.png', { frameWidth: 1024, frameHeight: 1536 });
             this.load.spritesheet('krepa_foot_left', 'game/assets/sprites/krepa_foot_left.png', { frameWidth: 334, frameHeight: 400 });
             this.load.spritesheet('krepa_foot_right', 'game/assets/sprites/krepa_foot_right.png', { frameWidth: 334, frameHeight: 400 });
-            this.load.spritesheet('plant1', 'game/assets/sprites/plant1.png', { frameWidth: 34, frameHeight: 32 });
-            this.load.spritesheet('plant2', 'game/assets/sprites/plant2.png', { frameWidth: 47, frameHeight: 30 });
-            this.load.spritesheet('plant3', 'game/assets/sprites/plant3.png', { frameWidth: 39, frameHeight: 35 });
-            this.load.spritesheet('plant4', 'game/assets/sprites/plant4.png', { frameWidth: 41, frameHeight: 35 });
             this.load.spritesheet('tntfood', 'game/assets/sprites/tnt.png', { frameWidth: 32, frameHeight: 32 });
             this.load.spritesheet('explosion', 'game/assets/sprites/explosion.png', { frameWidth: 192, frameHeight: 192 });
             this.load.spritesheet('poop', 'game/assets/sprites/poop.png', { frameWidth: 16, frameHeight: 16 });
@@ -41,7 +310,6 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.spritesheet('particle', 'game/assets/sprites/heart.png', { frameWidth: 32, frameHeight: 32 });
             this.load.spritesheet('burst', 'game/assets/sprites/burst.png', { frameWidth: 192, frameHeight: 192 });
 
-            this.load.audio('theme', 'game/assets/sounds/theme.ogg');
             this.load.audio('click', 'game/assets/sounds/click.wav');
             this.load.audio('step', 'game/assets/sounds/step.wav');
             this.load.audio('eating', 'game/assets/sounds/eating.wav');
@@ -64,15 +332,7 @@ class KrepagotchiGame extends Phaser.Scene {
 
             this.krepaName = this.getConfigValue('krepa_name', 'Krepa');
 
-            this.add.image(0, 0, 'background').setOrigin(0, 0);
-
-            this.add.image(100, 105, 'plant1');
-            this.add.image(250, 200, 'plant1');
-            this.add.image(111, 450, 'plant1');
-            this.add.image(200, 492, 'plant1');
-            this.add.image(200, 300, 'plant2');
-            this.add.image(300, 400, 'plant3');
-            this.add.image(50, 270, 'plant4');
+            this.loadBiome();
 
             this.fence_v_left = this.add.tileSprite(0, 50, 14, gameconfig.scale.height - 140, 'fence_v').setOrigin(0, 0);
             this.fence_v_right = this.add.tileSprite(gameconfig.scale.width - 14, 50, 14, gameconfig.scale.height - 140, 'fence_v').setOrigin(0, 0);
@@ -311,7 +571,6 @@ class KrepagotchiGame extends Phaser.Scene {
                   self.krepaDragTime = 0;
             });
 
-            this.sndTheme = this.sound.add('theme');
             this.sndClick = this.sound.add('click');
             this.sndStep = this.sound.add('step');
             this.sndEating = this.sound.add('eating');
@@ -327,6 +586,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.sndNoAction = this.sound.add('noaction');
 
             this.loadHelp();
+            this.loadBiomeAction();
             this.loadStats();
             this.loadMenu();
             this.loadThoughtBubbles();
@@ -341,10 +601,6 @@ class KrepagotchiGame extends Phaser.Scene {
 
             this.sndHiss.loop = true;
             this.sndHiss.setVolume(0.5);
-
-            this.sndTheme.loop = true;
-            this.sndTheme.setVolume(0.22);
-            this.sndTheme.play();
 
             this.restoreObjectsFromData();
 
@@ -370,6 +626,134 @@ class KrepagotchiGame extends Phaser.Scene {
 
             this.moveKrepa();
             this.updateStats();
+      }
+
+      precacheBiomeObjects(biome)
+      {
+            this.load.image('background', 'game/assets/biomes/' + this.current_biome + '/' + biome.background);
+            
+            for (let i = 0; i < biome.objects.length; i++) {
+                  const obj = biome.objects[i];
+                  const ident = obj.asset.substring(0, obj.asset.lastIndexOf('.'));
+                  
+                  this.load.spritesheet(ident, 'game/assets/biomes/' + this.current_biome + '/' + obj.asset, { frameWidth: obj.size.w, frameHeight: obj.size.h });
+            }
+
+            this.load.audio('theme', 'game/assets/biomes/' + this.current_biome + '/' + biome.theme);
+      }
+
+      precacheBiome()
+      {
+            try {
+                  this.current_biome = this.getConfigValue('current_biome', 'grass');
+                  
+                  for (let i = 0; i < this.biome_list.length; i++) {
+                        this.biome_data = this.biome_list[i];
+                        
+                        if (this.biome_data.ident === this.current_biome) {
+                              this.precacheBiomeObjects(this.biome_data);
+
+                              break;
+                        }
+                  }
+            } catch (error) {
+                  console.error(error);
+            }
+      }
+
+      loadBiome()
+      {
+            try {
+                  this.add.image(0, 0, 'background').setOrigin(0, 0);
+                  
+                  for (let i = 0; i < this.biome_data.objects.length; i++) {
+                        const obj = this.biome_data.objects[i];
+                        const ident = obj.asset.substring(0, obj.asset.lastIndexOf('.'));
+                        
+                        const image = this.add.image(obj.pos.x, obj.pos.y, ident);
+
+                        if (typeof obj.size.scale !== 'undefined') {
+                              image.setScale(obj.size.scale);
+                        }
+                  }
+
+                  this.sndTheme = this.sound.add('theme');
+                  this.sndTheme.loop = true;
+                  this.sndTheme.setVolume(0.22);
+                  this.sndTheme.play();
+            } catch (error) {
+                  console.error(error);
+            }
+      }
+
+      loadBiomeSelectionMenu() 
+      {
+            let self = this;
+
+            const dialog = this.add.container(0, 0);
+
+            const bg = this.add.rectangle(0, 0, this.scale.width, this.scale.height, 0x000000, 0)
+                  .setOrigin(0)
+                  .setInteractive();
+
+            dialog.add(bg);
+
+            const panel = this.add.rectangle(this.scale.width / 2, this.scale.height / 2, 300, 240, 0x323232, 1)
+                  .setStrokeStyle(2, 0xaaaaaa)
+                  .setOrigin(0.5);
+            dialog.add(panel);
+
+            const title = this.add.text(this.scale.width / 2, this.scale.height / 2 - 90, 'Choose a biome', {
+                  fontSize: '20px',
+                  fontFamily: 'sans-serif',
+                  color: '#000'
+            }).setOrigin(0.5);
+            dialog.add(title);
+
+            const cancel = this.add.text(80, 415, 'Cancel', {
+                  fontSize: '14px',
+                  fill: '#ff6666',
+                  backgroundColor: '#222222',
+                  padding: { x: 10, y: 5 }
+            }).setOrigin(0.5).setInteractive({ useHandCursor: true });
+            cancel.on('pointerdown', function() {
+                  self.sndClick.play();
+                  dialog.destroy();
+            });
+            dialog.add(cancel);
+
+            const biomeTypes = [
+                  { key: 'grass', label: 'Grass' },
+                  { key: 'beach', label: 'Beach' },
+                  { key: 'foliage', label: 'Foliage' },
+            ];
+
+            const startX = this.scale.width / 2 - 90;
+            const startY = this.scale.height / 2 - 5;
+
+            biomeTypes.forEach((biome, i) => {
+                  const preview = self.add.image(startX + i * 90, startY, 'biome_' + biome.key).setDisplaySize(64, 64).setInteractive();
+                  const label = self.add.text(startX + i * 90, startY + 40, biome.label, {
+                        fontSize: '14px',
+                        color: '#000'
+                  }).setOrigin(0.5, 0);
+
+                  preview.on('pointerdown', () => {
+                        self.sndClick.play();
+                        self.setConfigValue('current_biome', biome.key);
+                        dialog.destroy();
+                        location.reload();
+                  });
+                  preview.on('pointerover', function() { preview.setScale(1.1); });
+                  preview.on('pointerout', function() { preview.setScale(1.0); });
+
+                  dialog.add(preview);
+                  dialog.add(label);
+            });
+
+            this.children.bringToTop(dialog);
+
+            return dialog;
       }
 
       loadHelp()
@@ -430,6 +814,21 @@ class KrepagotchiGame extends Phaser.Scene {
             });
             helpAction.on('pointerover', function() { helpAction.setScale(1.01); });
             helpAction.on('pointerout', function() { helpAction.setScale(0.8); });
+      }
+
+      loadBiomeAction()
+      {
+            let self = this;
+
+            const helpAction = this.add.image(gameconfig.scale.width - 65, 25, 'biome').setScale(0.4).setInteractive();
+            helpAction.on('pointerdown', function() {
+                  self.loadBiomeSelectionMenu();
+
+                  self.sndClick.play();
+                  
+            });
+            helpAction.on('pointerover', function() { helpAction.setScale(0.45); });
+            helpAction.on('pointerout', function() { helpAction.setScale(0.4); });
       }
 
       loadInitInfo()
