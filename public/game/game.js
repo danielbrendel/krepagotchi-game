@@ -689,7 +689,7 @@ class KrepagotchiGame extends Phaser.Scene {
       {
             let self = this;
 
-            const dialog = this.add.container(0, 0);
+            const dialog = this.add.container(0, 0).setDepth(TOPMOST_ELEMENT);
 
             const bg = this.add.rectangle(0, 0, this.scale.width, this.scale.height, 0x000000, 0)
                   .setOrigin(0)
@@ -699,7 +699,8 @@ class KrepagotchiGame extends Phaser.Scene {
 
             const panel = this.add.rectangle(this.scale.width / 2, this.scale.height / 2, 300, 240, 0x323232, 1)
                   .setStrokeStyle(2, 0x505050)
-                  .setOrigin(0.5);
+                  .setOrigin(0.5)
+                  .setDepth(TOPMOST_ELEMENT);
             dialog.add(panel);
 
             const title = this.add.text(this.scale.width / 2, this.scale.height / 2 - 90, 'Choose a biome', {
