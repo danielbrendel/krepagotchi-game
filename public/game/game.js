@@ -590,8 +590,6 @@ class KrepagotchiGame extends Phaser.Scene {
             this.loadStats();
             this.loadMenu();
             this.loadThoughtBubbles();
-            
-            this.adjustStatsTimeGap();
 
             this.inDetonation = false;
             this.isDetonated = false;
@@ -603,6 +601,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.sndHiss.setVolume(0.5);
 
             this.restoreObjectsFromData();
+            this.adjustStatsTimeGap();
 
             if (this.getConfigValue('krepa_initmsg') != 1) {
                   this.sndClick.play();
@@ -1338,7 +1337,7 @@ class KrepagotchiGame extends Phaser.Scene {
             let self = this;
 
             if (self.poops.length > 0) {
-                  self.krepaStats.health -= 5;
+                  self.krepaStats.health -= 2 * self.poops.length;
             }
       }
 
