@@ -314,7 +314,6 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.spritesheet('smoke', 'game/assets/sprites/smoke.png', { frameWidth: 256, frameHeight: 256 });
 
             this.load.audio('click', 'game/assets/sounds/click.wav');
-            this.load.audio('step', 'game/assets/sounds/step.wav');
             this.load.audio('eating', 'game/assets/sounds/eating.wav');
             this.load.audio('tntspawn', 'game/assets/sounds/tntspawn.wav');
             this.load.audio('fuse', 'game/assets/sounds/fuse.wav');
@@ -325,6 +324,10 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.audio('purr', 'game/assets/sounds/purr.wav');
             this.load.audio('refreshed', 'game/assets/sounds/refreshed.wav');
             this.load.audio('noaction', 'game/assets/sounds/noaction.wav');
+
+            for (let i = 1; i <= 10; i++) {
+                  this.load.audio('step' + i, 'game/assets/sounds/step' + i + '.wav');
+            }
             
             this.cursors = this.input.keyboard.createCursorKeys();
       }
@@ -386,6 +389,7 @@ class KrepagotchiGame extends Phaser.Scene {
                   color: 'rgb(250, 250, 250)',
                   fontFamily: 'Pixel, monospace',
                   backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                  align: 'center',
                   padding: { x: 10, y: 5 }
             }).setDepth(TOPMOST_ELEMENT).setVisible(false);
 
@@ -478,6 +482,18 @@ class KrepagotchiGame extends Phaser.Scene {
                   },
                   callbackScope: self
             });
+
+            this.tmrKrepaStepSound = this.time.addEvent({
+                  delay: 590,
+                  loop: true,
+                  callback: function() {
+                        self.playStepSound();
+                        self.tmrKrepaStepSound.paused = true;
+                  },
+                  callbackScope: self
+            });
+
+            this.tmrKrepaStepSound.paused = true;
 
             this.krepaWobble = this.tweens.add({
                   targets: this.krepa_body,
@@ -611,7 +627,6 @@ class KrepagotchiGame extends Phaser.Scene {
             });
 
             this.sndClick = this.sound.add('click');
-            this.sndStep = this.sound.add('step');
             this.sndEating = this.sound.add('eating');
             this.sndHiss = this.sound.add('fuse');
             this.sndTntSpawn = this.sound.add('tntspawn');
@@ -624,6 +639,12 @@ class KrepagotchiGame extends Phaser.Scene {
             this.sndRefreshed = this.sound.add('refreshed');
             this.sndNoAction = this.sound.add('noaction');
 
+            this.sndSteps = [];
+            for (let i = 1; i <= 10; i++) {
+                  const step = this.sound.add('step' + i).setVolume(0.5);
+                  this.sndSteps.push(step);
+            }
+
             this.loadHelp();
             this.loadBiomeAction();
             this.loadStats();
@@ -632,9 +653,6 @@ class KrepagotchiGame extends Phaser.Scene {
 
             this.inDetonation = false;
             this.isDetonated = false;
-
-            this.sndStep.loop = true;
-            this.sndStep.setVolume(0.5);
 
             this.sndHiss.loop = true;
             this.sndHiss.setVolume(0.5);
@@ -1002,7 +1020,7 @@ class KrepagotchiGame extends Phaser.Scene {
             if ((this.krepaStats.full < 100) && (!this.krepaSick)) {
                   nearestFood = this.findNearestFood();
                   if (nearestFood) {
-                        this.krepaSpeed = self.current_max_speed * 2;
+                        this.krepaSpeed = this.current_max_speed * 2;
 
                         this.krepaRotation = Phaser.Math.Angle.Between(this.krepa.x, this.krepa.y, nearestFood.x, nearestFood.y);
                   }
@@ -1030,8 +1048,8 @@ class KrepagotchiGame extends Phaser.Scene {
                   this.krepaTweenFootRight.resume();
             }
 
-            if (!this.sndStep.isPlaying) {
-                  this.sndStep.play();
+            if (this.tmrKrepaStepSound.paused) {
+                  this.tmrKrepaStepSound.paused = false;
             }
       }
 
@@ -1047,8 +1065,8 @@ class KrepagotchiGame extends Phaser.Scene {
                   this.krepaTweenFootRight.pause();
             }
 
-            if (this.sndStep.isPlaying) {
-                  this.sndStep.stop();
+            if (!this.tmrKrepaStepSound.paused) {
+                  this.tmrKrepaStepSound.paused = true;
             }
       }
 
@@ -1115,6 +1133,9 @@ class KrepagotchiGame extends Phaser.Scene {
             this.physics.add.collider(this.krepa_body, food, function() {
                   if (!self.krepaSick) {
                         self.krepaStats.full += FOOD_ADD_COUNT;
+                        if (self.krepaStats.full >= 123) {
+                              self.krepaStats.health -= FOOD_ADD_COUNT / 2;
+                        }
 
                         self.krepaOverweightCheck();
 
@@ -1762,6 +1783,12 @@ class KrepagotchiGame extends Phaser.Scene {
             location.reload();
       }
 
+      playStepSound()
+      {
+            const sound = this.sndSteps[Phaser.Math.Between(0, this.sndSteps.length - 1)];
+            sound.play();
+      }
+
       getConfigValue(item, defval = null)
       {
             let result = localStorage.getItem(item);
@@ -1810,8 +1837,8 @@ const gameconfig = {
             name: 'Krepagotchi',
             version: '1.0',
             author: 'Daniel Brendel',
-            contact: '',
+            contact: 'dbrendel1988@gmail.com',
             description: 'Keep your Krepa as a pet',
-            info: ''
+            info: 'This project is a fan-made game\nand is not affiliated with\nMojang, Microsoft, Bandai,\nor any of their properties.'
       }
 };

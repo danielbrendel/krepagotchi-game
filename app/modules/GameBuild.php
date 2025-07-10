@@ -74,6 +74,14 @@ class GameBuild {
         if (method_exists(static::class, $method_name)) {
             echo "Bundling...\n";
 
+            if (!is_dir(public_path() . '/builds')) {
+                mkdir(public_path() . '/builds');
+            }
+
+            if (!is_dir(public_path() . '/bundler/node_modules')) {
+                system('cd /d "' . public_path() . '/bundler" && npm install');
+            }
+
             try {
                 static::$method_name($root_path);
             } catch (\Exception $e) {
