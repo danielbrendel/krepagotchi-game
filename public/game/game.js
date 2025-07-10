@@ -309,6 +309,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.spritesheet('poopsplash', 'game/assets/sprites/poop-splash.png', { frameWidth: 16, frameHeight: 16 });
             this.load.spritesheet('particle', 'game/assets/sprites/heart.png', { frameWidth: 32, frameHeight: 32 });
             this.load.spritesheet('burst', 'game/assets/sprites/burst.png', { frameWidth: 192, frameHeight: 192 });
+            this.load.spritesheet('smoke', 'game/assets/sprites/smoke.png', { frameWidth: 256, frameHeight: 256 });
 
             this.load.audio('click', 'game/assets/sounds/click.wav');
             this.load.audio('step', 'game/assets/sounds/step.wav');
@@ -358,6 +359,8 @@ class KrepagotchiGame extends Phaser.Scene {
             this.fenceColliderBottom = this.physics.add.staticImage(0, gameconfig.scale.height - 105, null).setSize(gameconfig.scale.width * 2, 32).setVisible(false);
             this.physics.add.collider(this.krepa, this.fenceColliderBottom);
 
+            this.smoke = this.physics.add.sprite(0, 0, 'smoke').setOrigin(0, 0).setScale(0.5, 0.5).setVisible(false);
+
             this.txtKrepaName = this.add.text(0, 0, this.krepaName, {
                   fontSize: '12px',
                   color: 'rgb(250, 250, 250)',
@@ -371,6 +374,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.krepaRotation = 10.0;
             this.krepaBlink = 0;
             this.krepaThoughts = [];
+            this.krepaSick = false;
             this.krepaInDragging = false;
             this.krepaDragTime = 0;
 
@@ -380,6 +384,13 @@ class KrepagotchiGame extends Phaser.Scene {
                   color: 'rgb(250, 250, 250)',
                   fontFamily: 'Pixel, monospace',
                   backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                  padding: { x: 10, y: 5 }
+            }).setDepth(TOPMOST_ELEMENT).setVisible(false);
+
+            this.txtKrepaEmoji = this.add.text(0, 0, '', {
+                  fontSize: '20px',
+                  color: 'rgb(250, 250, 250)',
+                  fontFamily: 'Pixel, monospace',
                   padding: { x: 10, y: 5 }
             }).setDepth(TOPMOST_ELEMENT).setVisible(false);
 
@@ -531,6 +542,13 @@ class KrepagotchiGame extends Phaser.Scene {
                   repeat: 0
             });
 
+            this.anims.create({
+                  key: 'smoke',
+                  frames: this.anims.generateFrameNumbers('smoke', { start: 0, end: 29 }),
+                  frameRate: 15,
+                  repeat: -1
+            });
+
             this.input.setDraggable(this.krepa);
             this.input.on('drag', function(pointer, gameObject, dragX, dragY) {
                   if (gameObject === self.krepa) {
@@ -608,9 +626,16 @@ class KrepagotchiGame extends Phaser.Scene {
                   this.loadInitInfo();
                   this.setConfigValue('krepa_initmsg', '1');
             } else {
-                  const chance = Phaser.Math.Between(1, 4);
-                  if (chance === 1) {
-                        this.krepaThoughtBubble();
+                  const illness = Phaser.Math.Between(1, 5);
+                  if (illness === 1) {
+                        this.setKrepaSick();
+                  }
+
+                  if (!illness) {
+                        const chance = Phaser.Math.Between(1, 4);
+                        if (chance === 1) {
+                              this.krepaThoughtBubble();
+                        }
                   }
             }
       }
@@ -618,6 +643,7 @@ class KrepagotchiGame extends Phaser.Scene {
       update()
       {
             this.updateTextPositions();
+            this.updateSpritePositions();
 
             if (this.inDetonation) {
                   return;
@@ -894,7 +920,9 @@ class KrepagotchiGame extends Phaser.Scene {
 
             const hand = this.add.image(iMenuStartX + 64 * 1, gameconfig.scale.height - 45 + 1, 'hand').setInteractive();
             hand.on('pointerdown', function() {
-                  self.addAffection(AFFECTION_VALUE);
+                  if (!self.krepaSick) {
+                        self.addAffection(AFFECTION_VALUE);
+                  }
             });
             hand.on('pointerover', function() { hand.setScale(1.1); });
             hand.on('pointerout', function() { hand.setScale(1.0); });
@@ -921,6 +949,12 @@ class KrepagotchiGame extends Phaser.Scene {
                               self.krepaStats.health = 100;
                         }
 
+                        if ((self.krepaSick) && (self.krepaStats.health >= 100)) {
+                              self.krepaSick = false;
+                              self.txtKrepaEmoji.setVisible(false);
+                              self.smoke.setVisible(false);
+                        }
+
                         self.txtHealthValue.setColor('rgb(50, 250, 50)');
                         self.time.delayedCall(500, () => {
                               self.txtHealthValue.setColor('rgb(250, 250, 250)');
@@ -944,7 +978,7 @@ class KrepagotchiGame extends Phaser.Scene {
             
             let nearestFood = null;
 
-            if (this.krepaStats.full < 100) {
+            if ((this.krepaStats.full < 100) && (!this.krepaSick)) {
                   nearestFood = this.findNearestFood();
                   if (nearestFood) {
                         this.krepaSpeed = MAX_WALKING_SPEED * 2;
@@ -1010,6 +1044,17 @@ class KrepagotchiGame extends Phaser.Scene {
 
                   this.txtThoughtBubble.setPosition(this.krepa.body.x + this.krepa.body.width / 2 - this.txtThoughtBubble.width / 2, this.krepa.body.y - txtgap);
             }
+
+            if (this.txtKrepaEmoji.visible) {
+                  this.txtKrepaEmoji.setPosition(this.krepa.body.x + this.krepa.body.width / 2 - this.txtKrepaEmoji.width / 2, this.krepa.body.y - 65);
+            }
+      }
+
+      updateSpritePositions()
+      {
+            if (this.smoke.visible) {
+                  this.smoke.setPosition(this.krepa.body.x + this.krepa.body.width / 2 - 60, this.krepa.body.y - 115);
+            }
       }
 
       updateStats()
@@ -1047,7 +1092,7 @@ class KrepagotchiGame extends Phaser.Scene {
             });
 
             this.physics.add.collider(this.krepa_body, food, function() {
-                  if (self.krepaStats.full < 100) {
+                  if ((self.krepaStats.full < 100) && (!self.krepaSick)) {
                         self.krepaStats.full += FOOD_ADD_COUNT;
 
                         if (self.krepaStats.full > 100) {
@@ -1213,6 +1258,32 @@ class KrepagotchiGame extends Phaser.Scene {
             } else {
                   self.sndNoAction.play();
             }
+      }
+
+      setKrepaSick()
+      {
+            this.krepaSick = true;
+
+            if (this.krepaStats.health > 20) {
+                  this.krepaStats.health = 20;
+            }
+
+            if (this.krepaStats.full > 30) {
+                  this.krepaStats.full = 30;
+            }
+
+            if (this.krepaStats.affection > 40) {
+                  this.krepaStats.affection = 40;
+            }
+
+            const faces = ['🤒', '😷', '🤕', '🤢', '🤮', '🤧'];
+            const face = faces[Phaser.Math.Between(0, faces.length - 1)];
+
+            this.txtKrepaEmoji.setText(face);
+            this.txtKrepaEmoji.setVisible(true);
+
+            this.smoke.anims.play('smoke', true);
+            this.smoke.setVisible(true);
       }
 
       explodeKrepa()
@@ -1477,7 +1548,7 @@ class KrepagotchiGame extends Phaser.Scene {
 
       krepaThoughtBubble()
       {
-            if (this.isDetonated) {
+            if ((this.krepaSick) || (this.isDetonated)) {
                   return;
             }
 
