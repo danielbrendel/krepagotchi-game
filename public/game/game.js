@@ -626,8 +626,8 @@ class KrepagotchiGame extends Phaser.Scene {
                   this.loadInitInfo();
                   this.setConfigValue('krepa_initmsg', '1');
             } else {
-                  const illness = Phaser.Math.Between(1, 5);
-                  if (illness === 1) {
+                  const illness = ((this.getConfigValue('krepa_sick') == 1) || (Phaser.Math.Between(1, 5) === 1));
+                  if (illness) {
                         this.setKrepaSick();
                   }
 
@@ -950,9 +950,7 @@ class KrepagotchiGame extends Phaser.Scene {
                         }
 
                         if ((self.krepaSick) && (self.krepaStats.health >= 100)) {
-                              self.krepaSick = false;
-                              self.txtKrepaEmoji.setVisible(false);
-                              self.smoke.setVisible(false);
+                              self.cureKrepa();
                         }
 
                         self.txtHealthValue.setColor('rgb(50, 250, 50)');
@@ -1284,6 +1282,18 @@ class KrepagotchiGame extends Phaser.Scene {
 
             this.smoke.anims.play('smoke', true);
             this.smoke.setVisible(true);
+
+            this.setConfigValue('krepa_sick', 1);
+      }
+
+      cureKrepa()
+      {
+            this.krepaSick = false;
+
+            this.txtKrepaEmoji.setVisible(false);
+            this.smoke.setVisible(false);
+
+            this.setConfigValue('krepa_sick', 0);
       }
 
       explodeKrepa()

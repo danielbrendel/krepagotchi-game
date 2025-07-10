@@ -65,6 +65,7 @@
                     localStorage.setItem('krepa_stats_health', {{ env('KREPA_INITIAL_HEALTH', 100) }});
                     localStorage.setItem('krepa_birthdate', Date.now());
                     localStorage.setItem('krepa_initmsg', 0);
+                    localStorage.setItem('krepa_sick', 0);
                     localStorage.setItem('food_objects', JSON.stringify([]));
                     localStorage.setItem('poop_objects', JSON.stringify([]));
                     localStorage.setItem('updated_timestamp', Number(Date.now()));
