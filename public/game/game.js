@@ -6,6 +6,7 @@ const HEALTH_VALUE = 10;
 const TIME_HEALTHCHECK = 4000 * 1000;
 const TIME_AFFECTIONCHECK = 3000 * 1000;
 const TIME_HUNGERCHECK = 3000 * 1000;
+const TIME_OVERWEIGHTCHECK = 10 * 1000;
 const TIME_POOPCHECK = 5000 * 1000;
 const TOPMOST_ELEMENT = 9999;
 const DRAG_TOLERANCE_THRESHOLD = 20;
@@ -277,6 +278,7 @@ class KrepagotchiGame extends Phaser.Scene {
             ];
 
       biome_data = null;
+      current_max_speed = MAX_WALKING_SPEED;
 
       preload()
       {
@@ -436,7 +438,7 @@ class KrepagotchiGame extends Phaser.Scene {
                   delay: Phaser.Math.Between(2000, 4500),
                   loop: true,
                   callback: function() {
-                        self.krepaSpeed = Phaser.Math.Between(0, MAX_WALKING_SPEED);
+                        self.krepaSpeed = Phaser.Math.Between(0, self.current_max_speed);
                   },
                   callbackScope: self
             });
@@ -467,6 +469,25 @@ class KrepagotchiGame extends Phaser.Scene {
                   },
                   callbackScope: self
             });
+
+            this.tmrKrepaOverweight = this.time.addEvent({
+                  delay: TIME_OVERWEIGHTCHECK,
+                  loop: true,
+                  callback: function() {
+                        self.krepaOverweightCheck();
+                  },
+                  callbackScope: self
+            });
+
+            this.krepaWobble = this.tweens.add({
+                  targets: this.krepa_body,
+                  scaleY: 1.0,
+                  scaleX: 1.6,
+                  duration: 500,
+                  yoyo: true,
+                  repeat: -1,
+                  ease: 'Sine.easeInOut'
+            }).pause();
 
             this.tmrPoopCheck = this.time.addEvent({
                   delay: TIME_POOPCHECK,
@@ -562,7 +583,7 @@ class KrepagotchiGame extends Phaser.Scene {
             });
             this.input.on('dragstart', function(pointer, gameObject) {
                   self.krepaSpeedBeforeDrag = self.krepaSpeed;
-                  self.krepaSpeed = MAX_WALKING_SPEED;
+                  self.krepaSpeed = self.current_max_speed;
 
                   self.krepaTweenFootLeft.timeScale = 4;
                   self.krepaTweenFootRight.timeScale = 4;
@@ -638,6 +659,8 @@ class KrepagotchiGame extends Phaser.Scene {
                         }
                   }
             }
+
+            this.krepaOverweightCheck();
       }
 
       update()
@@ -979,7 +1002,7 @@ class KrepagotchiGame extends Phaser.Scene {
             if ((this.krepaStats.full < 100) && (!this.krepaSick)) {
                   nearestFood = this.findNearestFood();
                   if (nearestFood) {
-                        this.krepaSpeed = MAX_WALKING_SPEED * 2;
+                        this.krepaSpeed = self.current_max_speed * 2;
 
                         this.krepaRotation = Phaser.Math.Angle.Between(this.krepa.x, this.krepa.y, nearestFood.x, nearestFood.y);
                   }
@@ -1090,12 +1113,10 @@ class KrepagotchiGame extends Phaser.Scene {
             });
 
             this.physics.add.collider(this.krepa_body, food, function() {
-                  if ((self.krepaStats.full < 100) && (!self.krepaSick)) {
+                  if (!self.krepaSick) {
                         self.krepaStats.full += FOOD_ADD_COUNT;
 
-                        if (self.krepaStats.full > 100) {
-                              self.krepaStats.full = 100;
-                        }
+                        self.krepaOverweightCheck();
 
                         self.sndEating.play();
                         self.spawnPoop();
@@ -1413,6 +1434,24 @@ class KrepagotchiGame extends Phaser.Scene {
                   if (self.krepaStats.full < 0) {
                         self.krepaStats.full = 0;
                   }
+            }
+      }
+
+      krepaOverweightCheck()
+      {
+            let self = this;
+
+            if (self.krepaStats.full > 100) {
+                  self.krepaWobble.play();
+                  self.krepa_body.setScale(1.5, 1.0);
+
+                  self.current_max_speed = MAX_WALKING_SPEED / 2;
+
+                  self.krepaStats.health -= 2;
+            } else {
+                  self.krepaWobble.pause();
+                  self.krepa_body.setScale(1.0, 1.0);
+                  self.current_max_speed = MAX_WALKING_SPEED;
             }
       }
 
