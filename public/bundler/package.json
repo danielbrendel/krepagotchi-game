@@ -1,7 +1,7 @@
 {
     "name": "krepagotchi",
     "version": "1.0.0",
-    "description": "Keep your Krepa as a pet",
+    "description": "A pixelated, adorable virtual pet",
     "author": "Daniel Brendel",
     "main": "src/main.js",
     "build": {

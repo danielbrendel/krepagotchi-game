@@ -4,7 +4,7 @@
 </h1>
 
 <p align="center">
-    Keep your Krepa as a pet<br/>
+    A pixelated, adorable virtual pet<br/>
     (C) 2025 by Daniel Brendel
 </p>
 
@@ -28,9 +28,7 @@ __GitHub__: https://github.com/danielbrendel
 ## Description
 
 Krepagotchi is a virtual pet game where you take care of your own little Krepa. You can feed it, clean its home and provide medical treatment when sick.
-You can also pet it in order to provide affection. Full hunger and zero affection levels as well as a dirty home will impact your pets health. If health
-reaches zero, your Krepa will fuse and detonate. When that happens you will be prompted with an info dialogue showing some text as well as date of birth 
-and date of detonation, and the opportunity to restart with a new pet. 
+You can also pet it or play with it using the ball in order to provide affection. Full hunger and zero affection levels as well as a dirty home will impact your pets health. If health reaches zero, your Krepa will fuse and detonate. When that happens you will be prompted with an info dialogue showing some text as well as date of birth and date of detonation, and the opportunity to restart with a new pet. 
 
 ## Disclaimer
 
@@ -44,9 +42,11 @@ This project is a fan-made game and is not affiliated with Mojang, Microsoft, Ba
 - Playing
 - Cleaning
 - Treatment
+- Health conditions
 - Thought bubbles
 - Biome selection
 - Weather effects
+- Dynamic environment
 - Cute pixel art
 - PWA support
 
