@@ -41,6 +41,7 @@ This project is a fan-made game and is not affiliated with Mojang, Microsoft, Ba
 - Personal name
 - Feeding
 - Petting
+- Playing
 - Cleaning
 - Treatment
 - Thought bubbles
