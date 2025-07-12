@@ -17,6 +17,7 @@ class KrepagotchiGame extends Phaser.Scene {
                         ident: "grass",
                         name: "Grass",
                         background: "background.png",
+                        raincolor: 0x65ccff,
                         theme: "theme.ogg",
                         objects: [
                               {
@@ -28,6 +29,10 @@ class KrepagotchiGame extends Phaser.Scene {
                                     size: {
                                           w: 34,
                                           h: 32
+                                    },
+                                    scale: {
+                                          x: 0.8,
+                                          y: 1.2
                                     }
                               },
                               {
@@ -39,6 +44,10 @@ class KrepagotchiGame extends Phaser.Scene {
                                     size: {
                                           w: 34,
                                           h: 32
+                                    },
+                                    scale: {
+                                          x: 0.8,
+                                          y: 1.2
                                     }
                               },
                               {
@@ -50,6 +59,10 @@ class KrepagotchiGame extends Phaser.Scene {
                                     size: {
                                           w: 34,
                                           h: 32
+                                    },
+                                    scale: {
+                                          x: 0.8,
+                                          y: 1.2
                                     }
                               },
                               {
@@ -61,6 +74,10 @@ class KrepagotchiGame extends Phaser.Scene {
                                     size: {
                                           w: 34,
                                           h: 32
+                                    },
+                                    scale: {
+                                          x: 0.8,
+                                          y: 1.2
                                     }
                               },
                               {
@@ -72,6 +89,10 @@ class KrepagotchiGame extends Phaser.Scene {
                                     size: {
                                           w: 47,
                                           h: 30
+                                    },
+                                    scale: {
+                                          x: 0.8,
+                                          y: 1.2
                                     }
                               },
                               {
@@ -83,6 +104,10 @@ class KrepagotchiGame extends Phaser.Scene {
                                     size: {
                                           w: 39,
                                           h: 35
+                                    },
+                                    scale: {
+                                          x: 0.8,
+                                          y: 1.2
                                     }
                               },
                               {
@@ -94,6 +119,10 @@ class KrepagotchiGame extends Phaser.Scene {
                                     size: {
                                           w: 41,
                                           h: 35
+                                    },
+                                    scale: {
+                                          x: 0.8,
+                                          y: 1.2
                                     }
                               },
                         ]
@@ -102,6 +131,7 @@ class KrepagotchiGame extends Phaser.Scene {
                         ident: "foliage",
                         name: "Foliage",
                         background: "background.png",
+                        raincolor: 0xf0e68c,
                         theme: "theme.ogg",
                         objects: [
                               {
@@ -113,7 +143,8 @@ class KrepagotchiGame extends Phaser.Scene {
                                     size: {
                                           w: 32,
                                           h: 32
-                                    }
+                                    },
+                                    scale: null
                               },
                               {
                                     asset: "rock2.png",
@@ -124,7 +155,8 @@ class KrepagotchiGame extends Phaser.Scene {
                                     size: {
                                           w: 33,
                                           h: 32
-                                    }
+                                    },
+                                    scale: null
                               },
                               {
                                     asset: "rock3.png",
@@ -135,7 +167,8 @@ class KrepagotchiGame extends Phaser.Scene {
                                     size: {
                                           w: 34,
                                           h: 29
-                                    }
+                                    },
+                                    scale: null
                               },
                               {
                                     asset: "rock4.png",
@@ -146,7 +179,8 @@ class KrepagotchiGame extends Phaser.Scene {
                                     size: {
                                           w: 30,
                                           h: 24
-                                    }
+                                    },
+                                    scale: null
                               },
                               {
                                     asset: "rock4.png",
@@ -157,7 +191,8 @@ class KrepagotchiGame extends Phaser.Scene {
                                     size: {
                                           w: 30,
                                           h: 24
-                                    }
+                                    },
+                                    scale: null
                               },
                               {
                                     asset: "rock3.png",
@@ -168,7 +203,8 @@ class KrepagotchiGame extends Phaser.Scene {
                                     size: {
                                           w: 34,
                                           h: 29
-                                    }
+                                    },
+                                    scale: null
                               },
                               {
                                     asset: "rock4.png",
@@ -179,7 +215,8 @@ class KrepagotchiGame extends Phaser.Scene {
                                     size: {
                                           w: 30,
                                           h: 24
-                                    }
+                                    },
+                                    scale: null
                               },
                         ]
                   },
@@ -187,6 +224,7 @@ class KrepagotchiGame extends Phaser.Scene {
                         ident: "glowath",
                         name: "Glowath",
                         background: "background.png",
+                        raincolor: 0x39ff14,
                         theme: "theme.ogg",
                         objects: [
                               {
@@ -199,6 +237,10 @@ class KrepagotchiGame extends Phaser.Scene {
                                           w: 256,
                                           h: 128,
                                           scale: 0.5
+                                    },
+                                    scale: {
+                                          x: 0.45,
+                                          y: 0.55
                                     }
                               },
                               {
@@ -211,6 +253,10 @@ class KrepagotchiGame extends Phaser.Scene {
                                           w: 256,
                                           h: 128,
                                           scale: 0.5
+                                    },
+                                    scale: {
+                                          x: 0.45,
+                                          y: 0.55
                                     }
                               },
                               {
@@ -223,6 +269,10 @@ class KrepagotchiGame extends Phaser.Scene {
                                           w: 256,
                                           h: 128,
                                           scale: 0.5
+                                    },
+                                    scale: {
+                                          x: 0.45,
+                                          y: 0.55
                                     }
                               },
                               {
@@ -235,6 +285,10 @@ class KrepagotchiGame extends Phaser.Scene {
                                           w: 256,
                                           h: 128,
                                           scale: 0.5
+                                    },
+                                    scale: {
+                                          x: 0.45,
+                                          y: 0.55
                                     }
                               },
                               {
@@ -247,6 +301,10 @@ class KrepagotchiGame extends Phaser.Scene {
                                           w: 256,
                                           h: 128,
                                           scale: 0.5
+                                    },
+                                    scale: {
+                                          x: 0.45,
+                                          y: 0.55
                                     }
                               },
                               {
@@ -259,6 +317,10 @@ class KrepagotchiGame extends Phaser.Scene {
                                           w: 256,
                                           h: 128,
                                           scale: 0.5
+                                    },
+                                    scale: {
+                                          x: 0.45,
+                                          y: 0.55
                                     }
                               },
                               {
@@ -271,6 +333,10 @@ class KrepagotchiGame extends Phaser.Scene {
                                           w: 256,
                                           h: 128,
                                           scale: 0.5
+                                    },
+                                    scale: {
+                                          x: 0.45,
+                                          y: 0.55
                                     }
                               },
                         ]
@@ -326,6 +392,13 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.audio('refreshed', 'game/assets/sounds/refreshed.wav');
             this.load.audio('noaction', 'game/assets/sounds/noaction.wav');
             this.load.audio('boing', 'game/assets/sounds/boing.wav');
+            this.load.audio('rain_1', 'game/assets/sounds/rain_1.wav');
+            this.load.audio('rain_2', 'game/assets/sounds/rain_2.wav');
+            this.load.audio('thunder_1', 'game/assets/sounds/thunder_1.wav');
+            this.load.audio('thunder_2', 'game/assets/sounds/thunder_2.wav');
+            this.load.audio('thunder_3', 'game/assets/sounds/thunder_3.wav');
+            this.load.audio('thunder_4', 'game/assets/sounds/thunder_4.wav');
+            this.load.audio('thunder_5', 'game/assets/sounds/thunder_5.wav');
 
             for (let i = 1; i <= 10; i++) {
                   this.load.audio('step' + i, 'game/assets/sounds/step' + i + '.wav');
@@ -782,15 +855,100 @@ class KrepagotchiGame extends Phaser.Scene {
                         if (typeof obj.size.scale !== 'undefined') {
                               image.setScale(obj.size.scale);
                         }
+
+                        if ((typeof obj.scale !== 'undefined') && (obj.scale !== null)) {
+                              this.tweens.add({
+                                    targets: image,
+                                    scaleX: obj.scale.x,
+                                    scaleY: obj.scale.y,
+                                    duration: 500,
+                                    yoyo: true,
+                                    repeat: -1,
+                                    ease: 'Sine.easeInOut'
+                              });
+                        }
                   }
 
                   this.sndTheme = this.sound.add('theme');
                   this.sndTheme.loop = true;
                   this.sndTheme.setVolume(0.22);
                   this.sndTheme.play();
+
+                  const chance = Phaser.Math.Between(1, 5);
+                  if (chance === 1) {
+                        this.spawnRain();
+                  }
             } catch (error) {
                   console.error(error);
             }
+      }
+
+      spawnRain()
+      {
+            const graphics = this.make.graphics({ x: 0, y: 0, add: false });
+            graphics.fillStyle(this.biome_data.raincolor, 0.8);
+            graphics.fillRect(0, 0, 2, 10);
+            graphics.generateTexture('raindrop', 2, 10);
+
+            this.rainParticles = this.add.particles(0, 0, 'raindrop', {
+                  frame: 'raindrop',
+                  x: { min: -150, max: gameconfig.scale.width + 50 },
+                  y: 0,
+                  lifespan: 2000,
+                  speedX: 100,
+                  speedY: 400,
+                  quantity: 10,
+                  frequency: 50,
+                  angle: 95,
+                  scale: { start: 1, end: 1 },
+                  alpha: { start: 0.9, end: 0.2 },
+                  blendMode: 'ADD'
+            });
+
+            this.sndRain = this.sound.add('rain_' + Phaser.Math.Between(1, 2));
+            this.sndRain.loop = true;
+            this.sndRain.setVolume(0.5);
+            this.sndRain.play();
+
+            this.lightning = this.add.rectangle(0, 0, gameconfig.scale.width, gameconfig.scale.height, 0xffffff);
+            this.lightning.setOrigin(0);
+            this.lightning.setDepth(100);
+            this.lightning.setAlpha(0);
+
+            const chance = Phaser.Math.Between(1, 4);
+            if (chance === 1) {
+                  this.tmrLightning = this.time.addEvent({
+                        delay: Phaser.Math.Between(5000, 10000),
+                        loop: true,
+                        callback: this.spawnLightning,
+                        callbackScope: this
+                  });
+            }
+      }
+
+      spawnLightning()
+      {
+            let self = this;
+
+            this.lightning.setAlpha(1);
+
+            this.tweens.add({
+                  targets: this.lightning,
+                  alpha: 0,
+                  duration: 250,
+                  ease: 'Cubic.easeOut'
+            });
+
+            this.sound.play('thunder_' + Phaser.Math.Between(1, 5));
+
+            this.tmrLightning.remove();
+
+            this.tmrLightning = this.time.addEvent({
+                  delay: Phaser.Math.Between(10000, 20000),
+                  loop: true,
+                  callback: self.spawnLightning,
+                  callbackScope: self
+            });
       }
 
       loadBiomeSelectionMenu() 
@@ -1252,6 +1410,16 @@ class KrepagotchiGame extends Phaser.Scene {
 
             this.physics.add.collider(food, this.fenceColliderTop);
             this.physics.add.collider(food, this.fenceColliderBottom);
+
+            this.tweens.add({
+                  targets: food,
+                  scaleY: 1.2,
+                  scaleX: 0.8,
+                  duration: 500,
+                  yoyo: true,
+                  repeat: -1,
+                  ease: 'Sine.easeInOut'
+            });
 
             this.foods.push(food);
 
