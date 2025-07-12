@@ -46,6 +46,7 @@ This project is a fan-made game and is not affiliated with Mojang, Microsoft, Ba
 - Treatment
 - Thought bubbles
 - Biome selection
+- Weather effects
 - Cute pixel art
 - PWA support
 

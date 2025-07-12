@@ -773,7 +773,7 @@ class KrepagotchiGame extends Phaser.Scene {
                   }
 
                   if (!illness) {
-                        const playful = Phaser.Math.Between(1, 3);
+                        const playful = Phaser.Math.Between(1, 2);
                         if ((playful === 1) && (this.krepaStats.affection < 100)) {
                               this.krepaPlayful = true;
                               this.initBall();
@@ -874,6 +874,7 @@ class KrepagotchiGame extends Phaser.Scene {
                   this.sndTheme.setVolume(0.22);
                   this.sndTheme.play();
 
+                  this.rainy = false;
                   const chance = Phaser.Math.Between(1, 5);
                   if (chance === 1) {
                         this.spawnRain();
@@ -924,6 +925,8 @@ class KrepagotchiGame extends Phaser.Scene {
                         callbackScope: this
                   });
             }
+
+            this.rainy = true;
       }
 
       spawnLightning()
@@ -1273,6 +1276,8 @@ class KrepagotchiGame extends Phaser.Scene {
                                     if (!this.krepaBallHit) {
                                           this.krepaBallHit = true;
                                           this.addAffection(AFFECTION_VALUE);
+
+                                          this.krepaStats.full -= HUNGER_VALUE;
 
                                           this.time.addEvent({
                                                 delay: 3000,
@@ -1779,6 +1784,24 @@ class KrepagotchiGame extends Phaser.Scene {
 
                   ],
 
+                  rainy: [
+                        'Not my favorite weather,\nbut it\'s alright...',
+                        'Rain hides my footsteps.\nExcellent...',
+                        'Moist fuse... again.',
+                        'Who sneaks through the rain?\nIt\'s me! 💚',
+                        'Drip... drip... BOOM. 😃',
+                        'Are thunderstorms exploding clouds?',
+                        'I don\'t mind the rain.\nNature needs water.',
+                        'Can we play in puddles\nonce there\'s enough rain?',
+                        'Fortunately, water doesn\'t bother me. 😃',
+                        'Hey, free beverage from the sky. 😂',
+                        'I really like this cozy weather. 😍',
+                        'Can I hide in the rain?',
+                        'Splish, splash! 😄',
+                        'Uh, it\'s kinda slippery here.',
+                        'Wow, free water from the sky!'
+                  ],
+
                   hungry: [
                         'Mmmhh... Tasty TNT...',
                         'Last night I dreamed about TNT.',
@@ -1882,7 +1905,11 @@ class KrepagotchiGame extends Phaser.Scene {
             } else if (this.krepaStats.affection < 50) {
                   thought = this.krepaThoughts.affection[Phaser.Math.Between(0, this.krepaThoughts.affection.length - 1)];
             } else {
-                  thought = this.krepaThoughts.casual[Phaser.Math.Between(0, this.krepaThoughts.casual.length - 1)];
+                  if (this.rainy) {
+                        thought = this.krepaThoughts.rainy[Phaser.Math.Between(0, this.krepaThoughts.rainy.length - 1)];
+                  } else {
+                        thought = this.krepaThoughts.casual[Phaser.Math.Between(0, this.krepaThoughts.casual.length - 1)];
+                  }
             }
 
             return thought;
