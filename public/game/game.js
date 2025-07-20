@@ -790,7 +790,7 @@ class KrepagotchiGame extends Phaser.Scene {
             });
 
             this.tmrDraftCheck = this.time.addEvent({
-                  delay: 2000,
+                  delay: 250,
                   loop: false,
                   callback: function() {
                         window.checkLetter('add', function(status) {
