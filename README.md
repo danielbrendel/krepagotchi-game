@@ -79,9 +79,9 @@ php asatru game:debug [platform]
 ```
 
 `platform` can be one of the following:
+- html5 (default)
 - windows
 - linux
 - macos
-- html5 (default)
 
 The ready-packaged game builds are stored in the `/public/builds` directory
