@@ -945,10 +945,16 @@ class KrepagotchiGame extends Phaser.Scene {
             this.restoreObjectsFromData();
             this.adjustStatsTimeGap();
 
+            this.krepaBirthdayCheck();
+
             if (this.getConfigValue('krepa_initmsg') != 1) {
                   this.sndClick.play();
                   this.loadInitInfo();
                   this.setConfigValue('krepa_initmsg', '1');
+                  this.setConfigValue('krepa_agecount', '0');
+
+                  const datetoday = new Date();
+                  this.setConfigValue('krepa_agecheck', Date.parse(new Date(datetoday.getFullYear(), datetoday.getMonth(), datetoday.getDate(), 0, 0, 0)).toString())
             } else {
                   const illness = ((this.getConfigValue('krepa_sick') == 1) || (Phaser.Math.Between(1, 5) === 1));
                   if (illness) {
@@ -970,7 +976,6 @@ class KrepagotchiGame extends Phaser.Scene {
             }
 
             this.krepaOverweightCheck();
-            this.krepaBirthdayCheck();
       }
 
       update()
@@ -1524,27 +1529,34 @@ class KrepagotchiGame extends Phaser.Scene {
       krepaBirthdayToday()
       {
             const birthday = new Date(parseInt(this.getConfigValue('krepa_birthdate')));
-            const bdayyear = birthday.getFullYear();
-            const bdaymonth = birthday.getMonth();
-            const bdayday = birthday.getDate();
-
             const today = new Date();
-            const todayyear = today.getFullYear();
-            const todaymonth = today.getMonth();
-            const todayday = today.getDate();
-            
-            return (bdayyear !== todayyear) && ((bdaymonth === todaymonth) && (bdayday === todayday));
+
+            const check_bday = Date.parse(new Date(birthday.getFullYear(), birthday.getMonth(), birthday.getDate(), 0, 0, 0));
+            const check_today = Date.parse(new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0));
+
+            return (birthday.getDate() === today.getDate()) && (check_bday !== check_today);
+      }
+
+      krepaBirthdayAgeCounting()
+      {
+            const lastcheck = parseInt(this.getConfigValue('krepa_agecheck'));
+            const datetoday = new Date();
+            const checktoday = Date.parse(new Date(datetoday.getFullYear(), datetoday.getMonth(), datetoday.getDate(), 0, 0, 0));
+
+            if (checktoday !== lastcheck) {
+                  this.setConfigValue('krepa_agecount', (this.krepaBirthdayAge() + 1).toString());
+                  this.setConfigValue('krepa_agecheck', checktoday.toString());
+            }
       }
 
       krepaBirthdayAge()
       {
-            const birthday = new Date(parseInt(this.getConfigValue('krepa_birthdate')));
-            const bdayyear = birthday.getFullYear();
+            const value = this.getConfigValue('krepa_agecount');
+            if (value === null) {
+                  return 0;
+            }
 
-            const today = new Date();
-            const todayyear = today.getFullYear();
-
-            return todayyear - bdayyear;
+            return parseInt(value);
       }
 
       krepaBirthdayCheck()
@@ -1555,9 +1567,10 @@ class KrepagotchiGame extends Phaser.Scene {
                   return;
             }
 
-            const newage = self.krepaBirthdayAge();
+            this.krepaBirthdayAgeCounting();
+            let agecount = this.krepaBirthdayAge();
 
-            const bdaytext = this.add.text(0, 0, `Happy birthday, ${this.krepaName}!\nYou turned ${newage} today.`, {
+            const bdaytext = this.add.text(0, 0, `Happy birthday, ${this.krepaName}!\nYou turned ${agecount} today.`, {
                   fontSize: '15px',
                   color: 'rgb(250, 250, 250)',
                   fontFamily: 'Pixel, monospace',
