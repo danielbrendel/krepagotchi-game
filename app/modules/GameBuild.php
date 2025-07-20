@@ -78,9 +78,7 @@ class GameBuild {
                 mkdir(public_path() . '/builds');
             }
 
-            if (!is_dir(public_path() . '/bundler/node_modules')) {
-                system('cd /d "' . public_path() . '/bundler" && npm install');
-            }
+            static::vendorInstallation();
 
             try {
                 static::$method_name($root_path);
@@ -137,8 +135,6 @@ class GameBuild {
     public static function bundleWindows($src)
     {
         try {
-            static::vendorInstallation();
-
             system('xcopy "' . $src . '" "' . public_path() . '/bundler/game/" /E /V /I /Y');
             copy(public_path() . '/img/logo.png', public_path() . '/bundler/game/logo.png');
 
@@ -165,8 +161,6 @@ class GameBuild {
     public static function bundleLinux($src)
     {
         try {
-            static::vendorInstallation();
-
             system('xcopy "' . $src . '" "' . public_path() . '/bundler/game/" /E /V /I /Y');
             copy(public_path() . '/img/logo.png', public_path() . '/bundler/game/logo.png');
 
@@ -193,8 +187,6 @@ class GameBuild {
     public static function bundleMacos($src)
     {
         try {
-            static::vendorInstallation();
-            
             system('xcopy "' . $src . '" "' . public_path() . '/bundler/game/" /E /V /I /Y');
             copy(public_path() . '/img/logo.png', public_path() . '/bundler/game/logo.png');
 
