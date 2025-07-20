@@ -389,6 +389,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.spritesheet('envelope', 'game/assets/sprites/envelope.png', { frameWidth: 32, frameHeight: 32 });
             this.load.spritesheet('pencil', 'game/assets/sprites/pencil.png', { frameWidth: 64, frameHeight: 64 });
             this.load.spritesheet('archive', 'game/assets/sprites/archive.png', { frameWidth: 120, frameHeight: 73 });
+            this.load.spritesheet('cake', 'game/assets/sprites/cake.png', { frameWidth: 39, frameHeight: 34 });
 
             this.load.audio('click', 'game/assets/sounds/click.wav');
             this.load.audio('eating', 'game/assets/sounds/eating.wav');
@@ -969,6 +970,7 @@ class KrepagotchiGame extends Phaser.Scene {
             }
 
             this.krepaOverweightCheck();
+            this.krepaBirthdayCheck();
       }
 
       update()
@@ -1519,6 +1521,110 @@ class KrepagotchiGame extends Phaser.Scene {
             pill.on('pointerout', function() { pill.setScale(1.0); });
       }
 
+      krepaBirthdayToday()
+      {
+            const birthday = new Date(parseInt(this.getConfigValue('krepa_birthdate')));
+            const bdayyear = birthday.getFullYear();
+            const bdaymonth = birthday.getMonth();
+            const bdayday = birthday.getDate();
+
+            const today = new Date();
+            const todayyear = today.getFullYear();
+            const todaymonth = today.getMonth();
+            const todayday = today.getDate();
+            
+            return (bdayyear !== todayyear) && ((bdaymonth === todaymonth) && (bdayday === todayday));
+      }
+
+      krepaBirthdayAge()
+      {
+            const birthday = new Date(parseInt(this.getConfigValue('krepa_birthdate')));
+            const bdayyear = birthday.getFullYear();
+
+            const today = new Date();
+            const todayyear = today.getFullYear();
+
+            return todayyear - bdayyear;
+      }
+
+      krepaBirthdayCheck()
+      {
+            let self = this;
+
+            if (!this.krepaBirthdayToday()) {
+                  return;
+            }
+
+            const newage = self.krepaBirthdayAge();
+
+            const bdaytext = this.add.text(0, 0, `Happy birthday, ${this.krepaName}!\nYou turned ${newage} today.`, {
+                  fontSize: '15px',
+                  color: 'rgb(250, 250, 250)',
+                  fontFamily: 'Pixel, monospace',
+                  backgroundColor: 'rgb(50, 50, 50)',
+                  padding: { x: 10, y: 5 }
+            });
+            bdaytext.setAlign('center');
+            bdaytext.setDepth(TOPMOST_ELEMENT);
+            bdaytext.setPosition(gameconfig.scale.width / 2 - bdaytext.width / 2, 50);
+
+            this.tmrBirthdayTextEffect = this.time.addEvent({
+                  delay: 500,
+                  loop: true,
+                  callback: function() {
+                        const red = Phaser.Math.Between(0, 255);
+                        const green = Phaser.Math.Between(0, 255);
+                        const blue = Phaser.Math.Between(0, 255);
+
+                        bdaytext.setColor(`rgb(${red}, ${green}, ${blue})`);
+                  },
+                  callbackScope: self
+            });
+
+            this.tmrBirthdayConfetti = this.time.addEvent({
+                  delay: 250,
+                  loop: true,
+                  callback: function() {
+                        self.spawnConfetti(Phaser.Math.Between(20, gameconfig.scale.width - 20), Phaser.Math.Between(20, gameconfig.scale.height - 50));
+                  },
+                  callbackScope: self
+            });
+      }
+
+      spawnConfetti(x, y)
+      {
+            let self = this;
+
+            const red = Phaser.Math.Between(0, 255);
+            const green = Phaser.Math.Between(0, 255);
+            const blue = Phaser.Math.Between(0, 255);
+
+            const chunk = self.make.graphics({ x: 0, y: 0, add: false });
+            chunk.fillStyle(self.rgbToHex(red, green, blue), 0.8);
+            chunk.fillRect(0, 0, 3, 3);
+            chunk.generateTexture('chunk', 3, 3);
+            let emitter = self.add.particles(x, y, 'chunk', {
+                  speed: 100,
+                  lifespan: 3000,
+                  frequency: 50,
+                  quantity: 1,
+                  gravityY: 200
+            });
+            let interval = setInterval(function() {
+                  emitter.x = x;
+                  emitter.y = y;
+            }, 10);
+            self.time.addEvent({
+                  delay: 1000,
+                  loop: false,
+                  callback: function() {
+                        clearInterval(interval);
+                        emitter.destroy();
+                  },
+                  callbackScope: self
+            });
+      }
+
       initBall()
       {
             if (this.ball) {
@@ -1682,7 +1788,9 @@ class KrepagotchiGame extends Phaser.Scene {
             let posx = Phaser.Math.Between(55, gameconfig.scale.width - 55);
             let posy = Phaser.Math.Between(90, gameconfig.scale.height - 150);
 
-            let food = this.physics.add.sprite(posx, posy, 'tntfood').refreshBody();
+            const foodident = self.krepaBirthdayToday() ? 'cake' : 'tntfood';
+
+            let food = this.physics.add.sprite(posx, posy, foodident).refreshBody();
             food.setCollideWorldBounds(true);
 
             food.setInteractive();
@@ -2530,6 +2638,16 @@ class KrepagotchiGame extends Phaser.Scene {
             const day = String(date.getDate()).padStart(2, '0');
 
             return `${year}-${month}-${day}`;
+      }
+
+      rgbToHex(r, g, b)
+      {
+            const convert_value = function(value) {
+                  let hex = value.toString(16);
+                  return (hex.length === 1) ? '0' + hex : hex;
+            };
+
+            return Number('0x' + convert_value(r) + convert_value(g) + convert_value(b));
       }
 }
 
