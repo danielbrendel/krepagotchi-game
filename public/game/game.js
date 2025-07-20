@@ -393,6 +393,10 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.spritesheet('fireworks', 'game/assets/sprites/fireworks.png', { frameWidth: 256, frameHeight: 256 });
             this.load.spritesheet('happynewyear', 'game/assets/sprites/happynewyear.png', { frameWidth: 400, frameHeight: 100 });
 
+            for (let j = 0; j < 5; j++) {
+                  this.load.spritesheet('bird' + (j + 1).toString(), 'game/assets/sprites/bird' + (j + 1).toString() + '.png', { frameWidth: 32, frameHeight: 32 });
+            }
+
             this.load.audio('click', 'game/assets/sounds/click.wav');
             this.load.audio('eating', 'game/assets/sounds/eating.wav');
             this.load.audio('tntspawn', 'game/assets/sounds/tntspawn.wav');
@@ -749,10 +753,19 @@ class KrepagotchiGame extends Phaser.Scene {
                   loop: true,
                   paused: self.rainy,
                   callback: function() {
-                        let quantity = Phaser.Math.Between(1, 9);
-                        for (let i = 0; i < quantity; i++) {
-                              self.spawnButterfly();
+                        let chance = Phaser.Math.Between(1, 2);
+                        if (chance === 1) {
+                              let quantity = Phaser.Math.Between(1, 9);
+                              for (let i = 0; i < quantity; i++) {
+                                    self.spawnButterfly();
+                              }
+                        } else if (chance === 2) {
+                              let quantity = Phaser.Math.Between(1, 3);
+                              for (let i = 0; i < quantity; i++) {
+                                    self.spawnBird();
+                              }
                         }
+                        
                   },
                   callbackScope: self
             });
@@ -843,6 +856,15 @@ class KrepagotchiGame extends Phaser.Scene {
                   frameRate: 25,
                   repeat: -1
             });
+
+            for (let j = 0; j < 5; j++) {
+                  this.anims.create({
+                        key: 'bird' + (j + 1).toString(),
+                        frames: this.anims.generateFrameNumbers('bird' + (j + 1).toString(), { start: 0, end: 2 }),
+                        frameRate: 5,
+                        repeat: -1
+                  });
+            }
 
             this.anims.create({
                   key: 'frog',
@@ -2127,6 +2149,58 @@ class KrepagotchiGame extends Phaser.Scene {
                   loop: false,
                   callback: function() {
                         butterfly.destroy();
+                  },
+                  callbackScope: self
+            });
+      }
+
+      spawnBird()
+      {
+            let self = this;
+
+            const birdident = 'bird' + (Phaser.Math.Between(1, 5)).toString();
+            
+            let bird = this.physics.add.sprite(200, 200, birdident).refreshBody();
+            bird.setCollideWorldBounds(false);
+            bird.anims.play(birdident, true);
+
+            let posx = 0;
+            let posy = Phaser.Math.Between(50, gameconfig.scale.height - 140);;
+
+            const side = Phaser.Math.Between(1, 2);
+            if (side === 1) {
+                  posx = gameconfig.scale.width + 50;
+                  bird.setRotation(Math.PI);
+                  bird.setFlipY(true);
+            } else {
+                  posx = -50;
+                  bird.setRotation(Math.PI * 2);
+            }
+
+            bird.setPosition(posx, posy);
+
+            const speed = Phaser.Math.Between(90, 145);
+
+            bird.setVelocity(
+                  Math.cos(bird.rotation) * speed,
+                  Math.sin(bird.rotation) * speed
+            );
+
+            this.tweens.add({
+                  targets: bird,
+                  scaleY: 1.2,
+                  scaleX: 0.8,
+                  duration: 500,
+                  yoyo: true,
+                  repeat: -1,
+                  ease: 'Sine.easeInOut'
+            });
+
+            this.time.addEvent({
+                  delay: 10000,
+                  loop: false,
+                  callback: function() {
+                        bird.destroy();
                   },
                   callbackScope: self
             });
