@@ -44,6 +44,7 @@ This project is a fan-made game and is not affiliated with Mojang, Microsoft, Ba
 - Treatment
 - Health conditions
 - Thought bubbles
+- Send/recieve letters
 - Biome selection
 - Weather effects
 - Dynamic environment
