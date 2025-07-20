@@ -234,6 +234,12 @@ html, body {
     float: right;
 }
 
+.archive-empty {
+    padding: 20px;
+    font-style: italic;
+    color: rgb(123, 123, 123);
+}
+
 .is-hidden {
     display: none;
 }
