@@ -1166,7 +1166,7 @@ class KrepagotchiGame extends Phaser.Scene {
                   scale: { start: 1, end: 1 },
                   alpha: { start: 0.9, end: 0.2 },
                   blendMode: 'ADD'
-            });
+            }).setDepth(99);
 
             this.sndRain = this.sound.add('rain_' + Phaser.Math.Between(1, 2));
             this.sndRain.loop = true;
@@ -1484,33 +1484,37 @@ class KrepagotchiGame extends Phaser.Scene {
 
       loadStats()
       {
-            this.add.image(20, 25, 'affection').setScale(0.8);
-            this.txtAffectionValue = this.add.text(40, 17, this.krepaStats.affection);
+            const depth = 105;
 
-            this.add.image(100, 25, 'food');
-            this.txtFoodValue = this.add.text(120, 17, this.krepaStats.full);
+            this.add.image(20, 25, 'affection').setScale(0.8).setDepth(depth);
+            this.txtAffectionValue = this.add.text(40, 17, this.krepaStats.affection).setDepth(depth);
 
-            this.add.image(180, 25, 'health');
-            this.txtHealthValue = this.add.text(200, 17, this.krepaStats.health);
+            this.add.image(100, 25, 'food').setDepth(depth);
+            this.txtFoodValue = this.add.text(120, 17, this.krepaStats.full).setDepth(depth);
+
+            this.add.image(180, 25, 'health').setDepth(depth);
+            this.txtHealthValue = this.add.text(200, 17, this.krepaStats.health).setDepth(depth);
       }
 
       loadMenu()
       {
             let self = this;
 
+            const depth = 105;
+
             let iMenuStartX = 83;
             for (let i = 0; i < 4; i++) {
-                  this.add.image(iMenuStartX + i * 64, gameconfig.scale.height - 45, 'slot').setScale(0.5);
+                  this.add.image(iMenuStartX + i * 64, gameconfig.scale.height - 45, 'slot').setDepth(depth).setScale(0.5);
             }
 
-            const food = this.add.image(iMenuStartX, gameconfig.scale.height - 45 + 1, 'tnt').setInteractive();
+            const food = this.add.image(iMenuStartX, gameconfig.scale.height - 45 + 1, 'tnt').setDepth(depth).setInteractive();
             food.on('pointerdown', function() {
                   self.spawnFood();
             });
             food.on('pointerover', function() { food.setScale(1.1); });
             food.on('pointerout', function() { food.setScale(1.0); });
 
-            const hand = this.add.image(iMenuStartX + 64 * 1, gameconfig.scale.height - 45 + 1, 'hand').setInteractive();
+            const hand = this.add.image(iMenuStartX + 64 * 1, gameconfig.scale.height - 45 + 1, 'hand').setDepth(depth).setInteractive();
             hand.on('pointerdown', function() {
                   if (!self.krepaSick) {
                         if (!self.krepaPlayful) {
@@ -1532,7 +1536,7 @@ class KrepagotchiGame extends Phaser.Scene {
             hand.on('pointerover', function() { hand.setScale(1.1); });
             hand.on('pointerout', function() { hand.setScale(1.0); });
 
-            const brush = this.add.image(iMenuStartX + 64 * 2, gameconfig.scale.height - 45 + 1, 'brush').setInteractive();
+            const brush = this.add.image(iMenuStartX + 64 * 2, gameconfig.scale.height - 45 + 1, 'brush').setDepth(depth).setInteractive();
             brush.on('pointerdown', function() {
                   if (self.poops.length > 0) {
                         let pindex = Phaser.Math.Between(0, self.poops.length - 1);
@@ -1546,7 +1550,7 @@ class KrepagotchiGame extends Phaser.Scene {
             brush.on('pointerover', function() { brush.setScale(1.1); });
             brush.on('pointerout', function() { brush.setScale(1.0); });
             
-            const pill = this.add.image(iMenuStartX + 64 * 3, gameconfig.scale.height - 45 + 1, 'pill').setRotation(Phaser.Math.DegToRad(132)).setInteractive();
+            const pill = this.add.image(iMenuStartX + 64 * 3, gameconfig.scale.height - 45 + 1, 'pill').setRotation(Phaser.Math.DegToRad(132)).setDepth(depth).setInteractive();
             pill.on('pointerdown', function() {
                   if (self.krepaStats.health < 100) {
                         self.krepaStats.health += HEALTH_VALUE;
