@@ -2300,6 +2300,8 @@ class KrepagotchiGame extends Phaser.Scene {
             this.txtKrepaEmoji.setVisible(false);
             this.smoke.setVisible(false);
 
+            this.sndSuccess.play();
+
             this.setConfigValue('krepa_sick', 0);
       }
 
