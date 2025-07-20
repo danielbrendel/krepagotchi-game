@@ -70,4 +70,17 @@ class Letters extends \Asatru\Database\Model {
             throw $e;
         }
     }
+
+    /**
+     * @return void
+     * @throws \Exception
+     */
+    public static function clean()
+    {
+        try {
+            static::raw('DELETE FROM `@THIS` WHERE approved = TRUE AND assigned = TRUE LIMIT 10');
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
 }

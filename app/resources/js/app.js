@@ -2,6 +2,7 @@ import './../sass/app.scss';
 require('phaser');
 
 const MAX_ARCHIVE_DISPLAY_ITEMS = 15;
+const MAX_LETTER_MESSAGE_PREVIEW_LEN = 10;
 
 window.currentPromptCallback = function(text) {};
 
@@ -265,28 +266,28 @@ window.openArchive = function(title = 'Letter Archive') {
             let maxiter = 0;
 
             if (archive.length > 0) {
-            for (let i = archive.length - 1; i >= 0; i--) {
-                elList.innerHTML += `
-                    <div class="archive-item">
-                        <textarea class="is-hidden" id="archive-vault-from-${i}">${archive[i].data.from}</textarea>
-                        <textarea class="is-hidden" id="archive-vault-message-${i}">${archive[i].data.message}</textarea>
+                for (let i = 0; i < archive.length; i++) {
+                    elList.innerHTML += `
+                        <div class="archive-item">
+                            <textarea class="is-hidden" id="archive-vault-from-${i}">${archive[i].data.from}</textarea>
+                            <textarea class="is-hidden" id="archive-vault-message-${i}">${archive[i].data.message}</textarea>
 
-                        <div class="archive-item-from">${archive[i].data.from}</div>
+                            <div class="archive-item-from">${archive[i].data.from}</div>
 
-                        <div class="archive-item-preview">
-                            <a href="javascript:void(0);" onclick="let btndel = document.getElementById('letter-archive-item-delete'); btndel.dataset.target = '${archive[i].ident}'; window.openLetter(document.getElementById('archive-vault-from-${i}').value, document.getElementById('archive-vault-message-${i}').value); btndel.classList.remove('is-hidden'); document.querySelector('.letter-archive-overlay').classList.add('is-hidden')">${archive[i].data.message.substr(0, 10) + '...'}</a>
+                            <div class="archive-item-preview">
+                                <a href="javascript:void(0);" onclick="let btndel = document.getElementById('letter-archive-item-delete'); btndel.dataset.target = '${archive[i].ident}'; window.openLetter(document.getElementById('archive-vault-from-${i}').value, document.getElementById('archive-vault-message-${i}').value); btndel.classList.remove('is-hidden'); document.querySelector('.letter-archive-overlay').classList.add('is-hidden')">${archive[i].data.message.substr(0, MAX_LETTER_MESSAGE_PREVIEW_LEN) + '...'}</a>
+                            </div>
+
+                            <div class="archive-item-date">${archive[i].data.date}</div>
                         </div>
+                    `;
 
-                        <div class="archive-item-date">${archive[i].data.date}</div>
-                    </div>
-                `;
+                    maxiter++;
 
-                maxiter++;
-
-                if (maxiter >= MAX_ARCHIVE_DISPLAY_ITEMS) {
-                    break;
+                    if (maxiter >= MAX_ARCHIVE_DISPLAY_ITEMS) {
+                        break;
+                    }
                 }
-            }
             } else {
                 elList.innerHTML = `<div class="archive-empty">You don't have any saved letters.</div>`
             }
