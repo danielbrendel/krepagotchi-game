@@ -428,8 +428,6 @@ class KrepagotchiGame extends Phaser.Scene {
             for (let i = 1; i <= 10; i++) {
                   this.load.audio('step' + i, 'game/assets/sounds/step' + i + '.wav');
             }
-            
-            this.cursors = this.input.keyboard.createCursorKeys();
       }
 
       create()
