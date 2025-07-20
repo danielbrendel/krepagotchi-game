@@ -54,4 +54,20 @@ class Letters extends \Asatru\Database\Model {
             throw $e;
         }
     }
+
+    /**
+     * @param $type
+     * @return bool
+     * @throws \Exception
+     */
+    public static function check($type)
+    {
+        try {
+            $token = md5($_SERVER['REMOTE_ADDR']);
+
+            return !Actions::today($token, $type);
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
 }

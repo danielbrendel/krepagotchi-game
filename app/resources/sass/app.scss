@@ -14,7 +14,7 @@ html, body {
     background-size: cover;
 }
 
-.prompt-overlay, .letter-reading-overlay {
+.prompt-overlay, .letter-reading-overlay, .letter-writing-overlay {
     position: fixed;
     width: 100%;
     height: 100%;
@@ -22,7 +22,7 @@ html, body {
     background-color: rgba(0, 0, 0, 0.5);
 }
 
-.prompt-content, .letter-reading-content {
+.prompt-content, .letter-reading-content, .letter-writing-content {
     position: absolute;
     z-index: 3;
     top: 50%;
@@ -42,11 +42,12 @@ html, body {
     border-radius: 5px;
 }
 
-.letter-reading-content {
+.letter-reading-content, .letter-writing-content {
     font-size: 1.0em;
+    min-width: 350px;
 }
 
-.prompt-title, .letter-reading-title {
+.prompt-title, .letter-reading-title, .letter-writing-title {
     margin-bottom: 10px;
     background-color: rgb(100, 100, 100);
     color: rgb(200, 200, 200);
@@ -55,11 +56,11 @@ html, body {
     border-top-left-radius: 5px;
 }
 
-.letter-reading-title {
+.letter-reading-title, .letter-writing-title {
     font-size: 0.8em;
 }
 
-.prompt-title img, .letter-reading-title img {
+.prompt-title img, .letter-reading-title img, .letter-writing-title img {
     position: relative;
     top: 9px;
     width: 40px;
@@ -80,7 +81,7 @@ html, body {
     }
 }
 
-.letter-reading-message {
+.letter-reading-message, .letter-writing-message {
     padding-top: 20px;
     padding-left: 20px;
     padding-right: 20px;
@@ -94,6 +95,13 @@ html, body {
         padding-right: 20px;
         font-size: 0.9em;
     }
+}
+
+.letter-writing-message textarea {
+    color: rgb(255, 255, 255);
+    background-color: rgb(50, 50, 50);
+    width: 100%;
+    min-height: 123px;
 }
 
 .prompt-input {
@@ -117,7 +125,7 @@ html, body {
     border: 1px solid rgb(150, 150, 150);
 }
 
-.prompt-action, .letter-reading-action {
+.prompt-action, .letter-reading-action, .letter-writing-action {
     margin-top: 10px;
     margin-bottom: 10px;
     padding-left: 20px;
@@ -132,6 +140,30 @@ html, body {
 
 .prompt-action a:hover, .letter-reading-action a:hover {
     color: rgb(50, 175, 225);
+    text-decoration: underline;
+}
+
+.letter-writing-action a {
+    margin-right: 20px;
+}
+
+.letter-writing-action a.button-send {
+    color: rgb(90, 253, 190);
+    text-decoration: none;
+}
+
+.letter-writing-action a.button-send:hover {
+    color: rgb(90, 253, 190);
+    text-decoration: underline;
+}
+
+.letter-writing-action a.button-close {
+    color: rgb(200, 200, 200);
+    text-decoration: none;
+}
+
+.letter-writing-action a.button-close:hover {
+    color: rgb(200, 200, 200);
     text-decoration: underline;
 }
 

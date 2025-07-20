@@ -63,4 +63,28 @@ class LettersController extends BaseController {
             ]);
         }
     }
+
+    /**
+	 * Handles URL: /letters/check/{type}
+	 * 
+	 * @param Asatru\Controller\ControllerArg $request
+	 * @return Asatru\View\JsonHandler
+	 */
+    public function check($request)
+    {
+        try {
+            $type = $request->arg('type');
+            $status = Letters::check($type);
+
+            return json([
+                'code' => 200,
+                'status' => $status
+            ]);
+        } catch (\Exception $e) {
+            return json([
+                'code' => 500,
+                'msg' => $e->getMessage()
+            ]);
+        }
+    }
 }

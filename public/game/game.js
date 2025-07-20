@@ -387,6 +387,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.spritesheet('mailbox_closed', 'game/assets/sprites/mailbox-closed.png', { frameWidth: 64, frameHeight: 64 });
             this.load.spritesheet('mailbox_open', 'game/assets/sprites/mailbox-open.png', { frameWidth: 64, frameHeight: 64 });
             this.load.spritesheet('envelope', 'game/assets/sprites/envelope.png', { frameWidth: 32, frameHeight: 32 });
+            this.load.spritesheet('pencil', 'game/assets/sprites/pencil.png', { frameWidth: 64, frameHeight: 64 });
 
             this.load.audio('click', 'game/assets/sounds/click.wav');
             this.load.audio('eating', 'game/assets/sounds/eating.wav');
@@ -410,6 +411,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.audio('sneeze', 'game/assets/sounds/sneeze.wav');
             this.load.audio('frog', 'game/assets/sounds/frog.wav');
             this.load.audio('mailbox', 'game/assets/sounds/mailbox.wav');
+            this.load.audio('success', 'game/assets/sounds/success.wav');
 
             for (let i = 1; i <= 10; i++) {
                   this.load.audio('step' + i, 'game/assets/sounds/step' + i + '.wav');
@@ -466,6 +468,8 @@ class KrepagotchiGame extends Phaser.Scene {
             this.mailbox_closed = this.add.image(gameconfig.scale.width - 45, gameconfig.scale.height - 159, 'mailbox_closed');
             this.mailbox_open = this.add.image(gameconfig.scale.width - 45, gameconfig.scale.height - 159, 'mailbox_open').setInteractive();
             this.mailbox_open.on('pointerdown', function() {
+                  //self.sndClick.play();
+
                   window.openLetter('A letter from <strong>' + window.currentLetter.from + '</strong>', window.currentLetter.message, function() {
                         self.mailbox_glow.active = false;
                         self.mailbox_open.setVisible(false);
@@ -483,6 +487,32 @@ class KrepagotchiGame extends Phaser.Scene {
                   yoyo: true,
                   loop: -1,
                   ease: 'sine.inout'
+            });
+
+            this.draftLetter = this.add.image(gameconfig.scale.width - 105, gameconfig.scale.height - 159, 'pencil').setInteractive();
+            this.draftLetter.setScale(0.5);
+            this.draftLetter.setFlipX(true);
+            this.draftLetter.on('pointerdown', function() {
+                  window.draftLetter('Send a letter to someone', 'Enter a friendly message...', function(event) {
+                        if (event === 'sent') {
+                              self.sndSuccess.play();
+
+                              self.draftLetter.setVisible(false);
+                        }
+                  });
+
+                  self.sndClick.play();
+            });
+            this.draftLetter.setVisible(false);
+
+            this.tweens.add({
+                  targets: this.draftLetter,
+                  scaleY: 0.59,
+                  scaleX: 0.59,
+                  duration: 700,
+                  yoyo: true,
+                  repeat: -1,
+                  ease: 'Sine.easeInOut'
             });
 
             this.krepaSpeed = 0;
@@ -729,6 +759,19 @@ class KrepagotchiGame extends Phaser.Scene {
                   callbackScope: self
             });
 
+            this.tmrDraftCheck = this.time.addEvent({
+                  delay: 2000,
+                  loop: false,
+                  callback: function() {
+                        window.checkLetter('add', function(status) {
+                              if (status) {
+                                    self.draftLetter.setVisible(true);
+                              }
+                        });
+                  },
+                  callbackScope: self
+            });
+
             this.tmrObjectStorage = this.time.addEvent({
                   delay: 2000,
                   loop: true,
@@ -863,7 +906,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.sndNoAction = this.sound.add('noaction');
             this.sndBoing = this.sound.add('boing');
             this.sndMailbox = this.sound.add('mailbox');
-            this.sndMailbox.setVolume(0.5);
+            this.sndSuccess = this.sound.add('success');
 
             this.sndSteps = [];
             for (let i = 1; i <= 10; i++) {
@@ -882,6 +925,9 @@ class KrepagotchiGame extends Phaser.Scene {
 
             this.sndHiss.loop = true;
             this.sndHiss.setVolume(0.5);
+
+            this.sndMailbox.setVolume(0.5);
+            this.sndSuccess.setVolume(0.5);
 
             this.restoreObjectsFromData();
             this.adjustStatsTimeGap();

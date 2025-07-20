@@ -19,5 +19,6 @@ return [
     array('/', 'GET', 'index@index'),
     array('/letters/pick', 'GET', 'letters@pick'),
     array('/letters/add', 'POST', 'letters@add'),
+    array('/letters/check/{type}', 'ANY', 'letters@check'),
     array('$404', 'ANY', 'error404@index')
 ];

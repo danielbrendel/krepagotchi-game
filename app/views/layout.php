@@ -53,6 +53,21 @@
             </div>
         </div>
 
+        <div class="letter-writing-overlay is-hidden">
+            <div id="letter-writing-content" class="letter-writing-content">
+                <div class="letter-writing-title"></div>
+
+                <div class="letter-writing-message">
+                    <textarea id="letter-writing-message"></textarea>
+                </div>
+
+                <div class="letter-writing-action">
+                    <span><a class="button button-send" href="javascript:void(0);" onclick="window.sendLetter();">Send</a></span>
+                    <span><a class="button button-close" href="javascript:void(0);" onclick="window.closeDraft();">Close</a></span>
+                </div>
+            </div>
+        </div>
+
         <script>
             window.krepaBackend = '{{ env('APP_BACKEND') }}';
 

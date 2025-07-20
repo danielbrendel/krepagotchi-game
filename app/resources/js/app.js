@@ -93,6 +93,16 @@ window.addLetter = function(message, callback = function() {}) {
     });
 };
 
+window.checkLetter = function(type, callback = function(status) {}) {
+    window.ajax('GET', window.krepaBackend + '/letters/check/' + type, null, function(code, response) {
+        if ((code == 200) && (response.code == 200)) {
+            callback(response.status);
+        } else {
+            console.warn(response);
+        }
+    });
+};
+
 window.openLetter = function(title, message, cb = function() {}) {
     let dialog = document.querySelector('.letter-reading-overlay');
     if (dialog) {
@@ -114,5 +124,42 @@ window.closeOpenLetter = function() {
         dialog.classList.add('is-hidden');
 
         window.currentOpenLetterCallback();
+    }
+};
+
+window.draftLetter = function(title, message, cb = function(event) {}) {
+    let dialog = document.querySelector('.letter-writing-overlay');
+    if (dialog) {
+        let elTitle = document.querySelector('.letter-writing-title');
+        elTitle.innerHTML = title;
+
+        let elMessage = document.querySelector('#letter-writing-message');
+        elMessage.placeholder = message;
+
+        window.currentDraftLetterCallback = cb;
+
+        dialog.classList.remove('is-hidden');
+    }
+};
+
+window.sendLetter = function() {
+    let dialog = document.querySelector('.letter-writing-overlay');
+    if (dialog) {
+        let message = document.querySelector('#letter-writing-message');
+
+        window.addLetter(message.value, function() {
+            window.currentDraftLetterCallback('sent');
+        });
+
+        dialog.classList.add('is-hidden');
+    }
+};
+
+window.closeDraft = function() {
+    let dialog = document.querySelector('.letter-writing-overlay');
+    if (dialog) {
+        window.currentDraftLetterCallback('aborted');
+
+        dialog.classList.add('is-hidden');
     }
 };
