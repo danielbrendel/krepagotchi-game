@@ -384,6 +384,9 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.spritesheet('ball', 'game/assets/sprites/ball.png', { frameWidth: 76, frameHeight: 76 });
             this.load.spritesheet('butterfly', 'game/assets/sprites/butterfly.png', { frameWidth: 16, frameHeight: 16 });
             this.load.spritesheet('frog', 'game/assets/sprites/frog.png', { frameWidth: 64, frameHeight: 64 });
+            this.load.spritesheet('mailbox_closed', 'game/assets/sprites/mailbox-closed.png', { frameWidth: 64, frameHeight: 64 });
+            this.load.spritesheet('mailbox_open', 'game/assets/sprites/mailbox-open.png', { frameWidth: 64, frameHeight: 64 });
+            this.load.spritesheet('envelope', 'game/assets/sprites/envelope.png', { frameWidth: 32, frameHeight: 32 });
 
             this.load.audio('click', 'game/assets/sounds/click.wav');
             this.load.audio('eating', 'game/assets/sounds/eating.wav');
@@ -406,6 +409,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.audio('thunder_5', 'game/assets/sounds/thunder_5.wav');
             this.load.audio('sneeze', 'game/assets/sounds/sneeze.wav');
             this.load.audio('frog', 'game/assets/sounds/frog.wav');
+            this.load.audio('mailbox', 'game/assets/sounds/mailbox.wav');
 
             for (let i = 1; i <= 10; i++) {
                   this.load.audio('step' + i, 'game/assets/sounds/step' + i + '.wav');
@@ -458,6 +462,28 @@ class KrepagotchiGame extends Phaser.Scene {
                   fontFamily: 'Pixel, monospace',
                   padding: { x: 5, y: 2 }
             }).setDepth(TOPMOST_ELEMENT);
+
+            this.mailbox_closed = this.add.image(gameconfig.scale.width - 45, gameconfig.scale.height - 159, 'mailbox_closed');
+            this.mailbox_open = this.add.image(gameconfig.scale.width - 45, gameconfig.scale.height - 159, 'mailbox_open').setInteractive();
+            this.mailbox_open.on('pointerdown', function() {
+                  window.openLetter('A letter from <strong>' + window.currentLetter.from + '</strong>', window.currentLetter.message, function() {
+                        self.mailbox_glow.active = false;
+                        self.mailbox_open.setVisible(false);
+                        self.mailbox_closed.setVisible(true);
+                  });
+            });
+            this.mailbox_open.setVisible(false);
+
+            this.mailbox_glow = this.mailbox_open.preFX.addGlow();
+            this.mailbox_glow.active = false;
+
+            this.tweens.add({
+                  targets: this.mailbox_glow,
+                  outerStrength: 10,
+                  yoyo: true,
+                  loop: -1,
+                  ease: 'sine.inout'
+            });
 
             this.krepaSpeed = 0;
             this.krepaSpeedBeforeDrag = 0;
@@ -683,6 +709,26 @@ class KrepagotchiGame extends Phaser.Scene {
                   callbackScope: self
             });
 
+            this.tmrLetterPick = this.time.addEvent({
+                  delay: Phaser.Math.Between(5000, 10000),
+                  loop: false,
+                  callback: function() {
+                        window.pickLetter(function(name, message) {
+                              window.currentLetter = {
+                                    from: name,
+                                    message: message
+                              };
+
+                              self.mailbox_closed.setVisible(false);
+                              self.mailbox_open.setVisible(true);
+                              self.mailbox_glow.active = true;
+
+                              self.sndMailbox.play();
+                        });
+                  },
+                  callbackScope: self
+            });
+
             this.tmrObjectStorage = this.time.addEvent({
                   delay: 2000,
                   loop: true,
@@ -816,6 +862,8 @@ class KrepagotchiGame extends Phaser.Scene {
             this.sndRefreshed = this.sound.add('refreshed');
             this.sndNoAction = this.sound.add('noaction');
             this.sndBoing = this.sound.add('boing');
+            this.sndMailbox = this.sound.add('mailbox');
+            this.sndMailbox.setVolume(0.5);
 
             this.sndSteps = [];
             for (let i = 1; i <= 10; i++) {

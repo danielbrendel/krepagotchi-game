@@ -41,7 +41,21 @@
             </div>
         </div>
 
+        <div class="letter-reading-overlay is-hidden">
+            <div id="letter-reading-content" class="letter-reading-content">
+                <div class="letter-reading-title"></div>
+
+                <div class="letter-reading-message"></div>
+
+                <div class="letter-reading-action">
+                    <a class="button button-save" href="javascript:void(0);" onclick="window.closeOpenLetter();">Close</a>
+                </div>
+            </div>
+        </div>
+
         <script>
+            window.krepaBackend = '{{ env('APP_BACKEND') }}';
+
             window.onload = function() {
                 if ('serviceWorker' in navigator) {
                     navigator.serviceWorker.register('./serviceworker.js', { scope: '/' })
