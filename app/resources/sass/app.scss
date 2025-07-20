@@ -14,7 +14,7 @@ html, body {
     background-size: cover;
 }
 
-.prompt-overlay, .letter-reading-overlay, .letter-writing-overlay {
+.prompt-overlay, .letter-reading-overlay, .letter-writing-overlay, .letter-archive-overlay {
     position: fixed;
     width: 100%;
     height: 100%;
@@ -22,7 +22,7 @@ html, body {
     background-color: rgba(0, 0, 0, 0.5);
 }
 
-.prompt-content, .letter-reading-content, .letter-writing-content {
+.prompt-content, .letter-reading-content, .letter-writing-content, .letter-archive-content {
     position: absolute;
     z-index: 3;
     top: 50%;
@@ -42,12 +42,12 @@ html, body {
     border-radius: 5px;
 }
 
-.letter-reading-content, .letter-writing-content {
+.letter-reading-content, .letter-writing-content, .letter-archive-content {
     font-size: 1.0em;
     min-width: 350px;
 }
 
-.prompt-title, .letter-reading-title, .letter-writing-title {
+.prompt-title, .letter-reading-title, .letter-writing-title, .letter-archive-title {
     margin-bottom: 10px;
     background-color: rgb(100, 100, 100);
     color: rgb(200, 200, 200);
@@ -56,11 +56,11 @@ html, body {
     border-top-left-radius: 5px;
 }
 
-.letter-reading-title, .letter-writing-title {
+.letter-reading-title, .letter-writing-title, .letter-archive-title {
     font-size: 0.8em;
 }
 
-.prompt-title img, .letter-reading-title img, .letter-writing-title img {
+.prompt-title img, .letter-reading-title img, .letter-writing-title img, .letter-archive-title img {
     position: relative;
     top: 9px;
     width: 40px;
@@ -125,7 +125,7 @@ html, body {
     border: 1px solid rgb(150, 150, 150);
 }
 
-.prompt-action, .letter-reading-action, .letter-writing-action {
+.prompt-action, .letter-reading-action, .letter-writing-action, .letter-archive-action {
     margin-top: 10px;
     margin-bottom: 10px;
     padding-left: 20px;
@@ -143,7 +143,17 @@ html, body {
     text-decoration: underline;
 }
 
-.letter-writing-action a {
+.letter-reading-action a.button-delete {
+    color: rgb(253, 90, 90);
+    text-decoration: none;
+}
+
+.letter-reading-action a.button-delete:hover {
+    color: rgb(253, 90, 90);
+    text-decoration: underline;
+}
+
+.letter-reading-action a, .letter-writing-action a {
     margin-right: 20px;
 }
 
@@ -165,6 +175,63 @@ html, body {
 .letter-writing-action a.button-close:hover {
     color: rgb(200, 200, 200);
     text-decoration: underline;
+}
+
+.letter-archive-list {
+    position: relative;
+    min-height: 50px;
+}
+
+.letter-archive-list i {
+    color: rgb(200, 200, 200);
+    padding: 30px;
+}
+
+.letter-archive-action a.button-close {
+    color: rgb(150, 150, 150);
+    text-decoration: none;
+}
+
+.letter-archive-action a.button-close:hover {
+    color: rgb(150, 150, 150);
+    text-decoration: underline;
+}
+
+.archive-item {
+    position: relative;
+    width: 90%;
+    padding: 10px;
+    color: rgb(200, 200, 200);
+}
+
+.archive-item:last-child {
+    margin-bottom: 35px;
+}
+
+.archive-item-from {
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.archive-item-preview {
+    display: inline-block;
+}
+
+.archive-item-preview a {
+    color: rgb(200, 200, 200);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.archive-item-preview a:hover {
+    color: rgb(200, 200, 200);
+    text-decoration: underline;
+    font-weight: bold;
+}
+
+.archive-item-date {
+    display: inline-block;
+    float: right;
 }
 
 .is-hidden {

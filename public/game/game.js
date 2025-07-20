@@ -388,6 +388,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.spritesheet('mailbox_open', 'game/assets/sprites/mailbox-open.png', { frameWidth: 64, frameHeight: 64 });
             this.load.spritesheet('envelope', 'game/assets/sprites/envelope.png', { frameWidth: 32, frameHeight: 32 });
             this.load.spritesheet('pencil', 'game/assets/sprites/pencil.png', { frameWidth: 64, frameHeight: 64 });
+            this.load.spritesheet('archive', 'game/assets/sprites/archive.png', { frameWidth: 120, frameHeight: 73 });
 
             this.load.audio('click', 'game/assets/sounds/click.wav');
             this.load.audio('eating', 'game/assets/sounds/eating.wav');
@@ -474,6 +475,8 @@ class KrepagotchiGame extends Phaser.Scene {
                         self.mailbox_glow.active = false;
                         self.mailbox_open.setVisible(false);
                         self.mailbox_closed.setVisible(true);
+
+                        window.addToArchive(window.currentLetter.from, window.currentLetter.message, window.currentLetter.date);
                   });
             });
             this.mailbox_open.setVisible(false);
@@ -489,8 +492,8 @@ class KrepagotchiGame extends Phaser.Scene {
                   ease: 'sine.inout'
             });
 
-            this.draftLetter = this.add.image(gameconfig.scale.width - 105, gameconfig.scale.height - 159, 'pencil').setInteractive();
-            this.draftLetter.setScale(0.5);
+            this.draftLetter = this.add.image(gameconfig.scale.width - 105, gameconfig.scale.height - 135, 'pencil').setInteractive();
+            this.draftLetter.setScale(0.3);
             this.draftLetter.setFlipX(true);
             this.draftLetter.on('pointerdown', function() {
                   window.draftLetter('Send a letter to someone', 'Enter a friendly message...', function(event) {
@@ -507,12 +510,20 @@ class KrepagotchiGame extends Phaser.Scene {
 
             this.tweens.add({
                   targets: this.draftLetter,
-                  scaleY: 0.59,
-                  scaleX: 0.59,
+                  scaleY: 0.39,
+                  scaleX: 0.39,
                   duration: 700,
                   yoyo: true,
                   repeat: -1,
                   ease: 'Sine.easeInOut'
+            });
+
+            this.letterArchive = this.add.image(gameconfig.scale.width - 105, gameconfig.scale.height - 170, 'archive').setInteractive();
+            this.letterArchive.setScale(0.5);
+            this.letterArchive.on('pointerdown', function() {
+                  window.openArchive();
+                  
+                  self.sndClick.play();
             });
 
             this.krepaSpeed = 0;
@@ -743,10 +754,11 @@ class KrepagotchiGame extends Phaser.Scene {
                   delay: Phaser.Math.Between(5000, 10000),
                   loop: false,
                   callback: function() {
-                        window.pickLetter(function(name, message) {
+                        window.pickLetter(function(name, message, date) {
                               window.currentLetter = {
                                     from: name,
-                                    message: message
+                                    message: message,
+                                    date: date
                               };
 
                               self.mailbox_closed.setVisible(false);
