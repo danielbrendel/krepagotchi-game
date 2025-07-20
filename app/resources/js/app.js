@@ -288,7 +288,7 @@ window.openArchive = function(title = 'Letter Archive') {
                 }
             }
             } else {
-                elList.innerHTML = `<i>You don't have any letters saved.</i>`
+                elList.innerHTML = `<i>You don't have any saved letters.</i>`
             }
         }
 
