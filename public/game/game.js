@@ -2460,7 +2460,7 @@ class KrepagotchiGame extends Phaser.Scene {
                         'Boomingly good weather.\nI like it. 🌞',
                         'I\'m feeling peaceful today\nI like that.',
                         'I like being a Krepa. 💚',
-                        'Is it cuddle time yet?\nJust wondering.',
+                        'I\'d like to befriend these birds. 😃',
                         'This place is cozy 💚\nPlease don\'t change it.',
                         'I want to learn how to smile. 🌞',
                         'I counted pixels today\nNew highscore: ' + Phaser.Math.Between(20, 50),
