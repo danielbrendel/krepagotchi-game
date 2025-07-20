@@ -390,6 +390,8 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.spritesheet('pencil', 'game/assets/sprites/pencil.png', { frameWidth: 64, frameHeight: 64 });
             this.load.spritesheet('archive', 'game/assets/sprites/archive.png', { frameWidth: 120, frameHeight: 73 });
             this.load.spritesheet('cake', 'game/assets/sprites/cake.png', { frameWidth: 39, frameHeight: 34 });
+            this.load.spritesheet('fireworks', 'game/assets/sprites/fireworks.png', { frameWidth: 256, frameHeight: 256 });
+            this.load.spritesheet('happynewyear', 'game/assets/sprites/happynewyear.png', { frameWidth: 400, frameHeight: 100 });
 
             this.load.audio('click', 'game/assets/sounds/click.wav');
             this.load.audio('eating', 'game/assets/sounds/eating.wav');
@@ -414,6 +416,10 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.audio('frog', 'game/assets/sounds/frog.wav');
             this.load.audio('mailbox', 'game/assets/sounds/mailbox.wav');
             this.load.audio('success', 'game/assets/sounds/success.wav');
+            this.load.audio('fireworks1', 'game/assets/sounds/fireworks1.wav');
+            this.load.audio('fireworks2', 'game/assets/sounds/fireworks2.wav');
+            this.load.audio('fireworks3', 'game/assets/sounds/fireworks3.wav');
+            this.load.audio('fireworks4', 'game/assets/sounds/fireworks4.wav');
 
             for (let i = 1; i <= 10; i++) {
                   this.load.audio('step' + i, 'game/assets/sounds/step' + i + '.wav');
@@ -845,6 +851,13 @@ class KrepagotchiGame extends Phaser.Scene {
                   repeat: 1
             });
 
+            this.anims.create({
+                  key: 'fireworks',
+                  frames: this.anims.generateFrameNumbers('fireworks', { start: 0, end: 29 }),
+                  frameRate: 50,
+                  repeat: 0
+            });
+
             this.input.setDraggable(this.krepa);
             this.input.on('drag', function(pointer, gameObject, dragX, dragY) {
                   if (gameObject === self.krepa) {
@@ -921,6 +934,11 @@ class KrepagotchiGame extends Phaser.Scene {
             this.sndMailbox = this.sound.add('mailbox');
             this.sndSuccess = this.sound.add('success');
 
+            this.sndFireworks = [];
+            for (let i = 1; i < 5; i++) {
+                  this.sndFireworks.push(this.sound.add('fireworks' + i.toString()));
+            }
+            
             this.sndSteps = [];
             for (let i = 1; i <= 10; i++) {
                   const step = this.sound.add('step' + i).setVolume(0.5);
@@ -946,6 +964,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.adjustStatsTimeGap();
 
             this.krepaBirthdayCheck();
+            this.newYearsEveCheck();
 
             if (this.getConfigValue('krepa_initmsg') != 1) {
                   this.sndClick.play();
@@ -1008,7 +1027,13 @@ class KrepagotchiGame extends Phaser.Scene {
                   this.load.spritesheet(ident, 'game/assets/biomes/' + this.current_biome + '/' + obj.asset, { frameWidth: obj.size.w, frameHeight: obj.size.h });
             }
 
-            const selected_theme = (this.krepaBirthdayToday()) ? 'game/assets/sounds/bday.ogg' : 'game/assets/biomes/' + this.current_biome + '/' + biome.theme;
+            let selected_theme = 'game/assets/biomes/' + this.current_biome + '/' + biome.theme;
+            if (this.krepaBirthdayToday()) {
+                  selected_theme = 'game/assets/sounds/bday.ogg';
+            } else if (this.newYearsEveTimeRange()) {
+                  selected_theme = 'game/assets/sounds/party.ogg';
+            }
+
             this.load.audio('theme', selected_theme);
 
             for (let j = 0; j < biome.ambience.length; j++) {
@@ -1634,6 +1659,51 @@ class KrepagotchiGame extends Phaser.Scene {
                   callback: function() {
                         clearInterval(interval);
                         emitter.destroy();
+                  },
+                  callbackScope: self
+            });
+      }
+
+      spawnFirework(x, y)
+      {
+            let burst = this.physics.add.sprite(x, y, 'fireworks');
+            burst.anims.play('fireworks', true);
+            burst.on('animationcomplete', function() {
+                  burst.destroy();
+            });
+
+            const fwsnd = this.sndFireworks[Phaser.Math.Between(0, this.sndFireworks.length - 1)];
+            fwsnd.play();
+      }
+
+      newYearsEveTimeRange()
+      {
+            let date = new Date();
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+
+            return (((month === 12) && (day === 31)) || ((month === 1) && (day === 1)));
+      }
+
+      newYearsEveCheck()
+      {
+            let self = this;
+
+            if (!this.newYearsEveTimeRange()) {
+                  return;
+            }
+
+            const banner_width = 400;
+            const banner_scale = 0.9;
+
+            let banner = this.add.image(gameconfig.scale.width / 2 - (banner_width * banner_scale) / 2 + 180, 63, 'happynewyear');
+            banner.setScale(banner_scale);
+
+            this.tmrFireworks = this.time.addEvent({
+                  delay: 2000,
+                  loop: true,
+                  callback: function() {
+                        self.spawnFirework(Phaser.Math.Between(20, gameconfig.scale.width - 20), Phaser.Math.Between(20, gameconfig.scale.height / 2 - 150));
                   },
                   callbackScope: self
             });
@@ -2341,6 +2411,24 @@ class KrepagotchiGame extends Phaser.Scene {
                         'I want to invite all my friends for today. 💚'
                   ],
 
+                  nye: [
+                        'Let\'s celebrate tonight! 🎉',
+                        'Do you have any new year\'s resolutions? 🤭',
+                        'I\'m starting to learn smiling next year. 😁',
+                        'These fireworks are so cool! 🎇',
+                        'I want to ignite some fireworks! 🎆',
+                        'Does TNT count as fireworks, too? 🧨',
+                        'Booooooom! 💥💥',
+                        'More fireworks, please! 🤩',
+                        'You should fuse some TNT. 😂',
+                        'How do you spend new year\'s eve?',
+                        'I want to celebrate with my owner tonight. 💚',
+                        'I\'d like to party tonight! 🎶',
+                        'Come on, dance with me tonight. 🥳',
+                        'I hope everyone is having a good time. 💚',
+                        'Sooo, are you ready to rock tonight?! 👏'
+                  ],
+
                   rainy: [
                         'Not my favorite weather,\nbut it\'s alright...',
                         'Rain hides my footsteps.\nExcellent...',
@@ -2464,6 +2552,8 @@ class KrepagotchiGame extends Phaser.Scene {
             } else {
                   if (this.krepaBirthdayToday()) {
                         thought = this.krepaThoughts.bday[Phaser.Math.Between(0, this.krepaThoughts.bday.length - 1)];
+                  } else if (this.newYearsEveTimeRange()) {
+                        thought = this.krepaThoughts.nye[Phaser.Math.Between(0, this.krepaThoughts.nye.length - 1)];
                   } else if (this.rainy) {
                         thought = this.krepaThoughts.rainy[Phaser.Math.Between(0, this.krepaThoughts.rainy.length - 1)];
                   } else {
