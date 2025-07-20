@@ -9,6 +9,16 @@
  */
 class LettersController extends BaseController {
     /**
+	 * Perform base initialization
+	 * 
+	 * @return void
+	 */
+	public function __construct()
+	{
+		header('Access-Control-Allow-Origin: *');
+	}
+
+    /**
 	 * Handles URL: /letters/pick
 	 * 
 	 * @param Asatru\Controller\ControllerArg $request
