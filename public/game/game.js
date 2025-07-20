@@ -19,6 +19,7 @@ class KrepagotchiGame extends Phaser.Scene {
                         background: "background.png",
                         raincolor: 0x65ccff,
                         theme: "theme.ogg",
+                        ambience: ["chirp.wav", "goldfinch1.wav", "goldfinch2.wav", "peacock.wav", "quail.wav"],
                         objects: [
                               {
                                     asset: "plant1.png",
@@ -133,6 +134,7 @@ class KrepagotchiGame extends Phaser.Scene {
                         background: "background.png",
                         raincolor: 0xf0e68c,
                         theme: "theme.ogg",
+                        ambience: ["crow.wav", "loon.wav", "seagull1.wav", "seagull2.wav", "vulture.wav"],
                         objects: [
                               {
                                     asset: "rock1.png",
@@ -226,6 +228,7 @@ class KrepagotchiGame extends Phaser.Scene {
                         background: "background.png",
                         raincolor: 0x39ff14,
                         theme: "theme.ogg",
+                        ambience: ["bubble1.wav", "bubble2.wav", "bubble3.wav", "bubble4.wav", "bubble5.wav"],
                         objects: [
                               {
                                     asset: "bamboo.png",
@@ -646,16 +649,18 @@ class KrepagotchiGame extends Phaser.Scene {
                                           ease: 'Back.easeOut',
                                           yoyo: true,
                                           onComplete: function() {
-                                                self.cameras.main.shake(100, 0.005);
+                                                if (!self.inDetonation) {
+                                                      self.cameras.main.shake(100, 0.005);
 
-                                                self.krepa_body.setScale(1.0);
-                                                
-                                                self.sound.play('sneeze', {
-                                                      rate: Phaser.Math.FloatBetween(1.8, 2.4)
-                                                });
+                                                      self.krepa_body.setScale(1.0);
+                                                      
+                                                      self.sound.play('sneeze', {
+                                                            rate: Phaser.Math.FloatBetween(1.8, 2.4)
+                                                      });
 
-                                                for (let i = 0; i < 3; i++) {
-                                                      self.spawnFusedTNT(self.krepa.body.x + Phaser.Math.Between(0, 200) - 100, self.krepa.body.y + Phaser.Math.Between(0, 200) - 100);
+                                                      for (let i = 0; i < 3; i++) {
+                                                            self.spawnFusedTNT(self.krepa.body.x + Phaser.Math.Between(0, 200) - 100, self.krepa.body.y + Phaser.Math.Between(0, 200) - 100);
+                                                      }
                                                 }
                                           }
                                     });
@@ -670,7 +675,7 @@ class KrepagotchiGame extends Phaser.Scene {
                   loop: true,
                   paused: self.rainy,
                   callback: function() {
-                        let quantity = Phaser.Math.Between(1, 4);
+                        let quantity = Phaser.Math.Between(1, 9);
                         for (let i = 0; i < quantity; i++) {
                               self.spawnButterfly();
                         }
@@ -891,6 +896,13 @@ class KrepagotchiGame extends Phaser.Scene {
             }
 
             this.load.audio('theme', 'game/assets/biomes/' + this.current_biome + '/' + biome.theme);
+
+            for (let j = 0; j < biome.ambience.length; j++) {
+                  const snd = biome.ambience[j];
+                  const ident = snd.substring(0, snd.lastIndexOf('.'));
+
+                  this.load.audio(ident, 'game/assets/biomes/' + this.current_biome + '/' + snd);
+            }
       }
 
       precacheBiome()
@@ -915,6 +927,8 @@ class KrepagotchiGame extends Phaser.Scene {
       loadBiome()
       {
             try {
+                  let self = this;
+
                   this.add.image(0, 0, 'background').setOrigin(0, 0);
                   
                   for (let i = 0; i < this.biome_data.objects.length; i++) {
@@ -945,11 +959,28 @@ class KrepagotchiGame extends Phaser.Scene {
                   this.sndTheme.setVolume(0.22);
                   this.sndTheme.play();
 
+                  this.tmrAmbience = this.time.addEvent({
+                        delay: Phaser.Math.Between(12500, 15000),
+                        paused: true,
+                        loop: true,
+                        callback: function() {
+                              const snd = self.biome_data.ambience[Phaser.Math.Between(0, self.biome_data.ambience.length - 1)];
+                              const ident = snd.substring(0, snd.lastIndexOf('.'));
+
+                              self.sound.play(ident, {
+                                    volume: Phaser.Math.FloatBetween(1.2, 1.5)
+                              });
+                        },
+                        callbackScope: self
+                  });
+
                   this.rainy = false;
                   const chance = Phaser.Math.Between(1, 5);
                   if (chance === 1) {
                         this.spawnRain();
                         this.spawnFrogs();
+                  } else {
+                        this.tmrAmbience.paused = false;
                   }
             } catch (error) {
                   console.error(error);
@@ -990,6 +1021,16 @@ class KrepagotchiGame extends Phaser.Scene {
 
             const chance = Phaser.Math.Between(1, 4);
             if (chance === 1) {
+                  this.add.rectangle(0, 0, gameconfig.scale.width, gameconfig.scale.height, 0x000000)
+                        .setOrigin(0)
+                        .setDepth(100)
+                        .setAlpha(0.5);
+
+                  this.rainParticles.x -= 50;
+                  this.rainParticles.frequency = 25;
+                  this.rainParticles.quantity = 30;
+                  this.rainParticles.speedX = 123;
+
                   this.tmrLightning = this.time.addEvent({
                         delay: Phaser.Math.Between(5000, 10000),
                         loop: true,
@@ -1024,6 +1065,10 @@ class KrepagotchiGame extends Phaser.Scene {
             frog.setCollideWorldBounds(true);
             this.physics.add.collider(frog, this.fenceColliderTop);
             this.physics.add.collider(frog, this.fenceColliderBottom);
+            frog.setInteractive();
+            frog.on('pointerdown', function() {
+                  self.frogJump(frog, 100, 1.2, 1.5);
+            });
 
             if (flip) {
                   frog.angle = Math.PI * 2;
@@ -1044,25 +1089,33 @@ class KrepagotchiGame extends Phaser.Scene {
                   delay: Phaser.Math.Between(5000, 10000),
                   loop: true,
                   callback: function() {
-                        frog.angle = Phaser.Math.FloatBetween(0, Math.PI * 2);
-                        frog.flipX = Math.cos(frog.angle) < 0;
-
-                        const frogSpeed = 40;
-
-                        frog.setVelocity(
-                              Math.cos(frog.angle) * frogSpeed,
-                              Math.sin(frog.angle) * frogSpeed
-                        );
-
-                        self.sound.play('frog');
-
-                        frog.anims.play('frog', true);
-                        frog.on('animationcomplete', function(anim, frame) {
-                              frog.setVelocity(0);
-                              frog.setFrame(anim.frames[0].frame.name);
-                        });
+                        self.frogJump(frog);
                   },
                   callbackScope: self
+            });
+      }
+
+      frogJump(frog, speed = 40, rate = 1.0, volume = 1.0)
+      {
+            let self = this;
+
+            frog.angle = Phaser.Math.FloatBetween(0, Math.PI * 2);
+            frog.flipX = Math.cos(frog.angle) < 0;
+
+            frog.setVelocity(
+                  Math.cos(frog.angle) * speed,
+                  Math.sin(frog.angle) * speed
+            );
+
+            self.sound.play('frog', {
+                  rate: rate,
+                  volume: volume
+            });
+
+            frog.anims.play('frog', true);
+            frog.on('animationcomplete', function(anim, frame) {
+                  frog.setVelocity(0);
+                  frog.setFrame(anim.frames[0].frame.name);
             });
       }
 
@@ -1084,7 +1137,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.tmrLightning.remove();
 
             this.tmrLightning = this.time.addEvent({
-                  delay: Phaser.Math.Between(10000, 20000),
+                  delay: Phaser.Math.Between(5000, 10000),
                   loop: true,
                   callback: self.spawnLightning,
                   callbackScope: self
@@ -2066,7 +2119,7 @@ class KrepagotchiGame extends Phaser.Scene {
                         'Can you feed me, please? 🥺',
                         'When is dinner ready?',
                         'I am sooo hungry right now!',
-                        'I smell TNT...\nWait, just a dream.',
+                        'I smell TNT...\nWait, just a day-dream.',
                         'My tummy is rumbling.\nPlease feed me!',
                         'Boom hunger is real 💥\nI need food.',
                         'Starving a little bit...\nOkay, a lot.',
