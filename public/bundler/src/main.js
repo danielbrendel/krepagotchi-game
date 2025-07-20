@@ -19,6 +19,7 @@ app.whenReady().then(() => {
         title: cfgBuild.name,
         width: cfgBuild.width,
         height: cfgBuild.height,
+        maximizable: false,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: true
