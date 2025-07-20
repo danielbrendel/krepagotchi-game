@@ -28,7 +28,9 @@ app.whenReady().then(() => {
         icon: cfgBuild.icon
     });
 
-    mainWindow.setAlwaysOnTop(true, 'screen');
+    if (cfgBuild.aot) {
+        mainWindow.setAlwaysOnTop(true, 'screen');
+    }
 
     mainWindow.webContents.setWindowOpenHandler(({ url }) => {
         shell.openExternal(url);

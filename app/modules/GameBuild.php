@@ -140,12 +140,7 @@ class GameBuild {
             system('xcopy "' . $src . '" "' . public_path() . '/bundler/game/" /E /V /I /Y');
             copy(public_path() . '/img/logo.png', public_path() . '/bundler/game/logo.png');
 
-            $build_config = [
-                'name' => env('APP_NAME'),
-                'icon' => 'game/logo.png',
-                'width' => env('APP_GAMERESX'),
-                'height' => env('APP_GAMERESY')
-            ];
+            $build_config = static::buildConfig();
 
             file_put_contents(public_path() . '/bundler/build.json', json_encode($build_config));
 
@@ -171,12 +166,7 @@ class GameBuild {
             system('xcopy "' . $src . '" "' . public_path() . '/bundler/game/" /E /V /I /Y');
             copy(public_path() . '/img/logo.png', public_path() . '/bundler/game/logo.png');
 
-            $build_config = [
-                'name' => env('APP_NAME'),
-                'icon' => 'game/logo.png',
-                'width' => env('APP_GAMERESX'),
-                'height' => env('APP_GAMERESY')
-            ];
+            $build_config = static::buildConfig();
 
             file_put_contents(public_path() . '/bundler/build.json', json_encode($build_config));
 
@@ -202,12 +192,7 @@ class GameBuild {
             system('xcopy "' . $src . '" "' . public_path() . '/bundler/game/" /E /V /I /Y');
             copy(public_path() . '/img/logo.png', public_path() . '/bundler/game/logo.png');
 
-            $build_config = [
-                'name' => env('APP_NAME'),
-                'icon' => 'game/logo.png',
-                'width' => env('APP_GAMERESX'),
-                'height' => env('APP_GAMERESY')
-            ];
+            $build_config = static::buildConfig();
 
             file_put_contents(public_path() . '/bundler/build.json', json_encode($build_config));
 
@@ -220,5 +205,19 @@ class GameBuild {
         } catch (\Exception $e) {
             throw $e;
         }
+    }
+
+    /**
+     * @return array
+     */
+    public static function buildConfig()
+    {
+        return [
+            'name' => env('APP_NAME'),
+            'icon' => 'game/logo.png',
+            'width' => env('APP_GAMERESX'),
+            'height' => env('APP_GAMERESY'),
+            'aot' => env('APP_ALWAYSONTOP')
+        ];
     }
 }
