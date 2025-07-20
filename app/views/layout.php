@@ -48,7 +48,7 @@
                 <div class="letter-reading-message"></div>
 
                 <div class="letter-reading-action">
-                    <span><a class="button button-save" href="javascript:void(0);" onclick="window.closeOpenLetter();">Close</a></span>
+                    <span><a class="button button-close" href="javascript:void(0);" onclick="window.closeOpenLetter();">Close</a></span>
                     <span id="letter-archive-item-delete" class="is-hidden" data-target=""><a class="button button-delete" href="javascript:void(0);" onclick="if (confirm('Do you really want to delete this letter?')) { window.removeArchiveItemByIdent(document.getElementById('letter-archive-item-delete').dataset.target); document.querySelector('.letter-reading-overlay').classList.add('is-hidden'); }">Delete</a></span>
                 </div>
             </div>
