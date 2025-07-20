@@ -468,7 +468,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.mailbox_closed = this.add.image(gameconfig.scale.width - 45, gameconfig.scale.height - 159, 'mailbox_closed');
             this.mailbox_open = this.add.image(gameconfig.scale.width - 45, gameconfig.scale.height - 159, 'mailbox_open').setInteractive();
             this.mailbox_open.on('pointerdown', function() {
-                  //self.sndClick.play();
+                  self.sndClick.play();
 
                   window.openLetter('A letter from <strong>' + window.currentLetter.from + '</strong>', window.currentLetter.message, function() {
                         self.mailbox_glow.active = false;
