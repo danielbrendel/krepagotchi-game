@@ -100,7 +100,7 @@ class KrepagotchiGame extends Phaser.Scene {
                                     asset: "plant3.png",
                                     pos: {
                                           x: 300,
-                                          y: 400
+                                          y: 111
                                     },
                                     size: {
                                           w: 39,
@@ -200,7 +200,7 @@ class KrepagotchiGame extends Phaser.Scene {
                                     asset: "rock3.png",
                                     pos: {
                                           x: 300,
-                                          y: 400
+                                          y: 111
                                     },
                                     size: {
                                           w: 34,
@@ -313,8 +313,8 @@ class KrepagotchiGame extends Phaser.Scene {
                               {
                                     asset: "bamboo.png",
                                     pos: {
-                                          x: 300,
-                                          y: 400
+                                          x: 305,
+                                          y: 111
                                     },
                                     size: {
                                           w: 256,
@@ -504,7 +504,7 @@ class KrepagotchiGame extends Phaser.Scene {
                   ease: 'sine.inout'
             });
 
-            this.draftLetter = this.add.image(gameconfig.scale.width - 105, gameconfig.scale.height - 135, 'pencil').setInteractive();
+            this.draftLetter = this.add.image(gameconfig.scale.width - 45, gameconfig.scale.height - 250, 'pencil').setInteractive();
             this.draftLetter.setScale(0.3);
             this.draftLetter.setFlipX(true);
             this.draftLetter.on('pointerdown', function() {
@@ -530,8 +530,8 @@ class KrepagotchiGame extends Phaser.Scene {
                   ease: 'Sine.easeInOut'
             });
 
-            this.letterArchive = this.add.image(gameconfig.scale.width - 105, gameconfig.scale.height - 170, 'archive').setInteractive();
-            this.letterArchive.setScale(0.5);
+            this.letterArchive = this.add.image(gameconfig.scale.width - 45, gameconfig.scale.height - 209, 'archive').setInteractive();
+            this.letterArchive.setScale(0.4);
             this.letterArchive.on('pointerdown', function() {
                   window.openArchive();
                   
