@@ -42,7 +42,6 @@ app.whenReady().then(() => {
     
     Menu.setApplicationMenu(null);
     mainWindow.loadFile(path.resolve(__dirname, '..', 'game', 'index.html'));
-    mainWindow.maximize();
     
     app.on('activate', () => {
         if (BrowserWindow.getAllWindows().length === 0) {
