@@ -2323,6 +2323,24 @@ class KrepagotchiGame extends Phaser.Scene {
 
                   ],
 
+                  bday: [
+                        'Happy birthday to me! 🥳',
+                        'Can we have cake today? 🥺',
+                        'I\'d love having some cake today! 🍰',
+                        'I want to celebrate with my owner today! 💚',
+                        'I have a wish... Let\'s have cake?! 😂',
+                        'It\'s party time!! 😎',
+                        'Whoop, whoop! 🥳',
+                        'Let\'s get this party started. 🎉',
+                        'This is my day, yaaay! 🎉',
+                        'I want cake and lots of fun for today. 😍',
+                        'I wished for a giant TNT pie.\nWill it happen? 😃',
+                        'This birthday music really rocks! 👏',
+                        'Hey owner, can you sing a birthday song? 🎤',
+                        'Let\'s have fun and rock to the music. 🎶',
+                        'I want to invite all my friends for today. 💚'
+                  ],
+
                   rainy: [
                         'Not my favorite weather,\nbut it\'s alright...',
                         'Rain hides my footsteps.\nExcellent...',
@@ -2444,7 +2462,9 @@ class KrepagotchiGame extends Phaser.Scene {
             } else if (this.krepaStats.affection < 50) {
                   thought = this.krepaThoughts.affection[Phaser.Math.Between(0, this.krepaThoughts.affection.length - 1)];
             } else {
-                  if (this.rainy) {
+                  if (this.krepaBirthdayToday()) {
+                        thought = this.krepaThoughts.bday[Phaser.Math.Between(0, this.krepaThoughts.bday.length - 1)];
+                  } else if (this.rainy) {
                         thought = this.krepaThoughts.rainy[Phaser.Math.Between(0, this.krepaThoughts.rainy.length - 1)];
                   } else {
                         thought = this.krepaThoughts.casual[Phaser.Math.Between(0, this.krepaThoughts.casual.length - 1)];
