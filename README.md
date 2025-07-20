@@ -47,6 +47,7 @@ This project is a fan-made game and is not affiliated with Mojang, Microsoft, Ba
 - Send/recieve letters
 - Biome selection
 - Birthday celebration
+- New Year's Eve Party
 - Weather effects
 - Dynamic environment
 - Cute pixel art
