@@ -78,7 +78,9 @@ window.pickLetter = function(callback = function(name, message, date) {}) {
         if ((code == 200) && (response.code == 200)) {
             callback(response.data.pet, response.data.message, response.data.date);
         } else {
-            console.warn(response);
+            if (window.appDebugMode) {
+                console.warn(response);
+            }
         }
     });
 };
@@ -90,7 +92,9 @@ window.addLetter = function(message, callback = function() {}) {
         if ((code == 200) && (response.code == 200)) {
             callback();
         } else {
-            console.warn(response);
+            if (window.appDebugMode) {
+                console.warn(response);
+            }
         }
     });
 };
@@ -100,7 +104,9 @@ window.checkLetter = function(type, callback = function(status) {}) {
         if ((code == 200) && (response.code == 200)) {
             callback(response.status);
         } else {
-            console.warn(response);
+            if (window.appDebugMode) {
+                console.warn(response);
+            }
         }
     });
 };

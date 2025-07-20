@@ -6,7 +6,7 @@
         gameconfig.about.contact = '{{ env('APP_CONTACT') }}';
         gameconfig.about.description = '{{ env('APP_DESCRIPTION') }}';
         gameconfig.about.info = 'This project is a fan-made game\nand is not affiliated with\nMojang, Microsoft, Bandai,\nor any of their properties.';
-        gameconfig.physics.arcade.debug = {{ env('APP_DEBUG') ? 'true' : 'false' }};
+        gameconfig.physics.arcade.debug = window.appDebugMode;
         gameconfig.scale.width = {{ env('APP_GAMERESX') }};
         gameconfig.scale.height = {{ env('APP_GAMERESY') }};
         

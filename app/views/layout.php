@@ -83,6 +83,7 @@
 
         <script>
             window.krepaBackend = '{{ env('APP_BACKEND') }}';
+            window.appDebugMode = {{ env('APP_DEBUG') ? 'true' : 'false' }};
 
             window.onload = function() {
                 if ('serviceWorker' in navigator) {
