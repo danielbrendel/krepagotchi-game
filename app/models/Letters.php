@@ -17,7 +17,7 @@ class Letters extends \Asatru\Database\Model {
                 throw new \Exception('User already picked a letter today');
             }
 
-            $item = static::raw('SELECT * FROM `@THIS` WHERE approved = TRUE AND assigned = FALSE ORDER BY RAND() LIMIT 1')->first();
+            $item = static::raw('SELECT * FROM `@THIS` WHERE approved = TRUE AND assigned = FALSE AND token <> ? ORDER BY RAND() LIMIT 1', [$token])->first();
             if ($item) {
                 static::raw('UPDATE `@THIS` SET assigned = TRUE WHERE id = ?', [$item->get('id')]);
 
