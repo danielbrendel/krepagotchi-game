@@ -1008,7 +1008,8 @@ class KrepagotchiGame extends Phaser.Scene {
                   this.load.spritesheet(ident, 'game/assets/biomes/' + this.current_biome + '/' + obj.asset, { frameWidth: obj.size.w, frameHeight: obj.size.h });
             }
 
-            this.load.audio('theme', 'game/assets/biomes/' + this.current_biome + '/' + biome.theme);
+            const selected_theme = (this.krepaBirthdayToday()) ? 'game/assets/sounds/bday.ogg' : 'game/assets/biomes/' + this.current_biome + '/' + biome.theme;
+            this.load.audio('theme', selected_theme);
 
             for (let j = 0; j < biome.ambience.length; j++) {
                   const snd = biome.ambience[j];
