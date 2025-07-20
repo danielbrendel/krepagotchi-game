@@ -475,7 +475,10 @@ class KrepagotchiGame extends Phaser.Scene {
                   padding: { x: 5, y: 2 }
             }).setDepth(TOPMOST_ELEMENT);
 
-            this.mailbox_closed = this.add.image(gameconfig.scale.width - 45, gameconfig.scale.height - 159, 'mailbox_closed');
+            this.mailbox_closed = this.add.image(gameconfig.scale.width - 45, gameconfig.scale.height - 159, 'mailbox_closed').setInteractive();
+            this.mailbox_closed.on('pointerdown', function() {
+                  self.sndNoAction.play();
+            });
             this.mailbox_open = this.add.image(gameconfig.scale.width - 45, gameconfig.scale.height - 159, 'mailbox_open').setInteractive();
             this.mailbox_open.on('pointerdown', function() {
                   self.sndClick.play();
