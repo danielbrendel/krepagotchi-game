@@ -10,7 +10,7 @@
         <meta name="og:title" property="og:title" content="{{ env('APP_NAME') }}">
         <meta name="og:description" property="og:description" content="{{ env('APP_DESCRIPTION') }}">
         <meta name="og:url" property="og:url" content="{{ url('/') }}">
-        <meta name="og:image" property="og:image" content="{{ asset('img/screenshot-game.png') }}">
+        <meta name="og:image" property="og:image" content="{{ asset('img/preview.png') }}">
         
         <title>{{ env('APP_NAME') }}</title>
 

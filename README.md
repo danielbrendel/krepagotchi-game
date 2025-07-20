@@ -16,7 +16,7 @@
 </p>
 
 <p align="center">
-    <img src="public/img/screenshot-game.png" />
+    <img src="public/img/preview.png" />
 </p>
 
 ## Author
