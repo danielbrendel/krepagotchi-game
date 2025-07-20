@@ -22,7 +22,8 @@ app.whenReady().then(() => {
         maximizable: false,
         webPreferences: {
             nodeIntegration: true,
-            contextIsolation: true
+            contextIsolation: true,
+            backgroundThrottling: false
         },
         icon: cfgBuild.icon
     });
