@@ -249,8 +249,8 @@ class KrepagotchiGame extends Phaser.Scene {
                               {
                                     asset: "tropical1.png",
                                     pos: {
-                                          x: 250,
-                                          y: 200
+                                          x: 265,
+                                          y: 250
                                     },
                                     size: {
                                           w: 256,
@@ -297,8 +297,8 @@ class KrepagotchiGame extends Phaser.Scene {
                               {
                                     asset: "tropical2.png",
                                     pos: {
-                                          x: 200,
-                                          y: 300
+                                          x: 230,
+                                          y: 350
                                     },
                                     size: {
                                           w: 256,
@@ -342,6 +342,22 @@ class KrepagotchiGame extends Phaser.Scene {
                                           y: 0.55
                                     }
                               },
+                              {
+                                    asset: "shrub.png",
+                                    pos: {
+                                          x: 109,
+                                          y: 200
+                                    },
+                                    size: {
+                                          w: 256,
+                                          h: 128,
+                                          scale: 0.5
+                                    },
+                                    scale: {
+                                          x: 0.45,
+                                          y: 0.55
+                                    }
+                              }
                         ]
                   }
             ];
@@ -379,8 +395,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.spritesheet('poop', 'game/assets/sprites/poop.png', { frameWidth: 16, frameHeight: 16 });
             this.load.spritesheet('poopsplash', 'game/assets/sprites/poop-splash.png', { frameWidth: 16, frameHeight: 16 });
             this.load.spritesheet('particle', 'game/assets/sprites/heart.png', { frameWidth: 32, frameHeight: 32 });
-            this.load.spritesheet('burst', 'game/assets/sprites/burst.png', { frameWidth: 192, frameHeight: 192 });
-            this.load.spritesheet('smoke', 'game/assets/sprites/smoke.png', { frameWidth: 256, frameHeight: 256 });
+            this.load.spritesheet('smoke', 'game/assets/sprites/smoke.png', { frameWidth: 128, frameHeight: 128 });
             this.load.spritesheet('ball', 'game/assets/sprites/ball.png', { frameWidth: 76, frameHeight: 76 });
             this.load.spritesheet('butterfly', 'game/assets/sprites/butterfly.png', { frameWidth: 16, frameHeight: 16 });
             this.load.spritesheet('frog', 'game/assets/sprites/frog.png', { frameWidth: 64, frameHeight: 64 });
@@ -390,8 +405,6 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.spritesheet('pencil', 'game/assets/sprites/pencil.png', { frameWidth: 64, frameHeight: 64 });
             this.load.spritesheet('archive', 'game/assets/sprites/archive.png', { frameWidth: 120, frameHeight: 73 });
             this.load.spritesheet('cake', 'game/assets/sprites/cake.png', { frameWidth: 39, frameHeight: 34 });
-            this.load.spritesheet('fireworks', 'game/assets/sprites/fireworks.png', { frameWidth: 256, frameHeight: 256 });
-            this.load.spritesheet('happynewyear', 'game/assets/sprites/happynewyear.png', { frameWidth: 400, frameHeight: 100 });
 
             for (let j = 0; j < 5; j++) {
                   this.load.spritesheet('bird' + (j + 1).toString(), 'game/assets/sprites/bird' + (j + 1).toString() + '.png', { frameWidth: 32, frameHeight: 32 });
@@ -402,8 +415,8 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.audio('tntspawn', 'game/assets/sounds/tntspawn.wav');
             this.load.audio('fuse', 'game/assets/sounds/fuse.wav');
             this.load.audio('explosion', 'game/assets/sounds/explosion.wav');
+            this.load.audio('detonation', 'game/assets/sounds/detonation.wav');
             this.load.audio('poopsplash', 'game/assets/sounds/poop-splash.wav');
-            this.load.audio('burst', 'game/assets/sounds/burst.wav');
             this.load.audio('hurt', 'game/assets/sounds/hurt.wav');
             this.load.audio('purr', 'game/assets/sounds/purr.wav');
             this.load.audio('refreshed', 'game/assets/sounds/refreshed.wav');
@@ -420,14 +433,12 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.audio('frog', 'game/assets/sounds/frog.wav');
             this.load.audio('mailbox', 'game/assets/sounds/mailbox.wav');
             this.load.audio('success', 'game/assets/sounds/success.wav');
-            this.load.audio('fireworks1', 'game/assets/sounds/fireworks1.wav');
-            this.load.audio('fireworks2', 'game/assets/sounds/fireworks2.wav');
-            this.load.audio('fireworks3', 'game/assets/sounds/fireworks3.wav');
-            this.load.audio('fireworks4', 'game/assets/sounds/fireworks4.wav');
 
             for (let i = 1; i <= 10; i++) {
                   this.load.audio('step' + i, 'game/assets/sounds/step' + i + '.wav');
             }
+
+            this.precacheNewYearsEve();
       }
 
       create()
@@ -462,7 +473,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.fenceColliderBottom = this.physics.add.staticImage(0, gameconfig.scale.height - 105, null).setSize(gameconfig.scale.width * 2, 32).setVisible(false);
             this.physics.add.collider(this.krepa, this.fenceColliderBottom);
 
-            this.smoke = this.physics.add.sprite(0, 0, 'smoke').setOrigin(0, 0).setScale(0.5, 0.5).setVisible(false);
+            this.smoke = this.physics.add.sprite(0, 0, 'smoke').setOrigin(0, 0).setVisible(false);
 
             this.ball = this.physics.add.sprite(100, 100, 'ball').setOrigin(0, 0).setScale(0.4, 0.4).setVisible(false);
             this.ballDragStart = { x: 0, y: 0 };
@@ -838,13 +849,6 @@ class KrepagotchiGame extends Phaser.Scene {
             });
 
             this.anims.create({
-                  key: 'burst',
-                  frames: this.anims.generateFrameNumbers('burst', { start: 0, end: 15 }),
-                  frameRate: 25,
-                  repeat: 0
-            });
-
-            this.anims.create({
                   key: 'smoke',
                   frames: this.anims.generateFrameNumbers('smoke', { start: 0, end: 29 }),
                   frameRate: 15,
@@ -853,7 +857,7 @@ class KrepagotchiGame extends Phaser.Scene {
 
             this.anims.create({
                   key: 'butterfly',
-                  frames: this.anims.generateFrameNumbers('butterfly', { start: 0, end: 3 }),
+                  frames: this.anims.generateFrameNumbers('butterfly', { start: 0, end: 2 }),
                   frameRate: 25,
                   repeat: -1
             });
@@ -947,8 +951,8 @@ class KrepagotchiGame extends Phaser.Scene {
             this.sndTntSpawn = this.sound.add('tntspawn');
             this.sndFuse = this.sound.add('fuse');
             this.sndExplosion = this.sound.add('explosion');
+            this.sndDetonation = this.sound.add('detonation');
             this.sndPoopSplash = this.sound.add('poopsplash');
-            this.sndBurst = this.sound.add('burst');
             this.sndHurt = this.sound.add('hurt');
             this.sndPurr = this.sound.add('purr');
             this.sndRefreshed = this.sound.add('refreshed');
@@ -957,10 +961,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.sndMailbox = this.sound.add('mailbox');
             this.sndSuccess = this.sound.add('success');
 
-            this.sndFireworks = [];
-            for (let i = 1; i < 5; i++) {
-                  this.sndFireworks.push(this.sound.add('fireworks' + i.toString()));
-            }
+            this.loadNewYearsEveAssets();
             
             this.sndSteps = [];
             for (let i = 1; i <= 10; i++) {
@@ -1146,6 +1147,32 @@ class KrepagotchiGame extends Phaser.Scene {
                   }
             } catch (error) {
                   console.error(error);
+            }
+      }
+
+      precacheNewYearsEve()
+      {
+            if (!this.newYearsEveTimeRange()) {
+                  return;
+            }
+
+            this.load.spritesheet('fireworks', 'game/assets/sprites/fireworks.png', { frameWidth: 256, frameHeight: 256 });
+
+            this.load.audio('fireworks1', 'game/assets/sounds/fireworks1.wav');
+            this.load.audio('fireworks2', 'game/assets/sounds/fireworks2.wav');
+            this.load.audio('fireworks3', 'game/assets/sounds/fireworks3.wav');
+            this.load.audio('fireworks4', 'game/assets/sounds/fireworks4.wav');
+      }
+
+      loadNewYearsEveAssets()
+      {
+            if (!this.newYearsEveTimeRange()) {
+                  return;
+            }
+
+            this.sndFireworks = [];
+            for (let i = 1; i < 5; i++) {
+                  this.sndFireworks.push(this.sound.add('fireworks' + i.toString()));
             }
       }
 
@@ -1720,11 +1747,29 @@ class KrepagotchiGame extends Phaser.Scene {
                   return;
             }
 
-            const banner_width = 400;
-            const banner_scale = 0.9;
+            const hnytext = this.add.text(0, 0, `Happy New Year's Eve, ${this.krepaName}!`, {
+                  fontSize: '15px',
+                  color: 'rgb(250, 250, 250)',
+                  fontFamily: 'Pixel, monospace',
+                  backgroundColor: 'rgb(50, 50, 50)',
+                  padding: { x: 10, y: 5 }
+            });
+            hnytext.setAlign('center');
+            hnytext.setDepth(TOPMOST_ELEMENT);
+            hnytext.setPosition(gameconfig.scale.width / 2 - hnytext.width / 2, 50);
 
-            let banner = this.add.image(gameconfig.scale.width / 2 - (banner_width * banner_scale) / 2 + 180, 63, 'happynewyear');
-            banner.setScale(banner_scale);
+            this.tmrHappyNewYearTextEffect = this.time.addEvent({
+                  delay: 500,
+                  loop: true,
+                  callback: function() {
+                        const red = Phaser.Math.Between(0, 255);
+                        const green = Phaser.Math.Between(0, 255);
+                        const blue = Phaser.Math.Between(0, 255);
+
+                        hnytext.setColor(`rgb(${red}, ${green}, ${blue})`);
+                  },
+                  callbackScope: self
+            });
 
             this.tmrFireworks = this.time.addEvent({
                   delay: 2000,
@@ -1906,7 +1951,7 @@ class KrepagotchiGame extends Phaser.Scene {
 
             food.setInteractive();
             food.on('pointerdown', function() {
-                  self.spawnBurst(food.x, food.y);
+                  self.spawnExplosion(food.x, food.y);
                   self.addAffection(AFFECTION_VALUE);
 
                   self.removeFoodbyObj(food);
@@ -2039,7 +2084,7 @@ class KrepagotchiGame extends Phaser.Scene {
             });
 
             this.sndFuse.once('complete', function() {
-                  self.spawnBurst(x, y);
+                  self.spawnExplosion(x, y);
                   tnt.destroy();
             });
 
@@ -2211,15 +2256,15 @@ class KrepagotchiGame extends Phaser.Scene {
             });
       }
 
-      spawnBurst(x, y)
+      spawnExplosion(x, y)
       {
-            let burst = this.physics.add.sprite(x, y, 'burst');
-            burst.anims.play('burst', true);
-            burst.on('animationcomplete', function() {
-                  burst.destroy();
+            let explosion = this.physics.add.sprite(x, y, 'explosion');
+            explosion.anims.play('explosion', true);
+            explosion.on('animationcomplete', function() {
+                  explosion.destroy();
             });
 
-            this.sndBurst.play();
+            this.sndExplosion.play();
       }
 
       addAffection(amount)
@@ -2340,16 +2385,16 @@ class KrepagotchiGame extends Phaser.Scene {
                   self.krepa.setVisible(false);
                   self.txtKrepaName.setVisible(false);
 
-                  self.sndExplosion.play();
+                  self.sndDetonation.play();
                   
-                  let explosion = self.physics.add.sprite(self.krepa.x, self.krepa.y, 'explosion');
+                  let explosion = self.physics.add.sprite(self.krepa.x, self.krepa.y, 'explosion').setScale(1.5);
                   explosion.anims.play('explosion', true);
                   explosion.on('animationcomplete', function() {
                         explosion.destroy();
 
                         self.isDetonated = true;
 
-                        const restartAction = self.add.text(0, 0, self.krepaName + ' is now at a better place.\n\nBorn: ' + self.getReadableDate(Number(self.getConfigValue('krepa_birthdate'))) + '\nDetonated: ' + self.getReadableDate(Date.now()) + '\n\nClick or tap to restart', {
+                        const restartAction = self.add.text(0, 0, self.krepaName + ' is now at a better place.\n\nAged: ' + self.krepaBirthdayAge() + '\nBorn: ' + self.getReadableDate(Number(self.getConfigValue('krepa_birthdate'))) + '\nDetonated: ' + self.getReadableDate(Date.now()) + '\n\nClick or tap to restart', {
                               fontSize: '15px',
                               color: 'rgb(250, 50, 0)',
                               fontFamily: 'Pixel, monospace',
