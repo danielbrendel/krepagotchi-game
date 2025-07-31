@@ -404,6 +404,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.load.spritesheet('envelope', 'game/assets/sprites/envelope.png', { frameWidth: 32, frameHeight: 32 });
             this.load.spritesheet('pencil', 'game/assets/sprites/pencil.png', { frameWidth: 64, frameHeight: 64 });
             this.load.spritesheet('archive', 'game/assets/sprites/archive.png', { frameWidth: 120, frameHeight: 73 });
+            this.load.spritesheet('music', 'game/assets/sprites/music.png', { frameWidth: 64, frameHeight: 64 });
             this.load.spritesheet('cake', 'game/assets/sprites/cake.png', { frameWidth: 39, frameHeight: 34 });
 
             for (let j = 0; j < 5; j++) {
@@ -485,69 +486,6 @@ class KrepagotchiGame extends Phaser.Scene {
                   fontFamily: 'Pixel, monospace',
                   padding: { x: 5, y: 2 }
             }).setDepth(TOPMOST_ELEMENT);
-
-            this.mailbox_closed = this.add.image(gameconfig.scale.width - 45, gameconfig.scale.height - 159, 'mailbox_closed').setInteractive();
-            this.mailbox_closed.on('pointerdown', function() {
-                  self.sndNoAction.play();
-            });
-            this.mailbox_open = this.add.image(gameconfig.scale.width - 45, gameconfig.scale.height - 159, 'mailbox_open').setInteractive();
-            this.mailbox_open.on('pointerdown', function() {
-                  self.sndClick.play();
-
-                  window.openLetter('A letter from <strong>' + window.currentLetter.from + '</strong>', window.currentLetter.message, function() {
-                        self.mailbox_glow.active = false;
-                        self.mailbox_open.setVisible(false);
-                        self.mailbox_closed.setVisible(true);
-
-                        window.addToArchive(window.currentLetter.from, window.currentLetter.message, window.currentLetter.date);
-                  });
-            });
-            this.mailbox_open.setVisible(false);
-
-            this.mailbox_glow = this.mailbox_open.preFX.addGlow();
-            this.mailbox_glow.active = false;
-
-            this.tweens.add({
-                  targets: this.mailbox_glow,
-                  outerStrength: 10,
-                  yoyo: true,
-                  loop: -1,
-                  ease: 'sine.inout'
-            });
-
-            this.draftLetter = this.add.image(gameconfig.scale.width - 45, gameconfig.scale.height - 250, 'pencil').setInteractive();
-            this.draftLetter.setScale(0.3);
-            this.draftLetter.setFlipX(true);
-            this.draftLetter.on('pointerdown', function() {
-                  window.draftLetter('Send a letter to someone', 'Enter a friendly message...', function(event) {
-                        if (event === 'sent') {
-                              self.sndSuccess.play();
-
-                              self.draftLetter.setVisible(false);
-                        }
-                  });
-
-                  self.sndClick.play();
-            });
-            this.draftLetter.setVisible(false);
-
-            this.tweens.add({
-                  targets: this.draftLetter,
-                  scaleY: 0.39,
-                  scaleX: 0.39,
-                  duration: 700,
-                  yoyo: true,
-                  repeat: -1,
-                  ease: 'Sine.easeInOut'
-            });
-
-            this.letterArchive = this.add.image(gameconfig.scale.width - 45, gameconfig.scale.height - 209, 'archive').setInteractive();
-            this.letterArchive.setScale(0.4);
-            this.letterArchive.on('pointerdown', function() {
-                  window.openArchive();
-                  
-                  self.sndClick.play();
-            });
 
             this.krepaSpeed = 0;
             this.krepaSpeedBeforeDrag = 0;
@@ -782,40 +720,6 @@ class KrepagotchiGame extends Phaser.Scene {
                   callbackScope: self
             });
 
-            this.tmrLetterPick = this.time.addEvent({
-                  delay: Phaser.Math.Between(5000, 10000),
-                  loop: false,
-                  callback: function() {
-                        window.pickLetter(function(name, message, date) {
-                              window.currentLetter = {
-                                    from: name,
-                                    message: message,
-                                    date: date
-                              };
-
-                              self.mailbox_closed.setVisible(false);
-                              self.mailbox_open.setVisible(true);
-                              self.mailbox_glow.active = true;
-
-                              self.sndMailbox.play();
-                        });
-                  },
-                  callbackScope: self
-            });
-
-            this.tmrDraftCheck = this.time.addEvent({
-                  delay: 250,
-                  loop: false,
-                  callback: function() {
-                        window.checkLetter('add', function(status) {
-                              if (status) {
-                                    self.draftLetter.setVisible(true);
-                              }
-                        });
-                  },
-                  callbackScope: self
-            });
-
             this.tmrObjectStorage = this.time.addEvent({
                   delay: 2000,
                   loop: true,
@@ -973,6 +877,8 @@ class KrepagotchiGame extends Phaser.Scene {
             this.loadBiomeAction();
             this.loadStats();
             this.loadMenu();
+            this.loadMailbox();
+            this.loadMusicToggle();
             this.loadThoughtBubbles();
 
             this.inDetonation = false;
@@ -998,6 +904,8 @@ class KrepagotchiGame extends Phaser.Scene {
 
                   const datetoday = new Date();
                   this.setConfigValue('krepa_agecheck', Date.parse(new Date(datetoday.getFullYear(), datetoday.getMonth(), datetoday.getDate(), 0, 0, 0)).toString())
+                  
+                  this.setConfigValue('music_enable', '1');
             } else {
                   const illness = ((this.getConfigValue('krepa_sick') == 1) || (Phaser.Math.Between(1, 5) === 1));
                   if (illness) {
@@ -1584,8 +1492,10 @@ class KrepagotchiGame extends Phaser.Scene {
             pill.on('pointerdown', function() {
                   if (self.krepaStats.health < 100) {
                         self.krepaStats.health += HEALTH_VALUE;
-                        if (self.krepaStats.health > 100) {
+                        if (self.krepaStats.health >= 100) {
                               self.krepaStats.health = 100;
+
+                              self.sndSuccess.play();
                         }
 
                         if ((self.krepaSick) && (self.krepaStats.health >= 100)) {
@@ -1604,6 +1514,143 @@ class KrepagotchiGame extends Phaser.Scene {
             });
             pill.on('pointerover', function() { pill.setScale(1.1); });
             pill.on('pointerout', function() { pill.setScale(1.0); });
+      }
+
+      loadMailbox()
+      {
+            let self = this;
+
+            this.mailbox_closed = this.add.image(gameconfig.scale.width - 45, gameconfig.scale.height - 159, 'mailbox_closed').setInteractive();
+            this.mailbox_closed.on('pointerdown', function() {
+                  self.sndNoAction.play();
+            });
+            this.mailbox_closed.on('pointerover', function() { self.mailbox_closed.setScale(1.1); });
+            this.mailbox_closed.on('pointerout', function() { self.mailbox_closed.setScale(1.0); });
+            this.mailbox_open = this.add.image(gameconfig.scale.width - 45, gameconfig.scale.height - 159, 'mailbox_open').setInteractive();
+            this.mailbox_open.on('pointerdown', function() {
+                  self.sndClick.play();
+
+                  window.openLetter('A letter from <strong>' + window.currentLetter.from + '</strong>', window.currentLetter.message, function() {
+                        self.mailbox_glow.active = false;
+                        self.mailbox_open.setVisible(false);
+                        self.mailbox_closed.setVisible(true);
+
+                        window.addToArchive(window.currentLetter.from, window.currentLetter.message, window.currentLetter.date);
+                  });
+            });
+            this.mailbox_open.on('pointerover', function() { self.mailbox_open.setScale(1.1); });
+            this.mailbox_open.on('pointerout', function() { self.mailbox_open.setScale(1.0); });
+            this.mailbox_open.setVisible(false);
+
+            this.mailbox_glow = this.mailbox_open.preFX.addGlow();
+            this.mailbox_glow.active = false;
+
+            this.tweens.add({
+                  targets: this.mailbox_glow,
+                  outerStrength: 10,
+                  yoyo: true,
+                  loop: -1,
+                  ease: 'sine.inout'
+            });
+
+            this.draftLetter = this.add.image(gameconfig.scale.width - 45, gameconfig.scale.height - 250, 'pencil').setInteractive();
+            this.draftLetter.setScale(0.3);
+            this.draftLetter.setFlipX(true);
+            this.draftLetter.on('pointerdown', function() {
+                  window.draftLetter('Send a letter to someone', 'Enter a friendly message...', function(event) {
+                        if (event === 'sent') {
+                              self.sndSuccess.play();
+
+                              self.draftLetter.setVisible(false);
+                        }
+                  });
+
+                  self.sndClick.play();
+            });
+            this.draftLetter.setVisible(false);
+
+            this.tweens.add({
+                  targets: this.draftLetter,
+                  scaleY: 0.39,
+                  scaleX: 0.39,
+                  duration: 700,
+                  yoyo: true,
+                  repeat: -1,
+                  ease: 'Sine.easeInOut'
+            });
+
+            this.letterArchive = this.add.image(gameconfig.scale.width - 45, gameconfig.scale.height - 209, 'archive').setInteractive();
+            this.letterArchive.setScale(0.4);
+            this.letterArchive.on('pointerdown', function() {
+                  window.openArchive();
+                  
+                  self.sndClick.play();
+            });
+            this.letterArchive.on('pointerover', function() { self.letterArchive.setScale(0.5); });
+            this.letterArchive.on('pointerout', function() { self.letterArchive.setScale(0.4); });
+
+            this.tmrLetterPick = this.time.addEvent({
+                  delay: Phaser.Math.Between(5000, 10000),
+                  loop: false,
+                  callback: function() {
+                        window.pickLetter(function(name, message, date) {
+                              window.currentLetter = {
+                                    from: name,
+                                    message: message,
+                                    date: date
+                              };
+
+                              self.mailbox_closed.setVisible(false);
+                              self.mailbox_open.setVisible(true);
+                              self.mailbox_glow.active = true;
+
+                              self.sndMailbox.play();
+                        });
+                  },
+                  callbackScope: self
+            });
+
+            this.tmrDraftCheck = this.time.addEvent({
+                  delay: 250,
+                  loop: false,
+                  callback: function() {
+                        window.checkLetter('add', function(status) {
+                              if (status) {
+                                    self.draftLetter.setVisible(true);
+                              }
+                        });
+                  },
+                  callbackScope: self
+            });
+      }
+
+      loadMusicToggle()
+      {
+            let self = this;
+
+            const depth = 105;
+
+            const icon = this.add.image(35, gameconfig.scale.height - 140, 'music').setDepth(depth).setScale(0.5).setInteractive();
+            icon.on('pointerdown', function() {
+                  let value = parseInt(self.getConfigValue('music_enable', '1'));
+                  value = !value;
+
+                  if (!value) {
+                        self.sndTheme.stop();
+                        icon.setTintFill(0x323232);
+
+                        self.sndClick.play();
+                  } else {
+                        self.sndTheme.play();
+                        icon.clearTint();
+
+                        self.sndClick.play();
+                  }
+
+                  self.setConfigValue('music_enable', Number(value).toString());
+            });
+            icon.on('pointerover', function() { icon.setScale(0.6); });
+            icon.on('pointerout', function() { icon.setScale(0.5); });
       }
 
       krepaBirthdayToday()
@@ -2344,8 +2391,6 @@ class KrepagotchiGame extends Phaser.Scene {
 
             this.txtKrepaEmoji.setVisible(false);
             this.smoke.setVisible(false);
-
-            this.sndSuccess.play();
 
             this.setConfigValue('krepa_sick', 0);
       }
