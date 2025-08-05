@@ -13,8 +13,8 @@ class Letters extends \Asatru\Database\Model {
         try {
             $token = md5($_SERVER['REMOTE_ADDR']);
 
-            if (Actions::today($token, 'pick')) {
-                throw new \Exception('User already picked a letter today');
+            if (Actions::maximum($token, 'pick')) {
+                throw new \Exception('User has reached their limit for today');
             }
 
             $item = static::raw('SELECT * FROM `@THIS` WHERE approved = TRUE AND assigned = FALSE AND token <> ? ORDER BY RAND() LIMIT 1', [$token])->first();
@@ -43,8 +43,8 @@ class Letters extends \Asatru\Database\Model {
         try {
             $token = md5($_SERVER['REMOTE_ADDR']);
 
-            if (Actions::today($token, 'add')) {
-                throw new \Exception('User already added a letter today');
+            if (Actions::maximum($token, 'add')) {
+                throw new \Exception('User has reached their limit for today');
             }
 
             static::raw('INSERT INTO `@THIS` (token, pet, content, approved, assigned) VALUES(?, ?, ?, FALSE, FALSE)', [$token, $pet, $message]);
@@ -65,7 +65,7 @@ class Letters extends \Asatru\Database\Model {
         try {
             $token = md5($_SERVER['REMOTE_ADDR']);
 
-            return !Actions::today($token, $type);
+            return !Actions::maximum($token, $type);
         } catch (\Exception $e) {
             throw $e;
         }

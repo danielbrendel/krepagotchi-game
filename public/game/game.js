@@ -1534,8 +1534,6 @@ class KrepagotchiGame extends Phaser.Scene {
                         self.mailbox_glow.active = false;
                         self.mailbox_open.setVisible(false);
                         self.mailbox_closed.setVisible(true);
-
-                        window.addToArchive(window.currentLetter.from, window.currentLetter.message, window.currentLetter.date);
                   });
             });
             this.mailbox_open.on('pointerover', function() { self.mailbox_open.setScale(1.1); });
@@ -1599,6 +1597,8 @@ class KrepagotchiGame extends Phaser.Scene {
                                     message: message,
                                     date: date
                               };
+
+                              window.addToArchive(window.currentLetter.from, window.currentLetter.message, window.currentLetter.date);
 
                               self.mailbox_closed.setVisible(false);
                               self.mailbox_open.setVisible(true);

@@ -29,13 +29,15 @@ class Actions extends \Asatru\Database\Model {
      * @return bool
      * @throws \Exception
      */
-    public static function today($token, $type)
+    public static function maximum($token, $type)
     {
         try {
             $today = date('Y-m-d');
 
-            $item = static::raw('SELECT * FROM `@THIS` WHERE token = ? AND type = ? AND DATE(created_at) = ? LIMIT 1', [$token, $type, $today])->first();
-            if ($item) {
+            $max = env('APP_MAXCOUNT_' . strtoupper($type), 1);
+
+            $count = (int)static::raw('SELECT COUNT(*) AS `count` FROM `@THIS` WHERE token = ? AND type = ? AND DATE(created_at) = ?', [$token, $type, $today])->first()->get('count');
+            if ($count >= $max) {
                 return true;
             }
 
