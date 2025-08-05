@@ -34,7 +34,9 @@ html, body {
     @media screen and (max-width: 450px) {
         top: 50%;
         left: unset;
-        transform: translate(-0%, -50%);
+        transform: translate(2.5%, -50%);
+        min-width: unset !important;
+        width: 95%;
     }
     font-family: "Jersey 10", sans-serif;
     font-size: 2.0em;
@@ -90,6 +92,7 @@ html, body {
     font-size: 1.0em;
     inline-size: 83%;
     overflow-wrap: break-word;
+    font-family: 'Comic Sans MS', 'Jersey 10', sans-serif;
     @media screen and (max-width: 890px) {
         padding-left: 20px;
         padding-right: 20px;
@@ -131,6 +134,14 @@ html, body {
     padding-left: 20px;
     padding-bottom: 10px;
     font-size: 0.8em;
+}
+
+.letter-reading-action {
+    margin-top: 45px;
+}
+
+.letter-writing-action {
+    margin-top: 35px;
 }
 
 .prompt-action a, .letter-reading-action a {

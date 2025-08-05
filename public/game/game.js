@@ -1560,6 +1560,33 @@ class KrepagotchiGame extends Phaser.Scene {
                               self.sndSuccess.play();
 
                               self.draftLetter.setVisible(false);
+
+                              const succmsg = self.add.text(0, 0, 'Your letter was successfully sent!', {
+                                    fontSize: '15px',
+                                    color: 'rgb(59, 223, 105)',
+                                    fontFamily: 'Pixel, monospace',
+                                    backgroundColor: 'rgb(50, 50, 50)',
+                                    padding: { x: 10, y: 5 }
+                              });
+                              succmsg.setDepth(TOPMOST_ELEMENT);
+                              succmsg.setAlpha(1);
+                              succmsg.setPosition(gameconfig.scale.width / 2 - succmsg.width / 2, gameconfig.scale.height / 2 - succmsg.height / 2);
+
+                              self.time.addEvent({
+                                    delay: 3000,
+                                    loop: false,
+                                    callback: function() {
+                                          self.tweens.add({
+                                                targets: succmsg,
+                                                alpha: 0,
+                                                duration: 500,
+                                                onComplete: function() {
+                                                      succmsg.destroy();
+                                                }
+                                          });
+                                    },
+                                    callbackScope: self
+                              });
                         }
                   });
 
