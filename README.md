@@ -44,10 +44,10 @@ This project is a fan-made game and is not affiliated with Mojang, Microsoft, Ba
 - Treatment
 - Health conditions
 - Thought bubbles
-- Send/recieve letters
-- Biome selection
+- Send/receive letters
 - Birthday celebration
 - New Year's Eve Party
+- Biome selection
 - Weather effects
 - Dynamic environment
 - Cute pixel art
