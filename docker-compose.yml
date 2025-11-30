@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   app:
-    image: danielbrendel/krepagotchi-game:latest
+    image: ghcr.io/danielbrendel/krepagotchi-game:latest
     ports:
       - "8080:80"
     volumes:
