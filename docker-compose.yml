@@ -2,14 +2,25 @@ version: "3.8"
 
 services:
   app:
-    image: danielbrendel/krepagotchi:latest
+    image: danielbrendel/krepagotchi-game:latest
     ports:
       - "8080:80"
     volumes:
       - app_logs:/var/www/html/app/logs
       - app_migrate:/var/www/html/app/migrations
     environment:
+      APP_GAMERESX: 360
+      APP_GAMERESY: 640
+      APP_BACKEND: "http://localhost:8080"
+      APP_MAXCOUNT_PICK: 3
+      APP_MAXCOUNT_ADD: 2
+      APP_ACCESSTOKEN: "access-token"
       APP_TIMEZONE: "UTC"
+      APP_DEBUG: 0
+      APP_UPDATEDEPS: 0
+      KREPA_INITIAL_HEALTH: 90
+      KREPA_INITIAL_AFFECTION: 70
+      KREPA_INITIAL_FULLNESS: 50
       LOG_ENABLE: 1
       DB_HOST: db
       DB_PORT: 3306

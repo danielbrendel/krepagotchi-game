@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Default values for environment variables
-DEFAULT_APP_DEBUG=true
+DEFAULT_APP_DEBUG=false
 DEFAULT_APP_UPDATEDEPS=false
 DEFAULT_APP_TIMEZONE="UTC"
 DEFAULT_LOG_ENABLE=true
@@ -13,7 +13,7 @@ DEFAULT_APP_MAXCOUNT_ADD=2
 DEFAULT_APP_ALWAYSONTOP=true
 DEFAULT_APP_ACCESSTOKEN=$(php -r "echo md5(random_bytes(55) . date('Y-m-d H:i:s'));")
 DEFAULT_KREPA_INITIAL_HEALTH=90
-DEFAULT_KREPA_INITIAL_AFFECTION=60
+DEFAULT_KREPA_INITIAL_AFFECTION=70
 DEFAULT_KREPA_INITIAL_FULLNESS=50
 
 # Use environment variables if provided, otherwise use defaults
@@ -151,7 +151,14 @@ if [ "$APP_UPDATEDEPS" = "true" ]; then
 fi
 
 # Run database migrations
-php asatru migrate:fresh
+if [ $(mysql -u "$DB_USERNAME" -p"$DB_PASSWORD" -h "$DB_HOST" -P "$DB_PORT" -D "$DB_DATABASE" -N -s -e "SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA = '$DB_DATABASE' AND TABLE_NAME IN ('Actions', 'Letters');") -gt 0 ]
+then
+    echo "Running unapplied database migrations..."
+    php asatru migrate:list
+else
+    echo "Running full database migrations..."
+    php asatru migrate:fresh
+fi
 
 # Set permissions to folder for logs
 chown -R www-data:www-data /var/www/html/app/logs

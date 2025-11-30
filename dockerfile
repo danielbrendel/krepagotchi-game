@@ -60,8 +60,8 @@ COPY . /var/www/html
 VOLUME ["/var/www/html/app/logs"]
 
 # Copy migration list and create volume for migrations
-RUN mkdir /tmp/migrations \
- && cp /var/www/html/app/migrations/* /tmp/migrations
+RUN mkdir /tmp/migrations
+RUN cp /var/www/html/app/migrations/* /tmp/migrations
 VOLUME ["/var/www/html/app/migrations"]
 
 # Copy the Composer dependencies from the first stage
