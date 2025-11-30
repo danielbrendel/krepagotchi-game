@@ -1,11 +1,9 @@
 <?php
 
-/*
-    Asatru PHP - Letters Controller
-*/
-
 /**
- * This class represents your controller
+ * Class LettersController
+ * 
+ * Handle letter requests
  */
 class LettersController extends BaseController {
     /**
@@ -15,7 +13,13 @@ class LettersController extends BaseController {
 	 */
 	public function __construct()
 	{
+        $enabled = env('APP_ENABLELETTERS', false);
         $method = $_SERVER['REQUEST_METHOD'];
+
+        if (!$enabled) {
+            http_response_code(403);
+            exit();
+        }
 
         header('Access-Control-Allow-Origin: *');
         header('Access-Control-Allow-Methods: GET, POST, OPTIONS');

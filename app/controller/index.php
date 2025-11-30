@@ -1,13 +1,9 @@
 <?php
 
-/*
-    Asatru PHP - Example controller
-
-    Add here all your needed routes implementations related to 'index'.
-*/
-
 /**
- * Example index controller
+ * Class IndexController
+ * 
+ * Handle main request
  */
 class IndexController extends BaseController {
 	const INDEX_LAYOUT = 'layout';

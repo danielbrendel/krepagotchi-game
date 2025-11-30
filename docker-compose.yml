@@ -11,6 +11,7 @@ services:
     environment:
       APP_GAMERESX: 360
       APP_GAMERESY: 640
+      APP_ENABLELETTERS: 1
       APP_BACKEND: "http://localhost:8080"
       APP_MAXCOUNT_PICK: 3
       APP_MAXCOUNT_ADD: 2

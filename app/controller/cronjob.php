@@ -1,11 +1,9 @@
 <?php
 
-/*
-    Asatru PHP - Cronjob Controller
-*/
-
 /**
- * This class represents your controller
+ * Class CronjobController
+ * 
+ * Handle cronjob requests
  */
 class CronjobController extends BaseController {
     /**
