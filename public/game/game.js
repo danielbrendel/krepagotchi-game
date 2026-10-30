@@ -2008,6 +2008,9 @@ class KrepagotchiGame extends Phaser.Scene {
                                           this.addAffection(AFFECTION_VALUE);
 
                                           this.krepaStats.full -= HUNGER_VALUE;
+                                          if (this.krepaStats.full < 0) {
+                                                this.krepaStats.full = 0;
+                                          }
 
                                           this.time.addEvent({
                                                 delay: 3000,
