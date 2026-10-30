@@ -962,6 +962,65 @@ class KrepagotchiGame extends Phaser.Scene {
             }
       }
 
+      interceptSeasonalBiome()
+      {
+            let date = new Date();
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+
+            if (month === 10) {
+                  this.biome_list[0].objects[0].asset = 'pumpkin_green.png';
+                  this.biome_list[0].objects[0].size = { w: 46, h: 38, scale: 0.7 };
+                  this.biome_list[0].objects[0].scale = { x: 0.8, y: 0.7 };
+                  this.biome_list[0].objects[1].asset = 'pumpkin_green.png';
+                  this.biome_list[0].objects[1].size = { w: 46, h: 38, scale: 0.7 };
+                  this.biome_list[0].objects[1].scale = { x: 0.8, y: 0.7 };
+                  this.biome_list[0].objects[2].asset = 'pumpkin_green.png';
+                  this.biome_list[0].objects[2].size = { w: 46, h: 38, scale: 0.7 };
+                  this.biome_list[0].objects[2].scale = { x: 0.8, y: 0.7 };
+                  this.biome_list[0].objects[3].asset = 'pumpkin_striped.png';
+                  this.biome_list[0].objects[3].size = { w: 42, h: 38, scale: 0.7 };
+                  this.biome_list[0].objects[3].scale = { x: 0.8, y: 0.7 };
+                  this.biome_list[0].objects[4].asset = 'pumpkin_orange.png';
+                  this.biome_list[0].objects[4].size = { w: 42, h: 42, scale: 0.7 };
+                  this.biome_list[0].objects[4].scale = { x: 0.8, y: 0.7 };
+                  this.biome_list[0].objects[5].asset = 'pumpkin_purple.png';
+                  this.biome_list[0].objects[5].size = { w: 44, h: 42, scale: 0.7 };
+                  this.biome_list[0].objects[5].scale = { x: 0.8, y: 0.7 };
+                  this.biome_list[0].objects[6].asset = 'pumpkin_striped.png';
+                  this.biome_list[0].objects[6].size = { w: 42, h: 38, scale: 0.7 };
+                  this.biome_list[0].objects[6].scale = { x: 0.8, y: 0.7 };
+
+
+                  this.biome_list[2].objects[0].asset = 'purple_mushroom.png';
+                  this.biome_list[2].objects[0].size = { w: 32, h: 32, scale: 0.8 };
+                  this.biome_list[2].objects[0].scale = { x: 0.9, y: 0.8 };
+                  this.biome_list[2].objects[1].asset = 'pumpkin_blue.png';
+                  this.biome_list[2].objects[1].size = { w: 45, h: 38, scale: 0.7 };
+                  this.biome_list[2].objects[1].scale = { x: 0.8, y: 0.7 };
+                  this.biome_list[2].objects[2].asset = 'pumpkin_blue.png';
+                  this.biome_list[2].objects[2].size = { w: 45, h: 38, scale: 0.7 };
+                  this.biome_list[2].objects[2].scale = { x: 0.8, y: 0.7 };
+                  this.biome_list[2].objects[3].asset = 'purple_mushroom.png';
+                  this.biome_list[2].objects[3].size = { w: 32, h: 32, scale: 0.8 };
+                  this.biome_list[2].objects[3].scale = { x: 0.9, y: 0.8 };
+                  this.biome_list[2].objects[4].asset = 'purple_mushroom.png';
+                  this.biome_list[2].objects[4].size = { w: 32, h: 32, scale: 0.8 };
+                  this.biome_list[2].objects[4].scale = { x: 0.9, y: 0.8 };
+                  this.biome_list[2].objects[5].asset = 'purple_mushroom.png';
+                  this.biome_list[2].objects[5].size = { w: 32, h: 32, scale: 0.8 };
+                  this.biome_list[2].objects[5].scale = { x: 0.9, y: 0.8 };
+                  this.biome_list[2].objects[6].asset = 'pumpkin_white.png';
+                  this.biome_list[2].objects[6].size = { w: 48, h: 41, scale: 0.7 };
+                  this.biome_list[2].objects[6].scale = { x: 0.8, y: 0.7 };
+                  this.biome_list[2].objects[7].asset = 'pumpkin_white.png';
+                  this.biome_list[2].objects[7].size = { w: 48, h: 41, scale: 0.7 };
+                  this.biome_list[2].objects[7].scale = { x: 0.8, y: 0.7 };
+            } else if (month === 12) {
+
+            }
+      }
+
       precacheBiomeObjects(biome)
       {
             this.load.image('background', 'game/assets/biomes/' + this.current_biome + '/' + biome.background);
@@ -994,6 +1053,8 @@ class KrepagotchiGame extends Phaser.Scene {
       {
             try {
                   this.current_biome = this.getConfigValue('current_biome', 'grass');
+
+                  this.interceptSeasonalBiome();
                   
                   for (let i = 0; i < this.biome_list.length; i++) {
                         this.biome_data = this.biome_list[i];
