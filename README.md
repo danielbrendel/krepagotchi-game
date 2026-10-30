@@ -5,7 +5,7 @@
 
 <p align="center">
     A pixelated, adorable virtual pet game<br/>
-    (C) 2025 by Daniel Brendel<br/>
+    (C) 2025 - 2026 by Daniel Brendel<br/>
     <a href="https://www.danielbrendel.com">www.danielbrendel.com</a>
 </p>
 
