@@ -1367,24 +1367,30 @@ class KrepagotchiGame extends Phaser.Scene {
             graphics.fillRect(0, 0, 2, 2);
             graphics.generateTexture('snowfall', 2, 10);
 
-            this.rainParticles = this.add.particles(0, 0, 'snowfall', {
+            this.add.particles(0, 0, 'snowfall', {
                   frame: 'snowfall',
                   x: { min: -150, max: gameconfig.scale.width + 50 },
                   y: 0,
-                  lifespan: 2000,
-                  speedX: 100,
-                  speedY: 400,
-                  quantity: 10,
-                  frequency: 50,
+                  lifespan: 10000,
+                  speedX: 25,
+                  speedY: 100,
+                  quantity: 5,
+                  frequency: 100,
                   angle: 95,
                   scale: { start: 1, end: 1 },
                   alpha: { start: 0.9, end: 0.2 },
                   blendMode: 'ADD'
             }).setDepth(99);
+
+            const winterfog = this.add.rectangle(0, 0, gameconfig.scale.width, gameconfig.scale.height, 0xffffff);
+            winterfog.setOrigin(0);
+            winterfog.setDepth(100);
+            winterfog.setAlpha(0.2);
       }
 
       cozySeasonTimeRange()
       {
+            return false;
             let date = new Date();
             const month = date.getMonth() + 1;
 
@@ -1393,6 +1399,7 @@ class KrepagotchiGame extends Phaser.Scene {
 
       winterSeasonTimeRange()
       {
+            return true;
             let date = new Date();
             const month = date.getMonth() + 1;
             const day = date.getDate();
