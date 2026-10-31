@@ -1344,7 +1344,7 @@ class KrepagotchiGame extends Phaser.Scene {
             graphics.fillRect(0, 0, 2, 2);
             graphics.generateTexture('leaves', 2, 10);
 
-            this.rainParticles = this.add.particles(0, 0, 'leaves', {
+            this.add.particles(0, 0, 'leaves', {
                   frame: 'leaves',
                   x: { min: -150, max: gameconfig.scale.width + 50 },
                   y: 0,
