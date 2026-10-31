@@ -9,6 +9,8 @@
         gameconfig.physics.arcade.debug = window.appDebugMode;
         gameconfig.scale.width = {{ env('APP_GAMERESX') }};
         gameconfig.scale.height = {{ env('APP_GAMERESY') }};
+
+        document.querySelector('.loading-overlay').classList.remove('is-hidden');
         
         const game = new Phaser.Game(gameconfig);
     };

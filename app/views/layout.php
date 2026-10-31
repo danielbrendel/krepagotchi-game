@@ -25,6 +25,10 @@
     <body>
         {%content%}
 
+        <div class="loading-overlay is-hidden">
+            <div><img src="{{ asset('img/logo.png') }}">&nbsp;Loading...</div>
+        </div>
+
         <div class="prompt-overlay is-hidden">
             <div id="prompt-content" class="prompt-content">
                 <div class="prompt-title"></div>

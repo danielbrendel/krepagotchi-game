@@ -943,6 +943,11 @@ class KrepagotchiGame extends Phaser.Scene {
             }
 
             this.krepaOverweightCheck();
+
+            const loadingOverlay = document.querySelector('.loading-overlay');
+            if ((loadingOverlay) && (!loadingOverlay.classList.contains('is-hidden'))) {
+                  loadingOverlay.classList.add('is-hidden');
+            }
       }
 
       update()
