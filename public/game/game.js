@@ -991,6 +991,27 @@ class KrepagotchiGame extends Phaser.Scene {
                   this.biome_list[0].objects[6].size = { w: 42, h: 38, scale: 0.7 };
                   this.biome_list[0].objects[6].scale = { x: 0.8, y: 0.7 };
 
+                  this.biome_list[1].objects[0].asset = 'mushroom_red_dark.png';
+                  this.biome_list[1].objects[0].size = { w: 32, h: 32, scale: 0.95 };
+                  this.biome_list[1].objects[0].scale = { x: 1.05, y: 0.95 };
+                  this.biome_list[1].objects[1].asset = 'mushroom_red_light.png';
+                  this.biome_list[1].objects[1].size = { w: 32, h: 32, scale: 0.95 };
+                  this.biome_list[1].objects[1].scale = { x: 1.05, y: 0.95 };
+                  this.biome_list[1].objects[2].asset = 'mushroom_maroon.png';
+                  this.biome_list[1].objects[2].size = { w: 32, h: 32, scale: 0.95 };
+                  this.biome_list[1].objects[2].scale = { x: 1.05, y: 0.95 };
+                  this.biome_list[1].objects[3].asset = 'mushroom_orange.png';
+                  this.biome_list[1].objects[3].size = { w: 32, h: 32, scale: 0.95 };
+                  this.biome_list[1].objects[3].scale = { x: 1.05, y: 0.95 };
+                  this.biome_list[1].objects[4].asset = 'mushroom_orange.png';
+                  this.biome_list[1].objects[4].size = { w: 32, h: 32, scale: 0.95 };
+                  this.biome_list[1].objects[4].scale = { x: 1.05, y: 0.95 };
+                  this.biome_list[1].objects[5].asset = 'mushroom_maroon.png';
+                  this.biome_list[1].objects[5].size = { w: 32, h: 32, scale: 0.95 };
+                  this.biome_list[1].objects[5].scale = { x: 1.05, y: 0.95 };
+                  this.biome_list[1].objects[6].asset = 'mushroom_orange.png';
+                  this.biome_list[1].objects[6].size = { w: 32, h: 32, scale: 0.95 };
+                  this.biome_list[1].objects[6].scale = { x: 1.05, y: 0.95 };
 
                   this.biome_list[2].objects[0].asset = 'purple_mushroom.png';
                   this.biome_list[2].objects[0].size = { w: 32, h: 32, scale: 0.8 };
