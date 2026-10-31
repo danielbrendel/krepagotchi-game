@@ -1358,6 +1358,22 @@ class KrepagotchiGame extends Phaser.Scene {
                   alpha: { start: 0.9, end: 0.2 },
                   blendMode: 'ADD'
             }).setDepth(99);
+
+            let fogcol = 0xa95500;
+            let fogalpha = 0.2;
+
+            if (this.current_biome === 'glowath') {
+                  fogcol = 0xb5c7eb;
+                  fogalpha = 0.1;
+            } else if (this.current_biome === 'foliage') {
+                  fogcol = 0x873000;
+                  fogalpha = 0.2;
+            }
+
+            const autumnfog = this.add.rectangle(0, 0, gameconfig.scale.width, gameconfig.scale.height, fogcol);
+            autumnfog.setOrigin(0);
+            autumnfog.setDepth(100);
+            autumnfog.setAlpha(fogalpha);
       }
 
       spawnSnowfall()
@@ -1390,7 +1406,6 @@ class KrepagotchiGame extends Phaser.Scene {
 
       cozySeasonTimeRange()
       {
-            return false;
             let date = new Date();
             const month = date.getMonth() + 1;
 
@@ -1399,7 +1414,6 @@ class KrepagotchiGame extends Phaser.Scene {
 
       winterSeasonTimeRange()
       {
-            return true;
             let date = new Date();
             const month = date.getMonth() + 1;
             const day = date.getDate();
