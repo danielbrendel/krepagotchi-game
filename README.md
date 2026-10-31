@@ -47,6 +47,7 @@ You can also pet it or play with it (randomly selected ball game or bubble poppi
 - Thought bubbles
 - Send/receive letters
 - Cozy Season Theme
+- Winter Season Theme
 - Birthday celebration
 - New Year's Eve Party
 - Biome selection
