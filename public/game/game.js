@@ -1037,7 +1037,7 @@ class KrepagotchiGame extends Phaser.Scene {
                   this.biome_list[2].objects[7].asset = 'pumpkin_white.png';
                   this.biome_list[2].objects[7].size = { w: 48, h: 41, scale: 0.7 };
                   this.biome_list[2].objects[7].scale = { x: 0.8, y: 0.7 };
-            } else if (month === 12) {
+            } else if ((month === 12) && (day <= 30)) {
 
             }
       }
@@ -1151,6 +1151,7 @@ class KrepagotchiGame extends Phaser.Scene {
                         this.spawnFrogs();
                   } else {
                         this.tmrAmbience.paused = false;
+                        this.loadSeasonalEffects();
                   }
             } catch (error) {
                   console.error(error);
@@ -1338,6 +1339,78 @@ class KrepagotchiGame extends Phaser.Scene {
                   callback: self.spawnLightning,
                   callbackScope: self
             });
+      }
+
+      spawnFallingLeaves()
+      {
+            const graphics = this.make.graphics({ x: 0, y: 0, add: false });
+            graphics.fillStyle(0xff7430, 1.0);
+            graphics.fillRect(0, 0, 2, 2);
+            graphics.generateTexture('leaves', 2, 10);
+
+            this.rainParticles = this.add.particles(0, 0, 'leaves', {
+                  frame: 'leaves',
+                  x: { min: -150, max: gameconfig.scale.width + 50 },
+                  y: 0,
+                  lifespan: 10000,
+                  speedX: 25,
+                  speedY: 100,
+                  quantity: 2,
+                  frequency: 100,
+                  angle: 95,
+                  scale: { start: 1, end: 1 },
+                  alpha: { start: 0.9, end: 0.2 },
+                  blendMode: 'ADD'
+            }).setDepth(99);
+      }
+
+      spawnSnowfall()
+      {
+            const graphics = this.make.graphics({ x: 0, y: 0, add: false });
+            graphics.fillStyle(0xffffff, 0.8);
+            graphics.fillRect(0, 0, 2, 2);
+            graphics.generateTexture('snowfall', 2, 10);
+
+            this.rainParticles = this.add.particles(0, 0, 'snowfall', {
+                  frame: 'snowfall',
+                  x: { min: -150, max: gameconfig.scale.width + 50 },
+                  y: 0,
+                  lifespan: 2000,
+                  speedX: 100,
+                  speedY: 400,
+                  quantity: 10,
+                  frequency: 50,
+                  angle: 95,
+                  scale: { start: 1, end: 1 },
+                  alpha: { start: 0.9, end: 0.2 },
+                  blendMode: 'ADD'
+            }).setDepth(99);
+      }
+
+      cozySeasonTimeRange()
+      {
+            let date = new Date();
+            const month = date.getMonth() + 1;
+
+            return month === 10;
+      }
+
+      winterSeasonTimeRange()
+      {
+            let date = new Date();
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+
+            return (month === 12) && (day <= 30);
+      }
+
+      loadSeasonalEffects()
+      {
+            if (this.cozySeasonTimeRange()) {
+                  this.spawnFallingLeaves();
+            } else if (this.winterSeasonTimeRange()) {
+                  this.spawnSnowfall();
+            }
       }
 
       loadBiomeSelectionMenu() 
