@@ -442,6 +442,7 @@ class KrepagotchiGame extends Phaser.Scene {
                   this.load.audio('pop' + i, 'game/assets/sounds/pop' + i + '.ogg');
             }
 
+            this.precacheWinterSeason();
             this.precacheNewYearsEve();
       }
 
@@ -869,6 +870,7 @@ class KrepagotchiGame extends Phaser.Scene {
             this.sndMailbox = this.sound.add('mailbox');
             this.sndSuccess = this.sound.add('success');
 
+            this.loadWinterSeasonAssets();
             this.loadNewYearsEveAssets();
             
             this.sndSteps = [];
@@ -1034,7 +1036,74 @@ class KrepagotchiGame extends Phaser.Scene {
                   this.biome_list[2].objects[7].size = { w: 48, h: 41, scale: 0.7 };
                   this.biome_list[2].objects[7].scale = { x: 0.8, y: 0.7 };
             } else if (this.winterSeasonTimeRange()) {
+                  this.biome_list[0].objects[0].asset = 'present1.png';
+                  this.biome_list[0].objects[0].size = { w: 29, h: 29, scale: 0.9 };
+                  this.biome_list[0].objects[0].scale = { x: 1.0, y: 0.9 };
+                  this.biome_list[0].objects[1].asset = 'present2.png';
+                  this.biome_list[0].objects[1].size = { w: 30, h: 33, scale: 0.9 };
+                  this.biome_list[0].objects[1].scale = { x: 1.0, y: 0.9 };
+                  this.biome_list[0].objects[2].asset = 'present3.png';
+                  this.biome_list[0].objects[2].size = { w: 32, h: 32, scale: 0.9 };
+                  this.biome_list[0].objects[2].scale = { x: 1.0, y: 0.9 };
+                  this.biome_list[0].objects[3].asset = 'present4.png';
+                  this.biome_list[0].objects[3].size = { w: 27, h: 27, scale: 0.9 };
+                  this.biome_list[0].objects[3].scale = { x: 1.0, y: 0.9 };
+                  this.biome_list[0].objects[4].asset = 'present1.png';
+                  this.biome_list[0].objects[4].size = { w: 29, h: 29, scale: 0.9 };
+                  this.biome_list[0].objects[4].scale = { x: 1.0, y: 0.9 };
+                  this.biome_list[0].objects[5].asset = 'present2.png';
+                  this.biome_list[0].objects[5].size = { w: 30, h: 33, scale: 0.9 };
+                  this.biome_list[0].objects[5].scale = { x: 1.0, y: 0.9 };
+                  this.biome_list[0].objects[6].asset = 'present3.png';
+                  this.biome_list[0].objects[6].size = { w: 32, h: 32, scale: 0.9 };
+                  this.biome_list[0].objects[6].scale = { x: 1.0, y: 0.9 };
 
+                  this.biome_list[1].objects[0].asset = 'present1.png';
+                  this.biome_list[1].objects[0].size = { w: 29, h: 29, scale: 0.9 };
+                  this.biome_list[1].objects[0].scale = { x: 1.0, y: 0.9 };
+                  this.biome_list[1].objects[1].asset = 'present2.png';
+                  this.biome_list[1].objects[1].size = { w: 30, h: 33, scale: 0.9 };
+                  this.biome_list[1].objects[1].scale = { x: 1.0, y: 0.9 };
+                  this.biome_list[1].objects[2].asset = 'present3.png';
+                  this.biome_list[1].objects[2].size = { w: 32, h: 32, scale: 0.9 };
+                  this.biome_list[1].objects[2].scale = { x: 1.0, y: 0.9 };
+                  this.biome_list[1].objects[3].asset = 'present4.png';
+                  this.biome_list[1].objects[3].size = { w: 27, h: 27, scale: 0.9 };
+                  this.biome_list[1].objects[3].scale = { x: 1.0, y: 0.9 };
+                  this.biome_list[1].objects[4].asset = 'present1.png';
+                  this.biome_list[1].objects[4].size = { w: 29, h: 29, scale: 0.9 };
+                  this.biome_list[1].objects[4].scale = { x: 1.0, y: 0.9 };
+                  this.biome_list[1].objects[5].asset = 'present2.png';
+                  this.biome_list[1].objects[5].size = { w: 30, h: 33, scale: 0.9 };
+                  this.biome_list[1].objects[5].scale = { x: 1.0, y: 0.9 };
+                  this.biome_list[1].objects[6].asset = 'present3.png';
+                  this.biome_list[1].objects[6].size = { w: 32, h: 32, scale: 0.9 };
+                  this.biome_list[1].objects[6].scale = { x: 1.0, y: 0.9 };
+
+                  this.biome_list[2].objects[0].asset = 'present1.png';
+                  this.biome_list[2].objects[0].size = { w: 29, h: 29, scale: 0.9 };
+                  this.biome_list[2].objects[0].scale = { x: 1.0, y: 0.9 };
+                  this.biome_list[2].objects[1].asset = 'present2.png';
+                  this.biome_list[2].objects[1].size = { w: 30, h: 33, scale: 0.9 };
+                  this.biome_list[2].objects[1].scale = { x: 1.0, y: 0.9 };
+                  this.biome_list[2].objects[2].asset = 'present3.png';
+                  this.biome_list[2].objects[2].size = { w: 32, h: 32, scale: 0.9 };
+                  this.biome_list[2].objects[2].scale = { x: 1.0, y: 0.9 };
+                  this.biome_list[2].objects[3].asset = 'present4.png';
+                  this.biome_list[2].objects[3].size = { w: 27, h: 27, scale: 0.9 };
+                  this.biome_list[2].objects[3].scale = { x: 1.0, y: 0.9 };
+                  this.biome_list[2].objects[4].asset = 'present1.png';
+                  this.biome_list[2].objects[4].size = { w: 29, h: 29, scale: 0.9 };
+                  this.biome_list[2].objects[4].scale = { x: 1.0, y: 0.9 };
+                  this.biome_list[2].objects[5].asset = 'present2.png';
+                  this.biome_list[2].objects[5].size = { w: 30, h: 33, scale: 0.9 };
+                  this.biome_list[2].objects[5].scale = { x: 1.0, y: 0.9 };
+                  this.biome_list[2].objects[6].asset = 'present3.png';
+                  this.biome_list[2].objects[6].size = { w: 32, h: 32, scale: 0.9 };
+                  this.biome_list[2].objects[6].scale = { x: 1.0, y: 0.9 };
+                  this.biome_list[2].objects[7].asset = 'present4.png';
+                  this.biome_list[2].objects[7].size = { w: 27, h: 27, scale: 0.9 };
+                  this.biome_list[2].objects[7].scale = { x: 1.0, y: 0.9 };
             }
       }
 
@@ -1152,6 +1221,41 @@ class KrepagotchiGame extends Phaser.Scene {
             } catch (error) {
                   console.error(error);
             }
+      }
+
+      precacheWinterSeason()
+      {
+            if (!this.winterSeasonTimeRange()) {
+                  return;
+            }
+
+            this.load.spritesheet('wintertree', 'game/assets/sprites/wintertree.png', { frameWidth: 96, frameHeight: 128 });
+      }
+
+      loadWinterSeasonAssets()
+      {
+            if (!this.winterSeasonTimeRange()) {
+                  return;
+            }
+
+            this.wintertree = this.physics.add.sprite(0, 0, 'wintertree').refreshBody();
+
+            if (this.current_biome === 'grass') {
+                  this.wintertree.setPosition(150, 200);
+            } else if (this.current_biome === 'glowath') {
+                  this.wintertree.setPosition(135, 305);
+            } else if (this.current_biome === 'foliage') {
+                  this.wintertree.setPosition(150, 200);
+            }
+
+            this.anims.create({
+                  key: 'wintertree',
+                  frames: this.anims.generateFrameNumbers('wintertree', { start: 0, end: 1 }),
+                  frameRate: 2,
+                  repeat: -1
+            });
+
+            this.wintertree.anims.play('wintertree', true);
       }
 
       precacheNewYearsEve()
@@ -1401,11 +1505,12 @@ class KrepagotchiGame extends Phaser.Scene {
             const winterfog = this.add.rectangle(0, 0, gameconfig.scale.width, gameconfig.scale.height, 0xffffff);
             winterfog.setOrigin(0);
             winterfog.setDepth(100);
-            winterfog.setAlpha(0.2);
+            winterfog.setAlpha(0.1);
       }
 
       cozySeasonTimeRange()
       {
+            return false;
             let date = new Date();
             const month = date.getMonth() + 1;
 
@@ -1414,6 +1519,7 @@ class KrepagotchiGame extends Phaser.Scene {
 
       winterSeasonTimeRange()
       {
+            return true;
             let date = new Date();
             const month = date.getMonth() + 1;
             const day = date.getDate();
