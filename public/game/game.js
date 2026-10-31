@@ -1510,7 +1510,6 @@ class KrepagotchiGame extends Phaser.Scene {
 
       cozySeasonTimeRange()
       {
-            return false;
             let date = new Date();
             const month = date.getMonth() + 1;
 
