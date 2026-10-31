@@ -964,11 +964,7 @@ class KrepagotchiGame extends Phaser.Scene {
 
       interceptSeasonalBiome()
       {
-            let date = new Date();
-            const month = date.getMonth() + 1;
-            const day = date.getDate();
-
-            if (month === 10) {
+            if (this.cozySeasonTimeRange()) {
                   this.biome_list[0].objects[0].asset = 'pumpkin_green.png';
                   this.biome_list[0].objects[0].size = { w: 46, h: 38, scale: 0.7 };
                   this.biome_list[0].objects[0].scale = { x: 0.8, y: 0.7 };
@@ -1037,7 +1033,7 @@ class KrepagotchiGame extends Phaser.Scene {
                   this.biome_list[2].objects[7].asset = 'pumpkin_white.png';
                   this.biome_list[2].objects[7].size = { w: 48, h: 41, scale: 0.7 };
                   this.biome_list[2].objects[7].scale = { x: 0.8, y: 0.7 };
-            } else if ((month === 12) && (day <= 30)) {
+            } else if (this.winterSeasonTimeRange()) {
 
             }
       }
